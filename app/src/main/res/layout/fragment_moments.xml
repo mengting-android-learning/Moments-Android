@@ -26,12 +26,14 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 app:layout_constraintTop_toTopOf="parent"
+                app:imageUrl="@{viewModel.userInfo.profileImageUrl}"
                 tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
             <ImageView
                 android:id="@+id/usr_avatar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:imageUrl="@{viewModel.userInfo.avatarUrl}"
                 app:layout_constraintBottom_toBottomOf="@id/profile_image"
                 app:layout_constraintEnd_toEndOf="@id/profile_image"
                 tools:srcCompat="@tools:sample/avatars"
@@ -44,7 +46,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@id/profile_image"
                 app:layout_constraintEnd_toStartOf="@id/usr_avatar"
-                android:text="@string/user_nick"
+                android:text="@{viewModel.userInfo.nick}"
                 android:textColor="@android:color/white"
                 android:layout_marginEnd="@dimen/small_margin_end"/>
 

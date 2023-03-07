@@ -1,7 +1,7 @@
 package com.example.momentsrecyclerview.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.example.momentsrecyclerview.R
 
 class MomentsActivity : AppCompatActivity() {

@@ -1,4 +1,8 @@
 package com.example.momentsrecyclerview.domain
 
-class UserInfo {
-}
+data class UserInfo(
+    val profileImageUrl: String,
+    val avatarUrl: String,
+    val nick: String,
+    val userName: String
+)
