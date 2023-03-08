@@ -30,6 +30,7 @@ class MomentsFragment : Fragment() {
         )
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.tweetsList.adapter = TweetsAdapter()
         return binding.root
     }
 }
