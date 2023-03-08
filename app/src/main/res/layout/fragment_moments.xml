@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.example.momentsrecyclerview.viewmodels.MomentsViewModel" />
@@ -23,35 +24,34 @@
             <ImageView
                 android:id="@+id/profile_image"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_height="@dimen/profile_height"
+                android:scaleType="center"
                 app:imageUrl="@{viewModel.userInfo.profileImageUrl}"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
             <ImageView
                 android:id="@+id/usr_avatar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/user_avatar_height"
+                android:layout_width="@dimen/user_avatar_width"
+                android:layout_marginEnd="@dimen/small_margin_end"
+                android:layout_marginBottom="@dimen/margin_bottom"
                 app:imageUrl="@{viewModel.userInfo.avatarUrl}"
                 app:layout_constraintBottom_toBottomOf="@id/profile_image"
                 app:layout_constraintEnd_toEndOf="@id/profile_image"
-                tools:srcCompat="@tools:sample/avatars"
-                android:layout_marginBottom="@dimen/margin_bottom"
-                android:layout_marginEnd="@dimen/small_margin_end"/>
+                tools:srcCompat="@tools:sample/avatars" />
 
             <TextView
                 android:id="@+id/user_nick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@id/profile_image"
-                app:layout_constraintEnd_toStartOf="@id/usr_avatar"
+                android:layout_marginEnd="@dimen/small_margin_end"
                 android:text="@{viewModel.userInfo.nick}"
                 android:textColor="@android:color/white"
-                android:layout_marginEnd="@dimen/small_margin_end"/>
+                app:layout_constraintBottom_toBottomOf="@id/profile_image"
+                app:layout_constraintEnd_toStartOf="@id/usr_avatar" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -59,7 +59,6 @@
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/user_info" />
-
 
 
     </LinearLayout>
