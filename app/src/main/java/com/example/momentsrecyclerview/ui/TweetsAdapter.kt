@@ -2,11 +2,14 @@ package com.example.momentsrecyclerview.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.momentsrecyclerview.databinding.ListItemTwwetsBinding
+import com.example.momentsrecyclerview.domain.ImageUrl
 import com.example.momentsrecyclerview.domain.Tweet
+import com.example.momentsrecyclerview.util.setImageUrl
 
 class TweetsAdapter :
     ListAdapter<Tweet, TweetsAdapter.TweetViewHolder>(DiffCallback) {
@@ -36,7 +39,27 @@ class TweetsAdapter :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(tweet: Tweet) {
             binding.tweet = tweet
+            addImages(tweet)
             binding.executePendingBindings()
+        }
+
+        private fun addImages(tweet: Tweet) {
+            val images: List<ImageUrl>? = tweet.images
+            if (images?.isNotEmpty() == true) {
+                binding.senderImages.removeAllViews()
+                val columnCount = mapOf(1 to 1, 2 to 2, 4 to 2)
+                binding.senderImages.columnCount =
+                    if (columnCount.containsKey(images.size)) columnCount[images.size]!! else 3
+                binding.senderImages.rowCount = ((images.size - 1) / 3) + 1
+                for (i in images.indices) {
+                    val imageViewNew = ImageView(binding.senderImages.context)
+                    imageViewNew.scaleType = ImageView.ScaleType.CENTER_CROP
+                    val padding = 5
+                    imageViewNew.setPadding(padding, padding, padding, padding)
+                    setImageUrl(imageViewNew, images[i].url)
+                    binding.senderImages.addView(imageViewNew, 300, 300)
+                }
+            }
         }
     }
 }

@@ -48,9 +48,7 @@ fun List<NetworkTweet>.asDomainModel() = filter {
     )
 }
 
-fun NetworkImage.asDomainModel() = let {
-    ImageUrl(url = it.url)
-}
+fun NetworkImage.asDomainModel() = ImageUrl(url = this.url)
 
 fun NetworkSender.asDomainModel() = let {
     Sender(

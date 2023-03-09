@@ -5,9 +5,15 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="tweet"
             type="com.example.momentsrecyclerview.domain.Tweet" />
+
+        <variable
+            name="imageUrl"
+            type="String" />
     </data>
 
     <LinearLayout
@@ -50,23 +56,27 @@
                 android:ellipsize="start"
                 android:text="@{tweet.content}"
                 android:textColor="@color/black"
+                android:visibility="@{tweet.content == null ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/sender_nick" />
 
             <GridLayout
                 android:id="@+id/sender_images"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="@{ (tweet.images == null || tweet.images.isEmpty) ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/sender_content" />
 
-            <!--            <androidx.recyclerview.widget.RecyclerView-->
-            <!--                android:id="@+id/comments_list"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toBottomOf="@id/sender_images" />-->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/comments_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sender_images" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
