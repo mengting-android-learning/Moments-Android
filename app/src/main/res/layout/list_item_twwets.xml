@@ -10,35 +10,36 @@
             type="com.example.momentsrecyclerview.domain.Tweet" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/tweet_padding_bottom">
 
         <ImageView
             android:id="@+id/sender_avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/tweet_avatar_width"
+            android:layout_height="@dimen/tweet_avatar_height"
             android:contentDescription="@string/sender_avatar_description"
+            android:paddingStart="@dimen/tweet_padding"
+            android:paddingEnd="@dimen/tweet_padding"
             android:scaleType="centerCrop"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars"
             app:imageUrl="@{tweet.sender.avatarUrl}"
-            />
+            tools:srcCompat="@tools:sample/avatars" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/sender_avatar"
-            app:layout_constraintTop_toTopOf="parent"
-           >
+            android:paddingStart="@dimen/tweet_padding"
+            android:paddingEnd="@dimen/tweet_padding">
 
             <TextView
                 android:id="@+id/sender_nick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{tweet.sender.nick}"
+                android:textColor="@color/black"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,7 +47,9 @@
                 android:id="@+id/sender_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="start"
                 android:text="@{tweet.content}"
+                android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/sender_nick" />
 
@@ -57,15 +60,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/sender_content" />
 
-<!--            <androidx.recyclerview.widget.RecyclerView-->
-<!--                android:id="@+id/comments_list"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/sender_images" />-->
+            <!--            <androidx.recyclerview.widget.RecyclerView-->
+            <!--                android:id="@+id/comments_list"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@id/sender_images" />-->
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </layout>
