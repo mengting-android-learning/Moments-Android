@@ -24,11 +24,11 @@ class TweetsAdapter :
 
     companion object DiffCallback : DiffUtil.ItemCallback<Tweet>() {
         override fun areItemsTheSame(oldItem: Tweet, newItem: Tweet): Boolean {
-            TODO("Not yet implemented")
+            return oldItem === newItem
         }
 
         override fun areContentsTheSame(oldItem: Tweet, newItem: Tweet): Boolean {
-            TODO("Not yet implemented")
+            return oldItem == newItem
         }
     }
 

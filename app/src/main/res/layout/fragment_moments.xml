@@ -59,7 +59,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/user_info" />
+            app:layout_constraintTop_toTopOf="@id/user_info"
+            app:listData="@{viewModel.tweetsList}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
 
     </LinearLayout>
