@@ -37,9 +37,15 @@ class TweetsAdapter :
 
     class TweetViewHolder(private var binding: ListItemTwwetsBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        private val commentAdapter = TweetCommentsAdapter()
+        init {
+            binding.commentsList.adapter = commentAdapter
+        }
         fun bind(tweet: Tweet) {
             binding.tweet = tweet
             addImages(tweet)
+            commentAdapter.submitList(tweet.comments)
             binding.executePendingBindings()
         }
 

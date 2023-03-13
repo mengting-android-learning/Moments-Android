@@ -10,10 +10,6 @@
         <variable
             name="tweet"
             type="com.example.momentsrecyclerview.domain.Tweet" />
-
-        <variable
-            name="imageUrl"
-            type="String" />
     </data>
 
     <LinearLayout
