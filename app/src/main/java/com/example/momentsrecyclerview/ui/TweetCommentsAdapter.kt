@@ -14,7 +14,9 @@ class TweetCommentsAdapter :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TweetCommentsViewHolder {
         return TweetCommentsViewHolder(
             ListItemCommentsBinding.inflate(
-                LayoutInflater.from(parent.context)
+                LayoutInflater.from(parent.context),
+                parent,
+                false
             )
         )
     }
@@ -28,6 +30,7 @@ class TweetCommentsAdapter :
         override fun areItemsTheSame(oldItem: TweetComment, newItem: TweetComment): Boolean {
             return oldItem === newItem
         }
+
         override fun areContentsTheSame(oldItem: TweetComment, newItem: TweetComment): Boolean {
             return oldItem == newItem
         }
