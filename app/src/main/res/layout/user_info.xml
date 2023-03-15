@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="userInfo"
             type="com.example.momentsrecyclerview.domain.UserInfo" />
@@ -11,31 +12,43 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/profile_image"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/profile_height"
-            android:scaleType="center"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/user_profile_description"
+            android:scaleType="centerCrop"
             app:imageUrl="@{userInfo.profileImageUrl}"
+            app:layout_constraintDimensionRatio="16:9"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/backgrounds/scenic"
-            android:contentDescription="@string/user_profile_description"/>
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        <Space
+            android:id="@+id/space"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/margin_bottom"
+            app:layout_constraintBottom_toBottomOf="@id/profile_image"
+            app:layout_constraintEnd_toEndOf="@id/profile_image"
+            app:layout_constraintStart_toStartOf="@id/profile_image" />
+
 
         <ImageView
-            android:id="@+id/usr_avatar"
+            android:id="@+id/user_avatar"
             android:layout_width="@dimen/user_avatar_width"
             android:layout_height="@dimen/user_avatar_height"
             android:layout_marginEnd="@dimen/small_margin_end"
-            android:layout_marginBottom="@dimen/margin_bottom"
+            android:contentDescription="@string/user_avatar_description"
             app:imageUrl="@{userInfo.avatarUrl}"
-            app:layout_constraintBottom_toBottomOf="@id/profile_image"
-            app:layout_constraintEnd_toEndOf="@id/profile_image"
-            tools:srcCompat="@tools:sample/avatars"
-            android:contentDescription="@string/user_avatar_description"/>
+            app:layout_constraintBottom_toBottomOf="@id/space"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
             android:id="@+id/user_nick"
@@ -43,10 +56,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/small_margin_end"
             android:text="@{userInfo.nick}"
-            app:layout_constraintBottom_toBottomOf="@id/profile_image"
-            app:layout_constraintEnd_toStartOf="@id/usr_avatar"
             android:textColor="@android:color/white"
-            />
+            app:layout_constraintBottom_toBottomOf="@id/profile_image"
+            app:layout_constraintEnd_toStartOf="@id/user_avatar" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -23,14 +23,18 @@ class TweetsAdapter : ListAdapter<DataItem, RecyclerView.ViewHolder>(DiffCallbac
                 UserInfoBinding.inflate(
                     LayoutInflater.from(
                         parent.context
-                    )
+                    ),
+                    parent,
+                    false
                 )
             )
             ITEM_VIEW_TYPE_TWEET -> TweetViewHolder(
                 ListItemTweetsBinding.inflate(
                     LayoutInflater.from(
                         parent.context
-                    )
+                    ),
+                    parent,
+                    false
                 )
             )
             else -> throw ClassCastException("Unknown viewType $viewType")
@@ -131,10 +135,10 @@ sealed class DataItem {
     abstract val id: Int
 
     data class TweetItem(val tweet: Tweet) : DataItem() {
-        override val id = 0
+        override val id = tweet.hashCode()
     }
 
     data class UserInfoItem(val userInfo: UserInfo) : DataItem() {
-        override val id = 1
+        override val id = userInfo.hashCode()
     }
 }
