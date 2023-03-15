@@ -9,18 +9,34 @@
             type="com.example.momentsrecyclerview.viewmodels.MomentsViewModel" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tweets_list"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tweetsList="@{viewModel.tweetsList}"
+            app:userInfo="@{viewModel.userInfo}" />
+
+        <ImageView
+            android:id="@+id/status_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:userInfo="@{viewModel.userInfo}"
-            app:tweetsList="@{viewModel.tweetsList}" />
-    </LinearLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:status="@{viewModel.status}"
+            android:contentDescription="@string/status_image_description"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </layout>

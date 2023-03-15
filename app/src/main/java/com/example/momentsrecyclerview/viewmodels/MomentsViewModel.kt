@@ -7,8 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.UserInfo
-import com.example.momentsrecyclerview.exceptions.TweetException
-import com.example.momentsrecyclerview.exceptions.UserInfoException
+import com.example.momentsrecyclerview.exceptions.NetWorkException
 import com.example.momentsrecyclerview.network.TweetsListNetwork
 import com.example.momentsrecyclerview.network.UserInfoNetwork
 import com.example.momentsrecyclerview.network.asDomainModel
@@ -27,43 +26,25 @@ class MomentsViewModel : ViewModel() {
     val tweetsList: LiveData<List<Tweet>>
         get() = _tweetsList
 
-    private val _userInfoStatus = MutableLiveData<STATUS>()
+    private val _status = MutableLiveData<STATUS>()
 
-    val userInfoStatus: LiveData<STATUS>
-        get() = _userInfoStatus
-
-    private val _tweetStatus = MutableLiveData<STATUS>()
-
-    val tweetStatus: LiveData<STATUS>
-        get() = _tweetStatus
+    val status: LiveData<STATUS>
+        get() = _status
 
     init {
-        getUserInfo()
-        getTweetsList()
+        getData()
     }
 
-    private fun getUserInfo() {
-        _userInfoStatus.value = STATUS.LOADING
+    private fun getData() {
+        _status.value = STATUS.LOADING
         viewModelScope.launch {
             try {
                 _userInfo.value = UserInfoNetwork.userInfo.getUserInfo().asDomainModel()
-                _userInfoStatus.value = STATUS.DONE
-            } catch (e: UserInfoException) {
-                Log.d("GetUserInfoError", e.toString())
-                _userInfoStatus.value = STATUS.ERROR
-            }
-        }
-    }
-
-    private fun getTweetsList() {
-        _tweetStatus.value = STATUS.LOADING
-        viewModelScope.launch {
-            try {
                 _tweetsList.value = TweetsListNetwork.tweets.getTweetsList().asDomainModel()
-                _tweetStatus.value = STATUS.DONE
-            } catch (e: TweetException) {
-                Log.d("GetTweetsError", e.toString())
-                _tweetStatus.value = STATUS.ERROR
+                _status.value = STATUS.DONE
+            } catch (e: NetWorkException) {
+                Log.i("NerWorkError", e.toString())
+                _status.value = STATUS.ERROR
             }
         }
     }

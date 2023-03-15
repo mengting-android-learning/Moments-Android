@@ -9,4 +9,5 @@
     <string name="tweet_avatar_ratio">1:1</string>
     <string name="user_avatar_description">this is user avatar</string>
     <string name="user_profile_description">this is user profile</string>
+    <string name="status_image_description">Loading or Network Error</string>
 </resources>
