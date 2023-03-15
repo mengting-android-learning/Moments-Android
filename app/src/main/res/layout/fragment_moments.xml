@@ -9,7 +9,8 @@
             type="com.example.momentsrecyclerview.viewmodels.MomentsViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -36,7 +37,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:status="@{viewModel.status}"
             android:contentDescription="@string/status_image_description"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 </layout>

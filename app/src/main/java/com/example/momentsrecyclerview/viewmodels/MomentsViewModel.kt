@@ -35,6 +35,10 @@ class MomentsViewModel : ViewModel() {
         getData()
     }
 
+    fun refreshData() {
+        getData()
+    }
+
     private fun getData() {
         _status.value = STATUS.LOADING
         viewModelScope.launch {

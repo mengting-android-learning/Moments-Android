@@ -31,6 +31,10 @@ class MomentsFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.tweetsList.adapter = TweetsAdapter()
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refreshData()
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
         return binding.root
     }
 }
