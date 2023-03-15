@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="userInfo"
+            type="com.example.momentsrecyclerview.domain.UserInfo" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/profile_image"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/profile_height"
+            android:scaleType="center"
+            app:imageUrl="@{userInfo.profileImageUrl}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/backgrounds/scenic"
+            android:contentDescription="@string/user_profile_description"/>
+
+        <ImageView
+            android:id="@+id/usr_avatar"
+            android:layout_width="@dimen/user_avatar_width"
+            android:layout_height="@dimen/user_avatar_height"
+            android:layout_marginEnd="@dimen/small_margin_end"
+            android:layout_marginBottom="@dimen/margin_bottom"
+            app:imageUrl="@{userInfo.avatarUrl}"
+            app:layout_constraintBottom_toBottomOf="@id/profile_image"
+            app:layout_constraintEnd_toEndOf="@id/profile_image"
+            tools:srcCompat="@tools:sample/avatars"
+            android:contentDescription="@string/user_avatar_description"/>
+
+        <TextView
+            android:id="@+id/user_nick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/small_margin_end"
+            android:text="@{userInfo.nick}"
+            app:layout_constraintBottom_toBottomOf="@id/profile_image"
+            app:layout_constraintEnd_toStartOf="@id/usr_avatar"
+            android:textColor="@android:color/white"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

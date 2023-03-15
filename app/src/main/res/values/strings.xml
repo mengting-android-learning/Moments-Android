@@ -5,7 +5,8 @@
     <string name="tweet_sender_nick">nick</string>
     <string name="tweet_content">content</string>
     <string name="comment_sender_nick">content sender nick</string>
-    <string name="comment_content">comments contentcomments contentcomments contentcomments contentcomments contentcomments contentcomments contentcomments contentcomments contentcomments contentcomments contentcomments contentcomments contentcomments contentcomments contentcomments contentcomments contentcomments contentcomments contentcomments contentcomments content</string>
     <string name="sender_avatar_description">sender avatar</string>
     <string name="tweet_avatar_ratio">1:1</string>
+    <string name="user_avatar_description">this is user avatar</string>
+    <string name="user_profile_description">this is user profile</string>
 </resources>
