@@ -132,13 +132,8 @@ class TweetsAdapter : ListAdapter<DataItem, RecyclerView.ViewHolder>(DiffCallbac
 }
 
 sealed class DataItem {
-    abstract val id: Int
 
-    data class TweetItem(val tweet: Tweet) : DataItem() {
-        override val id = tweet.hashCode()
-    }
+    data class TweetItem(val tweet: Tweet) : DataItem()
 
-    data class UserInfoItem(val userInfo: UserInfo) : DataItem() {
-        override val id = userInfo.hashCode()
-    }
+    data class UserInfoItem(val userInfo: UserInfo) : DataItem()
 }
