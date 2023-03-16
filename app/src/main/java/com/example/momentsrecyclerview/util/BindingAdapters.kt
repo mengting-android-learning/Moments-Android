@@ -40,14 +40,14 @@ fun bindStatus(
             if (tweets == null) {
                 statusImageView.setImageResource(R.drawable.loading_animation)
             } else {
-                View.GONE
+                statusImageView.visibility = View.GONE
             }
 
         STATUS.ERROR ->
             if (tweets == null) {
                 statusImageView.setImageResource(R.drawable.ic_connection_error)
             } else {
-                View.GONE
+                statusImageView.visibility = View.GONE
             }
 
         STATUS.DONE -> statusImageView.visibility = View.GONE

@@ -63,7 +63,7 @@ class TweetsAdapter : ListAdapter<DataItem, RecyclerView.ViewHolder>(DiffCallbac
 
     companion object DiffCallback : DiffUtil.ItemCallback<DataItem>() {
         override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
-            return oldItem === newItem
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
@@ -133,7 +133,13 @@ class TweetsAdapter : ListAdapter<DataItem, RecyclerView.ViewHolder>(DiffCallbac
 
 sealed class DataItem {
 
-    data class TweetItem(val tweet: Tweet) : DataItem()
+    abstract val id: Int
 
-    data class UserInfoItem(val userInfo: UserInfo) : DataItem()
+    data class TweetItem(val tweet: Tweet) : DataItem() {
+        override val id = tweet.hashCode()
+    }
+
+    data class UserInfoItem(val userInfo: UserInfo) : DataItem() {
+        override val id = 1
+    }
 }

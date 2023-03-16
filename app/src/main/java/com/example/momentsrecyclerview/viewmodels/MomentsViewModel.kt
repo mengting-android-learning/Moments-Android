@@ -41,8 +41,10 @@ class MomentsViewModel : ViewModel() {
         viewModelScope.launch {
             _status.value = STATUS.LOADING
             try {
-                _userInfo.value = UserInfoNetwork.userInfo.getUserInfo().asDomainModel()
-                _tweetsList.value = TweetsListNetwork.tweets.getTweetsList().asDomainModel()
+                val userInfoVal = UserInfoNetwork.userInfo.getUserInfo().asDomainModel()
+                val tweetsListVal = TweetsListNetwork.tweets.getTweetsList().asDomainModel()
+                _userInfo.value = userInfoVal
+                _tweetsList.value = tweetsListVal
                 _status.value = STATUS.DONE
             } catch (e: Exception) {
                 _status.value = STATUS.ERROR
