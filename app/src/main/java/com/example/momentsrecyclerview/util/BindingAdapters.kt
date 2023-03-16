@@ -14,10 +14,8 @@ import com.example.momentsrecyclerview.viewmodels.STATUS
 @BindingAdapter("imageUrl")
 fun setImageUrl(imageView: ImageView, url: String?) {
     url?.let {
-        Glide.with(imageView.context).load(it)
-            .placeholder(R.drawable.loading_animation)
-            .error(R.drawable.ic_broken_image)
-            .into(imageView)
+        Glide.with(imageView.context).load(it).placeholder(R.drawable.loading_animation)
+            .error(R.drawable.ic_broken_image).into(imageView)
     }
 }
 
@@ -31,22 +29,27 @@ fun bindRecyclerView(
     adapter.allItems(userInfo, tweets)
 }
 
-@BindingAdapter("status")
+@BindingAdapter("status", "tweetsList")
 fun bindStatus(
     statusImageView: ImageView,
-    status: STATUS?
+    status: STATUS?,
+    tweets: List<Tweet>?
 ) {
     when (status!!) {
-        STATUS.LOADING -> {
-            statusImageView.visibility = View.VISIBLE
-            statusImageView.setImageResource(R.drawable.loading_animation)
-        }
-        STATUS.ERROR -> {
-            statusImageView.visibility = View.VISIBLE
-            statusImageView.setImageResource(R.drawable.ic_broken_image)
-        }
-        STATUS.DONE -> {
-            statusImageView.visibility = View.GONE
-        }
+        STATUS.LOADING ->
+            if (tweets == null) {
+                statusImageView.setImageResource(R.drawable.loading_animation)
+            } else {
+                View.GONE
+            }
+
+        STATUS.ERROR ->
+            if (tweets == null) {
+                statusImageView.setImageResource(R.drawable.ic_connection_error)
+            } else {
+                View.GONE
+            }
+
+        STATUS.DONE -> statusImageView.visibility = View.GONE
     }
 }

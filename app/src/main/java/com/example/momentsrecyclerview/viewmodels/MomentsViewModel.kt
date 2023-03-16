@@ -1,13 +1,11 @@
 package com.example.momentsrecyclerview.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.UserInfo
-import com.example.momentsrecyclerview.exceptions.NetWorkException
 import com.example.momentsrecyclerview.network.TweetsListNetwork
 import com.example.momentsrecyclerview.network.UserInfoNetwork
 import com.example.momentsrecyclerview.network.asDomainModel
@@ -40,14 +38,13 @@ class MomentsViewModel : ViewModel() {
     }
 
     private fun getData() {
-        _status.value = STATUS.LOADING
         viewModelScope.launch {
+            _status.value = STATUS.LOADING
             try {
                 _userInfo.value = UserInfoNetwork.userInfo.getUserInfo().asDomainModel()
                 _tweetsList.value = TweetsListNetwork.tweets.getTweetsList().asDomainModel()
                 _status.value = STATUS.DONE
-            } catch (e: NetWorkException) {
-                Log.i("NerWorkError", e.toString())
+            } catch (e: Exception) {
                 _status.value = STATUS.ERROR
             }
         }
