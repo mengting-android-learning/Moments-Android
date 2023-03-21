@@ -27,10 +27,11 @@ class MomentsFragment : Fragment() {
             R.layout.fragment_moments,
             container,
             false
-        )
+        ).apply {
+            composeMoments.setContent { MomentsDescription() }
+        }
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.tweetsList.adapter = TweetsAdapter()
         binding.swipeRefreshLayout.setOnRefreshListener {
             viewModel.refreshData()
             binding.swipeRefreshLayout.isRefreshing = false
