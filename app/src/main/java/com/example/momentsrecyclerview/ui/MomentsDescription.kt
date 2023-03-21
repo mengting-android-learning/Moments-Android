@@ -35,10 +35,10 @@ fun MomentsDescription() {
 
 @Composable
 fun TweetCommentItem(modifier: Modifier = Modifier, tweetComments: List<TweetComment>) {
-    Column(modifier = Modifier.background(colorResource(id = R.color.grey))) {
+    Column(modifier.background(colorResource(id = R.color.grey))) {
         for (tweetComment in tweetComments) {
             Row(
-                modifier = Modifier
+                modifier = modifier
                     .padding(
                         0.dp,
                         5.dp,
@@ -58,11 +58,10 @@ fun TweetCommentItem(modifier: Modifier = Modifier, tweetComments: List<TweetCom
 }
 
 @Composable
-fun TweetsItem(tweet: Tweet, modifier: Modifier = Modifier) {
+fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet) =
     Row(verticalAlignment = Alignment.Top) {
         Image(
-            modifier = Modifier
-                .padding(5.dp)
+            modifier = modifier.padding(5.dp)
                 .size(50.dp),
             contentScale = ContentScale.Crop,
             painter = painterResource(id = R.drawable.user_avatar),
@@ -70,10 +69,10 @@ fun TweetsItem(tweet: Tweet, modifier: Modifier = Modifier) {
         )
         Column(horizontalAlignment = Alignment.Start) {
             Text(text = tweet.sender.nick)
-            tweet.content?.let { Text(text = it, modifier = Modifier.padding(bottom = 5.dp)) }
+            tweet.content?.let { Text(text = it, modifier = modifier.padding(bottom = 5.dp)) }
             tweet.images?.let {
                 Image(
-                    modifier = Modifier
+                    modifier = modifier
                         .padding(bottom = 5.dp)
                         .size(100.dp),
                     painter = painterResource(id = R.drawable.user_profile),
@@ -86,16 +85,15 @@ fun TweetsItem(tweet: Tweet, modifier: Modifier = Modifier) {
             }
         }
     }
-}
 
 @Composable
-fun UserInfoItem(modifier: Modifier = Modifier) {
+fun UserInfoItem(modifier: Modifier = Modifier) =
     Box(
         contentAlignment = Alignment.BottomEnd
     ) {
         Column {
             Image(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .height(200.dp),
                 painter = painterResource(id = R.drawable.user_profile),
@@ -104,16 +102,16 @@ fun UserInfoItem(modifier: Modifier = Modifier) {
 
             )
             Spacer(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .height(25.dp)
             )
         }
         Box {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "user name", modifier = Modifier.padding(end = 5.dp))
+                Text(text = "user name", modifier = modifier.padding(end = 5.dp))
                 Image(
-                    modifier = Modifier
+                    modifier = modifier
                         .padding(end = 5.dp)
                         .size(75.dp),
                     contentScale = ContentScale.Crop,
@@ -124,7 +122,6 @@ fun UserInfoItem(modifier: Modifier = Modifier) {
             }
         }
     }
-}
 
 @Composable
 fun Moments(tweets: List<Tweet>) {
@@ -147,6 +144,7 @@ private fun getTweetCommentsList() = listOf(
     TweetComment("comment1", sender),
     TweetComment("comment1", sender)
 )
+
 private fun getTweets() = listOf(
     Tweet("content", null, sender, getTweetCommentsList()),
     Tweet("content", listOf(ImageUrl("1")), sender, getTweetCommentsList())
