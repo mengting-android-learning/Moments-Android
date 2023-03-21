@@ -13,7 +13,7 @@ import com.example.momentsrecyclerview.viewmodels.MomentsViewModel
 
 class MomentsFragment : Fragment() {
 
-    private val viewModel: MomentsViewModel by lazy {
+    private val momentsViewModel: MomentsViewModel by lazy {
         ViewModelProvider(this).get(MomentsViewModel::class.java)
     }
 
@@ -28,12 +28,12 @@ class MomentsFragment : Fragment() {
             container,
             false
         ).apply {
-            composeMoments.setContent { MomentsDescription() }
+            composeMoments.setContent { MomentsDescription(momentsViewModel) }
         }
         binding.lifecycleOwner = this
-        binding.viewModel = viewModel
+        binding.viewModel = momentsViewModel
         binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.refreshData()
+            momentsViewModel.refreshData()
             binding.swipeRefreshLayout.isRefreshing = false
         }
         return binding.root

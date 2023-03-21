@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -27,10 +29,13 @@ import com.example.momentsrecyclerview.domain.ImageUrl
 import com.example.momentsrecyclerview.domain.Sender
 import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.TweetComment
+import com.example.momentsrecyclerview.viewmodels.MomentsViewModel
 
 @Composable
-fun MomentsDescription() {
-    Moments(getTweets())
+fun MomentsDescription(momentsViewModel: MomentsViewModel) {
+    val tweets by momentsViewModel.tweetsList.observeAsState()
+    tweets?.let { Moments(tweets = tweets!!) }
+//    Moments(getTweets())
 }
 
 @Composable
@@ -61,7 +66,8 @@ fun TweetCommentItem(modifier: Modifier = Modifier, tweetComments: List<TweetCom
 fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet) =
     Row(verticalAlignment = Alignment.Top) {
         Image(
-            modifier = modifier.padding(5.dp)
+            modifier = modifier
+                .padding(5.dp)
                 .size(50.dp),
             contentScale = ContentScale.Crop,
             painter = painterResource(id = R.drawable.user_avatar),
