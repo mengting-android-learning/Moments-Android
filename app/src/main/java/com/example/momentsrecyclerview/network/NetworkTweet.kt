@@ -50,17 +50,15 @@ fun List<NetworkTweet>.asDomainModel() = filter {
 
 fun NetworkImage.asDomainModel() = ImageUrl(url = this.url)
 
-fun NetworkSender.asDomainModel() = let {
+fun NetworkSender.asDomainModel() =
     Sender(
-        userName = it.username,
-        nick = it.nick,
-        avatarUrl = it.avatarUrl
+        userName = username,
+        nick = nick,
+        avatarUrl = avatarUrl
     )
-}
 
-fun NetworkTweetComment.asDomainModel() = let {
+fun NetworkTweetComment.asDomainModel() =
     TweetComment(
-        content = it.content,
-        sender = it.sender.asDomainModel()
+        content = content,
+        sender = sender.asDomainModel()
     )
-}

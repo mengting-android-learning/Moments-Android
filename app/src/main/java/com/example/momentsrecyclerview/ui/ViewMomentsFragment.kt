@@ -8,13 +8,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.momentsrecyclerview.R
-import com.example.momentsrecyclerview.databinding.FragmentMomentsBinding
+import com.example.momentsrecyclerview.databinding.ViewFragmentMomentsBinding
 import com.example.momentsrecyclerview.viewmodels.MomentsViewModel
 
-class MomentsFragment : Fragment() {
-
+class ViewMomentsFragment : Fragment() {
     private val momentsViewModel: MomentsViewModel by lazy {
-        ViewModelProvider(this).get(MomentsViewModel::class.java)
+        ViewModelProvider(this)[MomentsViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -22,19 +21,18 @@ class MomentsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = DataBindingUtil.inflate<FragmentMomentsBinding>(
+        val binding = DataBindingUtil.inflate<ViewFragmentMomentsBinding>(
             inflater,
-            R.layout.fragment_moments,
+            R.layout.view_fragment_moments,
             container,
             false
-        ).apply {
-            composeMoments.setContent { MomentsDescription(momentsViewModel) }
-        }
+        )
         binding.lifecycleOwner = this
         binding.viewModel = momentsViewModel
-        binding.swipeRefreshLayout.setOnRefreshListener {
+        binding.tweetsList.adapter = TweetsAdapter()
+        binding.viewSwipeRefreshLayout.setOnRefreshListener {
             momentsViewModel.refreshData()
-            binding.swipeRefreshLayout.isRefreshing = false
+            binding.viewSwipeRefreshLayout.isRefreshing = false
         }
         return binding.root
     }

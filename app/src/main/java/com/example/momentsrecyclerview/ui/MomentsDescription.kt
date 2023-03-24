@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,68 +20,97 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.example.momentsrecyclerview.R
-import com.example.momentsrecyclerview.domain.ImageUrl
-import com.example.momentsrecyclerview.domain.Sender
 import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.TweetComment
+import com.example.momentsrecyclerview.domain.UserInfo
 import com.example.momentsrecyclerview.viewmodels.MomentsViewModel
 
 @Composable
 fun MomentsDescription(momentsViewModel: MomentsViewModel) {
+    val userInfo by momentsViewModel.userInfo.observeAsState()
     val tweets by momentsViewModel.tweetsList.observeAsState()
-    tweets?.let { Moments(tweets = tweets!!) }
-//    Moments(getTweets())
-}
-
-@Composable
-fun TweetCommentItem(modifier: Modifier = Modifier, tweetComments: List<TweetComment>) {
-    Column(modifier.background(colorResource(id = R.color.grey))) {
-        for (tweetComment in tweetComments) {
-            Row(
-                modifier = modifier
-                    .padding(
-                        0.dp,
-                        5.dp,
-                        10.dp,
-                        5.dp
-                    )
-            ) {
-                Text(
-                    text = "${tweetComment.sender.nick}:",
-                )
-                Text(
-                    text = tweetComment.content,
-                )
-            }
-        }
+    if (userInfo != null && tweets != null) {
+        Moments(userInfo = userInfo!!, tweets = tweets!!)
     }
 }
 
 @Composable
+fun TweetCommentItem(modifier: Modifier = Modifier, tweetComments: List<TweetComment>) =
+    Column(
+        modifier
+            .fillMaxWidth()
+            .padding(
+                end = dimensionResource(id = R.dimen.small_margin_end),
+                top = dimensionResource(id = R.dimen.tweet_padding)
+            )
+            .background(colorResource(id = R.color.grey))
+    ) {
+        for (tweetComment in tweetComments) {
+            Row {
+                Text(
+                    text = "${tweetComment.sender.nick}: ",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+                )
+                Text(
+                    text = tweetComment.content,
+                    fontSize = 16.sp
+                )
+            }
+        }
+    }
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
 fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet) =
     Row(verticalAlignment = Alignment.Top) {
-        Image(
+        GlideImage(
+            model = tweet.sender.avatarUrl,
             modifier = modifier
-                .padding(5.dp)
-                .size(50.dp),
+                .padding(start = dimensionResource(id = R.dimen.tweet_padding))
+                .fillMaxWidth()
+                .weight(1f)
+                .aspectRatio(1f / 1f),
             contentScale = ContentScale.Crop,
-            painter = painterResource(id = R.drawable.user_avatar),
             contentDescription = stringResource(id = R.string.user_avatar_description)
         )
-        Column(horizontalAlignment = Alignment.Start) {
-            Text(text = tweet.sender.nick)
+        Column(
+            horizontalAlignment = Alignment.Start,
+            modifier = modifier
+                .fillMaxWidth()
+                .weight(9f)
+                .padding(
+                    start = dimensionResource(id = R.dimen.tweet_padding),
+                    end = dimensionResource(id = R.dimen.small_margin_end)
+                )
+        ) {
+            Text(
+                text = tweet.sender.nick,
+                style = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+            )
             tweet.content?.let { Text(text = it, modifier = modifier.padding(bottom = 5.dp)) }
             tweet.images?.let {
                 Image(
                     modifier = modifier
-                        .padding(bottom = 5.dp)
+                        .padding(bottom = dimensionResource(id = R.dimen.tweet_padding))
                         .size(100.dp),
                     painter = painterResource(id = R.drawable.user_profile),
                     contentDescription = stringResource(id = R.string.user_profile_description),
@@ -92,17 +123,18 @@ fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet) =
         }
     }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun UserInfoItem(modifier: Modifier = Modifier) =
+fun UserInfoItem(modifier: Modifier = Modifier, userInfo: UserInfo) =
     Box(
         contentAlignment = Alignment.BottomEnd
     ) {
         Column {
-            Image(
+            GlideImage(
+                model = userInfo.profileImageUrl,
                 modifier = modifier
                     .fillMaxWidth()
-                    .height(200.dp),
-                painter = painterResource(id = R.drawable.user_profile),
+                    .aspectRatio(16f / 9f),
                 contentDescription = stringResource(id = R.string.user_profile_description),
                 contentScale = ContentScale.Crop,
 
@@ -113,51 +145,29 @@ fun UserInfoItem(modifier: Modifier = Modifier) =
                     .height(25.dp)
             )
         }
-        Box {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "user name", modifier = modifier.padding(end = 5.dp))
-                Image(
-                    modifier = modifier
-                        .padding(end = 5.dp)
-                        .size(75.dp),
-                    contentScale = ContentScale.Crop,
 
-                    painter = painterResource(id = R.drawable.user_avatar),
-                    contentDescription = stringResource(id = R.string.user_avatar_description)
-                )
-            }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = userInfo.nick,
+                modifier = modifier.padding(end = 10.dp),
+                color = Color.White
+            )
+            GlideImage(
+                model = userInfo.avatarUrl,
+                modifier = modifier
+                    .padding(end = 10.dp)
+                    .size(75.dp),
+                contentScale = ContentScale.Crop,
+                contentDescription = stringResource(id = R.string.user_avatar_description)
+            )
         }
     }
 
 @Composable
-fun Moments(tweets: List<Tweet>) {
-    LazyColumn {
-        item { UserInfoItem() }
+fun Moments(modifier: Modifier = Modifier, userInfo: UserInfo, tweets: List<Tweet>) =
+    LazyColumn(modifier = modifier.fillMaxHeight()) {
+        item { UserInfoItem(userInfo = userInfo) }
         items(items = tweets) { tweet ->
             TweetsItem(tweet = tweet)
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun UserInfoItemPreview() {
-    UserInfoItem()
-}
-
-private val sender: Sender = Sender("nick", "nick", "null")
-private fun getTweetCommentsList() = listOf(
-    TweetComment("comment1", sender),
-    TweetComment("comment1", sender)
-)
-
-private fun getTweets() = listOf(
-    Tweet("content", null, sender, getTweetCommentsList()),
-    Tweet("content", listOf(ImageUrl("1")), sender, getTweetCommentsList())
-)
-
-@Preview
-@Composable
-private fun TweetsItemPreview() {
-    TweetsItem(tweet = getTweets()[0])
-}

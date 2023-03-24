@@ -34,6 +34,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs +=
+                '-opt-in=androidx.compose.material3.ExperimentalMaterial3Api'
+
     }
     buildFeatures {
         dataBinding = true
@@ -86,6 +89,7 @@ dependencies {
     kapt "com.squareup.moshi:moshi-kotlin-codegen:1.14.0"
 
     implementation 'com.github.bumptech.glide:glide:4.15.0'
+    implementation 'com.github.bumptech.glide:compose:1.0.0-alpha.1'
     kapt 'com.github.bumptech.glide:compiler:4.15.0'
 
     implementation 'androidx.multidex:multidex:2.0.1'
@@ -93,5 +97,7 @@ dependencies {
 
 detekt {
     autoCorrect = true
-    baseline = file("${rootProject.projectDir}/config/baseline.xml")
+    baseline = file("${rootProject.projectDir}/config/detekt/baseline.xml")
+    config = files("${rootProject.projectDir}/config/detekt/detekt.yml")
+    buildUponDefaultConfig = true
 }

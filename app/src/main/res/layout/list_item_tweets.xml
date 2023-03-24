@@ -23,8 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/sender_avatar_description"
-            android:paddingStart="@dimen/tweet_padding"
-            android:paddingEnd="@dimen/tweet_padding"
+            android:padding="@dimen/tweet_padding"
             android:scaleType="centerCrop"
             app:imageUrl="@{tweet.sender.avatarUrl}"
             app:layout_constraintStart_toStartOf="parent"
@@ -49,6 +48,7 @@
                 android:text="@{tweet.sender.nick}"
                 android:textColor="@color/black"
                 android:textStyle="bold"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

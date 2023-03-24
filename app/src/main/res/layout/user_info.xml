@@ -22,6 +22,7 @@
             android:adjustViewBounds="true"
             android:contentDescription="@string/user_profile_description"
             android:scaleType="centerCrop"
+            app:imageUrl="@{userInfo.profileImageUrl}"
             app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

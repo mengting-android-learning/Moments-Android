@@ -12,11 +12,10 @@ data class NetworkUserInfo(
     @Json(name = "username") val userName: String
 )
 
-fun NetworkUserInfo.asDomainModel() = let {
+fun NetworkUserInfo.asDomainModel() =
     UserInfo(
-        profileImageUrl = it.profileImageUrl,
-        avatarUrl = it.avatarUrl,
-        nick = it.nick,
-        userName = it.userName
+        profileImageUrl = profileImageUrl,
+        avatarUrl = avatarUrl,
+        nick = nick,
+        userName = userName
     )
-}

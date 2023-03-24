@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.MomentsActivity">
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/view_fragment_moments"
+        android:name="com.example.momentsrecyclerview.ui.ViewMomentsFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/moments_nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        app:navGraph="@navigation/nav_graph"
-        app:defaultNavHost="true"/>
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-</FrameLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@id/view_fragment_moments" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/compose_fragment_moments"
+        android:name="com.example.momentsrecyclerview.ui.ComposeMomentsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>
