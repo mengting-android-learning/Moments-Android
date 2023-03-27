@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.momentsrecyclerview.data.Tweet
 import com.example.momentsrecyclerview.data.UserInfo
+import com.example.momentsrecyclerview.data.source.network.TweetsListNetwork
+import com.example.momentsrecyclerview.data.source.network.UserInfoNetwork
 import com.example.momentsrecyclerview.data.source.network.asDomainModel
-import com.example.momentsrecyclerview.network.TweetsListNetwork
-import com.example.momentsrecyclerview.network.UserInfoNetwork
 import kotlinx.coroutines.launch
 
 enum class STATUS { LOADING, ERROR, DONE }

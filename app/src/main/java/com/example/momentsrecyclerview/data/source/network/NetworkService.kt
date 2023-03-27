@@ -1,7 +1,5 @@
-package com.example.momentsrecyclerview.network
+package com.example.momentsrecyclerview.data.source.network
 
-import com.example.momentsrecyclerview.data.source.network.NetworkTweet
-import com.example.momentsrecyclerview.data.source.network.NetworkUserInfo
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
