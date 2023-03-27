@@ -31,10 +31,10 @@ import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.momentsrecyclerview.R
-import com.example.momentsrecyclerview.domain.ImageUrl
-import com.example.momentsrecyclerview.domain.Tweet
-import com.example.momentsrecyclerview.domain.TweetComment
-import com.example.momentsrecyclerview.domain.UserInfo
+import com.example.momentsrecyclerview.data.ImageUrl
+import com.example.momentsrecyclerview.data.Tweet
+import com.example.momentsrecyclerview.data.TweetComment
+import com.example.momentsrecyclerview.data.UserInfo
 import com.example.momentsrecyclerview.viewmodels.MomentsViewModel
 
 @Composable

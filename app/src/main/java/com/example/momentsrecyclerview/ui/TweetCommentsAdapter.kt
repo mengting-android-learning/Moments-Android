@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.momentsrecyclerview.data.TweetComment
 import com.example.momentsrecyclerview.databinding.ListItemCommentsBinding
-import com.example.momentsrecyclerview.domain.TweetComment
 
 class TweetCommentsAdapter :
     ListAdapter<TweetComment, TweetCommentsAdapter.TweetCommentsViewHolder>(DiffCallback) {

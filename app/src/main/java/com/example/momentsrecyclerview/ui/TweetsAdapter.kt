@@ -6,11 +6,11 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.momentsrecyclerview.data.ImageUrl
+import com.example.momentsrecyclerview.data.Tweet
+import com.example.momentsrecyclerview.data.UserInfo
 import com.example.momentsrecyclerview.databinding.ListItemTweetsBinding
 import com.example.momentsrecyclerview.databinding.UserInfoBinding
-import com.example.momentsrecyclerview.domain.ImageUrl
-import com.example.momentsrecyclerview.domain.Tweet
-import com.example.momentsrecyclerview.domain.UserInfo
 import com.example.momentsrecyclerview.util.setImageUrl
 
 private const val ITEM_VIEW_TYPE_USER_INFO = 0

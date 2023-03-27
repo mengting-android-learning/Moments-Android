@@ -1,4 +1,4 @@
-package com.example.momentsrecyclerview.domain
+package com.example.momentsrecyclerview.data
 
 data class UserInfo(
     val profileImageUrl: String,

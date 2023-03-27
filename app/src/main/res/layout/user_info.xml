@@ -7,7 +7,7 @@
 
         <variable
             name="userInfo"
-            type="com.example.momentsrecyclerview.domain.UserInfo" />
+            type="com.example.momentsrecyclerview.data.UserInfo" />
 
     </data>
 

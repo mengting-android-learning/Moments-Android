@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.momentsrecyclerview.domain.Tweet
-import com.example.momentsrecyclerview.domain.UserInfo
+import com.example.momentsrecyclerview.data.Tweet
+import com.example.momentsrecyclerview.data.UserInfo
 import com.example.momentsrecyclerview.network.TweetsListNetwork
 import com.example.momentsrecyclerview.network.UserInfoNetwork
 import com.example.momentsrecyclerview.network.asDomainModel
