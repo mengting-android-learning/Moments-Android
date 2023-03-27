@@ -1,6 +1,5 @@
 package com.example.momentsrecyclerview.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -33,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.momentsrecyclerview.R
+import com.example.momentsrecyclerview.domain.ImageUrl
 import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.TweetComment
 import com.example.momentsrecyclerview.domain.UserInfo
@@ -78,11 +77,16 @@ fun TweetCommentItem(modifier: Modifier = Modifier, tweetComments: List<TweetCom
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet) =
-    Row(verticalAlignment = Alignment.Top) {
+    Row(
+        verticalAlignment = Alignment.Top,
+        modifier = modifier.padding(
+            bottom = dimensionResource(id = R.dimen.tweet_padding_bottom)
+        )
+    ) {
         GlideImage(
             model = tweet.sender.avatarUrl,
             modifier = modifier
-                .padding(start = dimensionResource(id = R.dimen.tweet_padding))
+                .padding(dimensionResource(id = R.dimen.tweet_padding))
                 .fillMaxWidth()
                 .weight(1f)
                 .aspectRatio(1f / 1f),
@@ -108,20 +112,44 @@ fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet) =
             )
             tweet.content?.let { Text(text = it, modifier = modifier.padding(bottom = 5.dp)) }
             tweet.images?.let {
-                Image(
-                    modifier = modifier
-                        .padding(bottom = dimensionResource(id = R.dimen.tweet_padding))
-                        .size(100.dp),
-                    painter = painterResource(id = R.drawable.user_profile),
-                    contentDescription = stringResource(id = R.string.user_profile_description),
-                    contentScale = ContentScale.Crop,
-                )
+                GridImages(tweet.images, modifier)
             }
             if (tweet.comments?.isNotEmpty() == true) {
                 TweetCommentItem(tweetComments = tweet.comments)
             }
         }
     }
+
+@Composable
+@OptIn(ExperimentalGlideComposeApi::class)
+private fun GridImages(
+    images: List<ImageUrl>,
+    modifier: Modifier
+) {
+    val columnCountMap = mapOf(1 to 1, 2 to 2, 4 to 2)
+    val columnCount =
+        if (columnCountMap.containsKey(images.size)) columnCountMap[images.size]!! else 3
+    val rowCount = ((images.size - 1) / 3) + 1
+    Column {
+        for (i in 0 until rowCount) {
+            Row {
+                for (j in 0 until columnCount) {
+                    GlideImage(
+                        model = images[i * columnCount + j].url,
+                        contentDescription = stringResource(id = R.string.tweet_image_description),
+                        modifier = modifier
+                            .padding(
+                                end = dimensionResource(id = R.dimen.tweet_padding),
+                                bottom = dimensionResource(id = R.dimen.tweet_padding)
+                            )
+                            .size(100.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable

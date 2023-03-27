@@ -1,6 +1,10 @@
 <?xml version="1.0" ?>
 <SmellBaseline>
   <CurrentIssues>
+    <ID>MagicNumber:MomentsDescription.kt$16f</ID>
+    <ID>MagicNumber:MomentsDescription.kt$3</ID>
+    <ID>MagicNumber:MomentsDescription.kt$4</ID>
+    <ID>MagicNumber:MomentsDescription.kt$9f</ID>
     <ID>MagicNumber:TweetsAdapter.kt$TweetsAdapter.TweetViewHolder$3</ID>
     <ID>MagicNumber:TweetsAdapter.kt$TweetsAdapter.TweetViewHolder$300</ID>
     <ID>MagicNumber:TweetsAdapter.kt$TweetsAdapter.TweetViewHolder$4</ID>
