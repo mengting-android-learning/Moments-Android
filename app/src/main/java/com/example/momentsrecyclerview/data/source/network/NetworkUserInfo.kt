@@ -1,4 +1,4 @@
-package com.example.momentsrecyclerview.network
+package com.example.momentsrecyclerview.data.source.network
 
 import com.example.momentsrecyclerview.data.UserInfo
 import com.squareup.moshi.Json
