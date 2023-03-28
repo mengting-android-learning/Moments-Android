@@ -6,10 +6,10 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.momentsrecyclerview.R
-import com.example.momentsrecyclerview.data.Tweet
-import com.example.momentsrecyclerview.data.UserInfo
-import com.example.momentsrecyclerview.ui.TweetsAdapter
-import com.example.momentsrecyclerview.viewmodels.STATUS
+import com.example.momentsrecyclerview.data.domain.Tweet
+import com.example.momentsrecyclerview.data.domain.UserInfo
+import com.example.momentsrecyclerview.ui.STATUS
+import com.example.momentsrecyclerview.ui.view.TweetsAdapter
 
 @BindingAdapter("imageUrl")
 fun setImageUrl(imageView: ImageView, url: String?) {

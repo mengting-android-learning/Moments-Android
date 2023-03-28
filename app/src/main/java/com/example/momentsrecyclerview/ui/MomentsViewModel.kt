@@ -1,4 +1,4 @@
-package com.example.momentsrecyclerview.viewmodels
+package com.example.momentsrecyclerview.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,10 +9,10 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.momentsrecyclerview.data.NetworkTweetsRepository
 import com.example.momentsrecyclerview.data.NetworkUserInfoRepository
-import com.example.momentsrecyclerview.data.Tweet
 import com.example.momentsrecyclerview.data.TweetsRepository
-import com.example.momentsrecyclerview.data.UserInfo
 import com.example.momentsrecyclerview.data.UserInfoRepository
+import com.example.momentsrecyclerview.data.domain.Tweet
+import com.example.momentsrecyclerview.data.domain.UserInfo
 import com.example.momentsrecyclerview.data.source.network.TweetsListNetwork
 import com.example.momentsrecyclerview.data.source.network.UserInfoNetwork
 import kotlinx.coroutines.launch

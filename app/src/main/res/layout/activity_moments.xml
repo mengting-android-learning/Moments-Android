@@ -9,7 +9,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/view_fragment_moments"
-        android:name="com.example.momentsrecyclerview.ui.ViewMomentsFragment"
+        android:name="com.example.momentsrecyclerview.ui.view.ViewMomentsFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
@@ -22,7 +22,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/compose_fragment_moments"
-        android:name="com.example.momentsrecyclerview.ui.ComposeMomentsFragment"
+        android:name="com.example.momentsrecyclerview.ui.compose.ComposeMomentsFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />

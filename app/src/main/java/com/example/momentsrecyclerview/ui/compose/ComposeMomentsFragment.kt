@@ -1,4 +1,4 @@
-package com.example.momentsrecyclerview.ui
+package com.example.momentsrecyclerview.ui.compose
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.momentsrecyclerview.R
 import com.example.momentsrecyclerview.databinding.ComposeFragmentMomentsBinding
-import com.example.momentsrecyclerview.viewmodels.MomentsViewModel
+import com.example.momentsrecyclerview.ui.MomentsViewModel
 
 class ComposeMomentsFragment : Fragment() {
 

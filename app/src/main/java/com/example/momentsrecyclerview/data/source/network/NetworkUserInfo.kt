@@ -1,6 +1,6 @@
 package com.example.momentsrecyclerview.data.source.network
 
-import com.example.momentsrecyclerview.data.UserInfo
+import com.example.momentsrecyclerview.data.domain.UserInfo
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

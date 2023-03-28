@@ -1,9 +1,9 @@
 package com.example.momentsrecyclerview.data.source.network
 
-import com.example.momentsrecyclerview.data.ImageUrl
-import com.example.momentsrecyclerview.data.Sender
-import com.example.momentsrecyclerview.data.Tweet
-import com.example.momentsrecyclerview.data.TweetComment
+import com.example.momentsrecyclerview.data.domain.ImageUrl
+import com.example.momentsrecyclerview.data.domain.Sender
+import com.example.momentsrecyclerview.data.domain.Tweet
+import com.example.momentsrecyclerview.data.domain.TweetComment
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

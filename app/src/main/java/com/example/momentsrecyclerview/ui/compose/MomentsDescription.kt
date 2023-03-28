@@ -1,4 +1,4 @@
-package com.example.momentsrecyclerview.ui
+package com.example.momentsrecyclerview.ui.compose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -31,11 +31,11 @@ import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.momentsrecyclerview.R
-import com.example.momentsrecyclerview.data.ImageUrl
-import com.example.momentsrecyclerview.data.Tweet
-import com.example.momentsrecyclerview.data.TweetComment
-import com.example.momentsrecyclerview.data.UserInfo
-import com.example.momentsrecyclerview.viewmodels.MomentsViewModel
+import com.example.momentsrecyclerview.data.domain.ImageUrl
+import com.example.momentsrecyclerview.data.domain.Tweet
+import com.example.momentsrecyclerview.data.domain.TweetComment
+import com.example.momentsrecyclerview.data.domain.UserInfo
+import com.example.momentsrecyclerview.ui.MomentsViewModel
 
 @Composable
 fun MomentsDescription(momentsViewModel: MomentsViewModel) {

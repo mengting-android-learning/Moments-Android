@@ -1,4 +1,4 @@
-package com.example.momentsrecyclerview.ui
+package com.example.momentsrecyclerview.ui.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,9 +6,9 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.momentsrecyclerview.data.ImageUrl
-import com.example.momentsrecyclerview.data.Tweet
-import com.example.momentsrecyclerview.data.UserInfo
+import com.example.momentsrecyclerview.data.domain.ImageUrl
+import com.example.momentsrecyclerview.data.domain.Tweet
+import com.example.momentsrecyclerview.data.domain.UserInfo
 import com.example.momentsrecyclerview.databinding.ListItemTweetsBinding
 import com.example.momentsrecyclerview.databinding.UserInfoBinding
 import com.example.momentsrecyclerview.util.setImageUrl
