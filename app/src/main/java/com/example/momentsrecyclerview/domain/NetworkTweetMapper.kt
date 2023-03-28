@@ -20,7 +20,11 @@ fun List<NetworkTweet>.asDomainModel() = filter {
     )
 }
 
-fun NetworkImage.asDomainModel() = ImageUrl(url = url)
+fun NetworkTweetComment.asDomainModel() =
+    TweetComment(
+        content = content,
+        sender = sender.asDomainModel()
+    )
 
 fun NetworkSender.asDomainModel() =
     Sender(
@@ -29,8 +33,4 @@ fun NetworkSender.asDomainModel() =
         avatarUrl = avatarUrl
     )
 
-fun NetworkTweetComment.asDomainModel() =
-    TweetComment(
-        content = content,
-        sender = sender.asDomainModel()
-    )
+fun NetworkImage.asDomainModel() = ImageUrl(url = url)
