@@ -6,16 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.example.momentsrecyclerview.R
 import com.example.momentsrecyclerview.databinding.ComposeFragmentMomentsBinding
 import com.example.momentsrecyclerview.viewmodels.MomentsViewModel
 
 class ComposeMomentsFragment : Fragment() {
 
-    private val momentsViewModel: MomentsViewModel by lazy {
-        ViewModelProvider(this)[MomentsViewModel::class.java]
-    }
+    private val momentsViewModel: MomentsViewModel by viewModels { MomentsViewModel.Factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
