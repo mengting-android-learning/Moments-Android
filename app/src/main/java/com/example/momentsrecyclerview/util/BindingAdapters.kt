@@ -6,8 +6,8 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.momentsrecyclerview.R
-import com.example.momentsrecyclerview.data.domain.Tweet
-import com.example.momentsrecyclerview.data.domain.UserInfo
+import com.example.momentsrecyclerview.domain.Tweet
+import com.example.momentsrecyclerview.domain.UserInfo
 import com.example.momentsrecyclerview.ui.STATUS
 import com.example.momentsrecyclerview.ui.view.TweetsAdapter
 

@@ -1,6 +1,5 @@
-package com.example.momentsrecyclerview.network
+package com.example.momentsrecyclerview.data.source.network
 
-import com.example.momentsrecyclerview.data.source.network.NetworkUserInfo
 import retrofit2.http.GET
 
 interface UserInfoService {

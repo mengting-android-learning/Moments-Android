@@ -9,7 +9,7 @@
 
         <variable
             name="tweet"
-            type="com.example.momentsrecyclerview.data.domain.Tweet" />
+            type="com.example.momentsrecyclerview.domain.Tweet" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,4 +1,4 @@
-package com.example.momentsrecyclerview.data.domain
+package com.example.momentsrecyclerview.domain
 
 data class Tweet(
     val content: String?,

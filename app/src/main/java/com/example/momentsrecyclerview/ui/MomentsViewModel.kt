@@ -11,10 +11,11 @@ import com.example.momentsrecyclerview.data.NetworkTweetsRepository
 import com.example.momentsrecyclerview.data.NetworkUserInfoRepository
 import com.example.momentsrecyclerview.data.TweetsRepository
 import com.example.momentsrecyclerview.data.UserInfoRepository
-import com.example.momentsrecyclerview.data.domain.Tweet
-import com.example.momentsrecyclerview.data.domain.UserInfo
 import com.example.momentsrecyclerview.data.source.network.TweetsListNetwork
 import com.example.momentsrecyclerview.data.source.network.UserInfoNetwork
+import com.example.momentsrecyclerview.domain.Tweet
+import com.example.momentsrecyclerview.domain.UserInfo
+import com.example.momentsrecyclerview.domain.asDomainModel
 import kotlinx.coroutines.launch
 
 enum class STATUS { LOADING, ERROR, DONE }
@@ -50,8 +51,8 @@ class MomentsViewModel(
         viewModelScope.launch {
             _status.value = STATUS.LOADING
             try {
-                val userInfoVal = userInfoRepository.getUserInfo()
-                val tweetsListVal = tweetsRepository.getTweetsList()
+                val userInfoVal = userInfoRepository.getUserInfo().asDomainModel()
+                val tweetsListVal = tweetsRepository.getTweetsList().asDomainModel()
                 _userInfo.value = userInfoVal
                 _tweetsList.value = tweetsListVal
                 _status.value = STATUS.DONE

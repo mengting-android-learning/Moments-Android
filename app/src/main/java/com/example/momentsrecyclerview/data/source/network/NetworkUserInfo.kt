@@ -1,6 +1,5 @@
 package com.example.momentsrecyclerview.data.source.network
 
-import com.example.momentsrecyclerview.data.domain.UserInfo
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -11,11 +10,3 @@ data class NetworkUserInfo(
     val nick: String,
     @Json(name = "username") val userName: String
 )
-
-fun NetworkUserInfo.asDomainModel() =
-    UserInfo(
-        profileImageUrl = profileImageUrl,
-        avatarUrl = avatarUrl,
-        nick = nick,
-        userName = userName
-    )

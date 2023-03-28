@@ -1,9 +1,5 @@
 package com.example.momentsrecyclerview.data.source.network
 
-import com.example.momentsrecyclerview.data.domain.ImageUrl
-import com.example.momentsrecyclerview.data.domain.Sender
-import com.example.momentsrecyclerview.data.domain.Tweet
-import com.example.momentsrecyclerview.data.domain.TweetComment
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -32,33 +28,3 @@ data class NetworkSender(
 data class NetworkImage(
     val url: String
 )
-
-fun List<NetworkTweet>.asDomainModel() = filter {
-    it.sender != null
-}.filter {
-    !(it.images == null && it.content == null)
-}.map { networkTweet ->
-    Tweet(
-        content = networkTweet.content,
-        images = networkTweet.images?.map {
-            it.asDomainModel()
-        },
-        sender = networkTweet.sender!!.asDomainModel(),
-        comments = networkTweet.comments?.map { it.asDomainModel() }
-    )
-}
-
-fun NetworkImage.asDomainModel() = ImageUrl(url = this.url)
-
-fun NetworkSender.asDomainModel() =
-    Sender(
-        userName = username,
-        nick = nick,
-        avatarUrl = avatarUrl
-    )
-
-fun NetworkTweetComment.asDomainModel() =
-    TweetComment(
-        content = content,
-        sender = sender.asDomainModel()
-    )
