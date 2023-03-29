@@ -1,5 +1,6 @@
 package com.example.momentsrecyclerview.ui.compose
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,13 +12,19 @@ import com.bumptech.glide.integration.compose.GlideImage
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun SingleTweetImage(url: String?) {
-    Box(modifier = Modifier.fillMaxSize()) {
+fun SingleTweetImage(url: String?, onScreenClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable { onScreenClick() }
+    ) {
         url?.let {
             GlideImage(
                 model = url,
                 contentDescription = "singleImage",
-                modifier = Modifier.fillMaxWidth().align(Alignment.Center)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.Center)
             )
         }
     }

@@ -77,7 +77,7 @@ fun MomentsNavHost(
         ) { navBackStackEntry ->
             val imageUrl =
                 navBackStackEntry.arguments?.getString(SingleTweetImageScreen.imageUrlArg)
-            SingleTweetImage(imageUrl)
+            SingleTweetImage(imageUrl) { navController.navigateUp() }
         }
     }
 }
