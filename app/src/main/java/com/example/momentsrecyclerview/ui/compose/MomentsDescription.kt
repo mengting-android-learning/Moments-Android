@@ -2,6 +2,7 @@ package com.example.momentsrecyclerview.ui.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,9 +46,11 @@ import com.example.momentsrecyclerview.domain.TweetComment
 import com.example.momentsrecyclerview.domain.UserInfo
 import com.example.momentsrecyclerview.ui.MomentsViewModel
 import com.example.momentsrecyclerview.ui.STATUS
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
-fun MomentsDescription(momentsViewModel: MomentsViewModel) {
+fun MomentsDescription(momentsViewModel: MomentsViewModel, onImageClick: (String) -> Unit) {
     var showLandingScreen by remember { mutableStateOf(true) }
     if (showLandingScreen) {
         LandingScreen(
@@ -58,7 +61,7 @@ fun MomentsDescription(momentsViewModel: MomentsViewModel) {
         val userInfo by momentsViewModel.userInfo.observeAsState()
         val tweets by momentsViewModel.tweetsList.observeAsState()
         if (userInfo != null && tweets != null) {
-            Moments(userInfo = userInfo!!, tweets = tweets!!)
+            Moments(userInfo = userInfo!!, tweets = tweets!!, onImageClick = onImageClick)
         }
     }
 }
@@ -115,7 +118,7 @@ fun TweetCommentItem(modifier: Modifier = Modifier, tweetComments: List<TweetCom
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet) =
+fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet, onImageClick: (String) -> Unit) =
     Row(
         verticalAlignment = Alignment.Top,
         modifier = modifier.padding(
@@ -151,7 +154,7 @@ fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet) =
             )
             tweet.content?.let { Text(text = it, modifier = modifier.padding(bottom = 5.dp)) }
             tweet.images?.let {
-                GridImages(tweet.images, modifier)
+                GridImages(tweet.images, modifier, onImageClick = onImageClick)
             }
             if (tweet.comments?.isNotEmpty() == true) {
                 TweetCommentItem(tweetComments = tweet.comments)
@@ -163,7 +166,8 @@ fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet) =
 @OptIn(ExperimentalGlideComposeApi::class)
 private fun GridImages(
     images: List<ImageUrl>,
-    modifier: Modifier
+    modifier: Modifier,
+    onImageClick: (String) -> Unit
 ) {
     val columnCountMap = mapOf(1 to 1, 2 to 2, 4 to 2)
     val columnCount =
@@ -173,16 +177,23 @@ private fun GridImages(
         for (i in 0 until rowCount) {
             Row {
                 for (j in 0 until columnCount) {
+                    val url = images[i * columnCount + j].url
+                    val encodeUrl = URLEncoder.encode(
+                        url,
+                        StandardCharsets.UTF_8.toString()
+                    )
+
                     GlideImage(
-                        model = images[i * columnCount + j].url,
+                        model = url,
                         contentDescription = stringResource(id = R.string.tweet_image_description),
                         modifier = modifier
                             .padding(
                                 end = dimensionResource(id = R.dimen.tweet_padding),
                                 bottom = dimensionResource(id = R.dimen.tweet_padding)
                             )
-                            .size(100.dp),
-                        contentScale = ContentScale.Crop
+                            .size(100.dp)
+                            .clickable { onImageClick(encodeUrl) },
+                        contentScale = ContentScale.Crop,
                     )
                 }
             }
@@ -231,10 +242,15 @@ fun UserInfoItem(modifier: Modifier = Modifier, userInfo: UserInfo) =
     }
 
 @Composable
-fun Moments(modifier: Modifier = Modifier, userInfo: UserInfo, tweets: List<Tweet>) =
+fun Moments(
+    modifier: Modifier = Modifier,
+    userInfo: UserInfo,
+    tweets: List<Tweet>,
+    onImageClick: (String) -> Unit
+) =
     LazyColumn(modifier = modifier.fillMaxHeight()) {
         item { UserInfoItem(userInfo = userInfo) }
         items(items = tweets) { tweet ->
-            TweetsItem(tweet = tweet)
+            TweetsItem(tweet = tweet, onImageClick = onImageClick)
         }
     }
