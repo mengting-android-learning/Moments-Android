@@ -24,7 +24,7 @@ class MomentsDescriptionTest{
         val tweet = Tweet("content", null, sender, null)
 
         composeTestRule.setContent {
-            TweetsItem(tweet = tweet)
+            TweetsItem(tweet = tweet, onImageClick = {})
         }
 
         composeTestRule.onNodeWithText("nick").assertIsDisplayed()
@@ -36,7 +36,7 @@ class MomentsDescriptionTest{
         val tweet = Tweet("content", listOf(ImageUrl("https://com.example/image")),sender,null)
 
         composeTestRule.setContent {
-            TweetsItem(tweet = tweet)
+            TweetsItem(tweet = tweet, onImageClick = {})
         }
 
         composeTestRule.onRoot().printToLog("currentLabelExists")
