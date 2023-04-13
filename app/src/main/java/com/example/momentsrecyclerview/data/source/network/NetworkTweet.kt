@@ -12,7 +12,7 @@ data class NetworkTweet(
 )
 
 @JsonClass(generateAdapter = true)
-class NetworkTweetComment(
+data class NetworkTweetComment(
     val content: String,
     val sender: NetworkSender
 )
