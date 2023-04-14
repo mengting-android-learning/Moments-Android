@@ -23,7 +23,7 @@ class UserInfoNetworkTest {
     @Test
     fun networkService_userInfoService_verifySuccess() {
         runBlocking {
-            val userInfoResponse = retrofit.create(UserInfoService::class.java).getUserInfo()
+            val userInfoResponse = retrofit.create(NetworkUserInfoService::class.java).getUserInfo()
             assertNotNull(userInfoResponse)
         }
     }
@@ -31,7 +31,7 @@ class UserInfoNetworkTest {
     @Test
     fun networkService_tweetsService_verifySuccess() {
         runBlocking {
-            val tweetsResponse = retrofit.create(TweetsService::class.java).getTweetsList()
+            val tweetsResponse = retrofit.create(NetworkTweetsService::class.java).getTweetsList()
             assertNotNull(tweetsResponse)
         }
     }

@@ -11,13 +11,13 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 object UserInfoNetwork {
-    val userInfo: UserInfoService by lazy {
-        retrofit.create(UserInfoService::class.java)
+    val userInfo: NetworkUserInfoService by lazy {
+        retrofit.create(NetworkUserInfoService::class.java)
     }
 }
 
 object TweetsListNetwork {
-    val tweets: TweetsService by lazy {
-        retrofit.create(TweetsService::class.java)
+    val tweets: NetworkTweetsService by lazy {
+        retrofit.create(NetworkTweetsService::class.java)
     }
 }

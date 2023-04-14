@@ -1,8 +1,8 @@
 package com.example.momentsrecyclerview.fake
 
 import com.example.momentsrecyclerview.data.source.network.NetworkUserInfo
-import com.example.momentsrecyclerview.data.source.network.UserInfoService
+import com.example.momentsrecyclerview.data.source.network.NetworkUserInfoService
 
-class FakeUserInfoService : UserInfoService {
+class FakeNetworkUserInfoService : NetworkUserInfoService {
     override suspend fun getUserInfo(): NetworkUserInfo = FakeData.networkUserInfo
 }
