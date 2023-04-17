@@ -3,6 +3,7 @@ package com.example.momentsrecyclerview.data.source.local
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 
 @Dao
 interface MomentsDatabaseDao {
@@ -20,5 +21,6 @@ interface MomentsDatabaseDao {
     suspend fun insertImage(image: LocalImage)
 
     @Query("SELECT * from tweet")
-    suspend fun loadTweets(): List<TweetWithCommentsAndImages>
+    @Transaction
+    suspend fun loadTweets(): List<Tweets>
 }
