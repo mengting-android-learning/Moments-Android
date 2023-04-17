@@ -11,25 +11,18 @@ import com.example.momentsrecyclerview.domain.Sender
 import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.TweetComment
 
-fun List<LocalEntireTweet>.asDomain() = map {
-    Tweet(
-        content = it.tweet.content,
-        images = it.images?.asDomainImages(),
-        sender = it.sender.asDomainSender(),
-        comments = it.comments?.asDomainComments()
-    )
-}
+fun LocalEntireTweet.asDomainTweet() = Tweet(
+    content = tweet.content,
+    images =
+    if (images?.isNotEmpty() == true) images.map { it.asDomainImage() } else null,
+    sender = sender.asDomainSender(),
+    comments = if (comments?.isNotEmpty() == true) comments.map { it.asDomainComment() } else null
+)
 
-fun List<CommentWithSender>.asDomainComments() = if (isNotEmpty()) {
-    map {
-        TweetComment(
-            content = it.comment.content,
-            sender = it.sender.asDomainSender()
-        )
-    }
-} else {
-    null
-}
+fun CommentWithSender.asDomainComment() = TweetComment(
+    content = comment.content,
+    sender = sender.asDomainSender()
+)
 
 fun LocalUser.asDomainSender() = Sender(
     userName = userName,
@@ -37,13 +30,7 @@ fun LocalUser.asDomainSender() = Sender(
     avatarUrl = avatarUrl
 )
 
-fun List<LocalImage>.asDomainImages() = if (isNotEmpty()) {
-    map {
-        ImageUrl(url = it.imageUrl)
-    }
-} else {
-    null
-}
+fun LocalImage.asDomainImage() = ImageUrl(url = imageUrl)
 
 fun Tweet.toLocalTweet(senderId: Long) = LocalTweet(
     content = content,
@@ -62,6 +49,4 @@ fun Sender.toLocalUser() = LocalUser(
     avatarUrl = avatarUrl
 )
 
-fun List<ImageUrl>.toLocalImage(id: Long) = map {
-    LocalImage(imageUrl = it.url, tweetId = id)
-}
+fun ImageUrl.toLocalImage(id: Long) = LocalImage(imageUrl = url, tweetId = id)

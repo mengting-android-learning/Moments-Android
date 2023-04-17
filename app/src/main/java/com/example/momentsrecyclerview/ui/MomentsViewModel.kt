@@ -16,6 +16,7 @@ import com.example.momentsrecyclerview.data.source.network.TweetsListNetwork
 import com.example.momentsrecyclerview.data.source.network.UserInfoNetwork
 import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.UserInfo
+import com.example.momentsrecyclerview.domain.mapper.local.asDomainTweet
 import com.example.momentsrecyclerview.domain.mapper.local.toLocalImage
 import com.example.momentsrecyclerview.domain.mapper.local.toLocalTweet
 import com.example.momentsrecyclerview.domain.mapper.local.toLocalTweetComment
@@ -83,10 +84,10 @@ class MomentsViewModel(
                 }
             }
             if (tweet.images?.isNotEmpty() == true) {
-                db.insertImage(tweet.images.toLocalImage(tweetId))
+                db.insertImage(tweet.images.map { it.toLocalImage(tweetId) })
             }
         }
-//        _tweetsList.value = db.loadTweets().asDomain()
+//        _tweetsList.value = db.loadTweets().map { it.asDomainTweet() }
     }
 }
 
