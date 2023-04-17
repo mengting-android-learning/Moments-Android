@@ -9,25 +9,38 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.momentsrecyclerview.R
+import com.example.momentsrecyclerview.data.NetworkTweetsRepository
+import com.example.momentsrecyclerview.data.NetworkUserInfoRepository
+import com.example.momentsrecyclerview.data.source.network.TweetsListNetwork
+import com.example.momentsrecyclerview.data.source.network.UserInfoNetwork
 import com.example.momentsrecyclerview.databinding.ComposeFragmentMomentsBinding
 import com.example.momentsrecyclerview.ui.MomentsViewModel
 
 class ComposeMomentsFragment : Fragment() {
-
-    private val momentsViewModel: MomentsViewModel by viewModels { MomentsViewModel.Factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val application = requireNotNull(this.activity).application
+        val momentsViewModelFactory = MomentsViewModel.MomentsViewModelFactory(
+            application,
+            NetworkUserInfoRepository(UserInfoNetwork.userInfo),
+            NetworkTweetsRepository(TweetsListNetwork.tweets)
+        )
+        val momentsViewModel =
+            ViewModelProvider(
+                this,
+                momentsViewModelFactory
+            )[MomentsViewModel::class.java]
         val binding = DataBindingUtil.inflate<ComposeFragmentMomentsBinding>(
             inflater,
             R.layout.compose_fragment_moments,

@@ -1,18 +1,14 @@
 package com.example.momentsrecyclerview.ui
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.momentsrecyclerview.data.NetworkTweetsRepository
-import com.example.momentsrecyclerview.data.NetworkUserInfoRepository
 import com.example.momentsrecyclerview.data.TweetsRepository
 import com.example.momentsrecyclerview.data.UserInfoRepository
-import com.example.momentsrecyclerview.data.source.network.TweetsListNetwork
-import com.example.momentsrecyclerview.data.source.network.UserInfoNetwork
 import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.UserInfo
 import com.example.momentsrecyclerview.domain.mapper.network.asDomainModel
@@ -21,9 +17,10 @@ import kotlinx.coroutines.launch
 enum class STATUS { LOADING, ERROR, DONE }
 
 class MomentsViewModel(
+    application: Application,
     private val userInfoRepository: UserInfoRepository,
     private val tweetsRepository: TweetsRepository
-) : ViewModel() {
+) : AndroidViewModel(application) {
 
     private val _userInfo = MutableLiveData<UserInfo>()
 
@@ -62,14 +59,13 @@ class MomentsViewModel(
         }
     }
 
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                MomentsViewModel(
-                    NetworkUserInfoRepository(UserInfoNetwork.userInfo),
-                    NetworkTweetsRepository(TweetsListNetwork.tweets)
-                )
-            }
+    class MomentsViewModelFactory(
+        private val application: Application,
+        private val userInfoRepository: UserInfoRepository,
+        private val tweetsRepository: TweetsRepository
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return MomentsViewModel(application, userInfoRepository, tweetsRepository) as T
         }
     }
 }
