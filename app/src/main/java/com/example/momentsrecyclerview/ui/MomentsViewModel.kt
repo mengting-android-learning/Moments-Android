@@ -15,7 +15,7 @@ import com.example.momentsrecyclerview.data.source.network.TweetsListNetwork
 import com.example.momentsrecyclerview.data.source.network.UserInfoNetwork
 import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.UserInfo
-import com.example.momentsrecyclerview.domain.asDomainModel
+import com.example.momentsrecyclerview.domain.mapper.network.asDomainModel
 import kotlinx.coroutines.launch
 
 enum class STATUS { LOADING, ERROR, DONE }

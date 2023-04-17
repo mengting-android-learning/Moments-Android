@@ -1,5 +1,6 @@
 package com.example.momentsrecyclerview.domain
 
+import com.example.momentsrecyclerview.domain.mapper.network.asDomainModel
 import com.example.momentsrecyclerview.fake.FakeData
 import org.junit.Assert.assertEquals
 import org.junit.Test
