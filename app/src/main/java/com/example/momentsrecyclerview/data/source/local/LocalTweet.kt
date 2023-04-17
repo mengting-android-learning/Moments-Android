@@ -6,18 +6,18 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 
-data class Tweets(
+data class LocalEntireTweet(
     @Embedded
     val tweet: LocalTweet,
     @Relation(parentColumn = "senderId", entityColumn = "userId")
     val sender: LocalUser,
     @Relation(parentColumn = "id", entityColumn = "tweetId", entity = LocalTweetComment::class)
-    val comments: List<CommentsWithSender>?,
+    val comments: List<CommentWithSender>?,
     @Relation(parentColumn = "id", entityColumn = "tweetId")
     val images: List<LocalImage>?
 )
 
-data class CommentsWithSender(
+data class CommentWithSender(
     @Embedded
     val comment: LocalTweetComment,
     @Relation(parentColumn = "senderId", entityColumn = "userId")
@@ -43,7 +43,8 @@ data class LocalTweetComment(
 
 @Entity(tableName = "image")
 data class LocalImage(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    val imageId: Long = 0L,
     @ColumnInfo(name = "image_url")
     val imageUrl: String,
     val tweetId: Long
