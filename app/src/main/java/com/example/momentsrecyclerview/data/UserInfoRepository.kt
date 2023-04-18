@@ -9,19 +9,23 @@ import com.example.momentsrecyclerview.domain.mapper.network.asDomainModel
 
 interface UserInfoRepository {
     suspend fun getUserInfo(): UserInfo
+    suspend fun saveUserInfo(userInfo: UserInfo)
 }
 
 class NetworkUserInfoRepository(private val networkUserInfoService: NetworkUserInfoService) :
     UserInfoRepository {
     override suspend fun getUserInfo(): UserInfo =
         networkUserInfoService.getUserInfo().asDomainModel()
+    override suspend fun saveUserInfo(userInfo: UserInfo) {
+        // push update userInfo to remote
+    }
 }
 
 class LocalUserInfoRepository(private val dataSource: MomentsDatabaseDao) : UserInfoRepository {
     override suspend fun getUserInfo(): UserInfo =
         dataSource.getUserInfo().asDomainUserInfo()
 
-    suspend fun saveUserInfo(userInfo: UserInfo) {
+    override suspend fun saveUserInfo(userInfo: UserInfo) {
         dataSource.insertUser(userInfo.toLocalUser())
     }
 }

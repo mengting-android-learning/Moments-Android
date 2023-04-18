@@ -1,6 +1,7 @@
 package com.example.momentsrecyclerview.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -29,7 +30,6 @@ class MomentsViewModel(
     private val localUserInfoRepo: UserInfoRepository,
     private val localTweetsRepo: TweetsRepository
 ) : AndroidViewModel(application) {
-
     private val _userInfo = MutableLiveData<UserInfo>()
 
     val userInfo: LiveData<UserInfo>
@@ -56,15 +56,47 @@ class MomentsViewModel(
         viewModelScope.launch {
             _status.value = STATUS.LOADING
             try {
-                val userInfoVal = remoteUserInfoRepo.getUserInfo()
-                val tweetsListVal = remoteTweetsRepo.getTweetsList()
-                _userInfo.value = userInfoVal
-                _tweetsList.value = tweetsListVal
+                fetchRemoteData()
                 _status.value = STATUS.DONE
+                saveDataToLocal()
             } catch (e: Exception) {
-                _status.value = STATUS.ERROR
+                if (_tweetsList.value == null || _userInfo.value == null) {
+                    _status.value = STATUS.LOADING
+                    try {
+                        fetchLocalData()
+                        _status.value = STATUS.DONE
+                    } catch (e: Exception) {
+                        _status.value = STATUS.ERROR
+                    }
+                }
+                Log.d("NetOrRoomError", e.toString())
             }
         }
+    }
+
+    private suspend fun saveDataToLocal() {
+        _userInfo.value?.let {
+            localUserInfoRepo.saveUserInfo(it)
+        }
+        if (localTweetsRepo is LocalTweetsRepository) {
+            _tweetsList.value?.let {
+                localTweetsRepo.saveTweets(it)
+            }
+        }
+    }
+
+    private suspend fun fetchRemoteData() {
+        val userInfoVal = remoteUserInfoRepo.getUserInfo()
+        val tweetsListVal = remoteTweetsRepo.getTweetsList()
+        _userInfo.value = userInfoVal
+        _tweetsList.value = tweetsListVal
+    }
+
+    private suspend fun fetchLocalData() {
+        val userInfoVal = _userInfo.value ?: localUserInfoRepo.getUserInfo()
+        val tweetsListVal = _tweetsList.value ?: localTweetsRepo.getTweetsList()
+        _userInfo.value = userInfoVal
+        _tweetsList.value = tweetsListVal
     }
 }
 
