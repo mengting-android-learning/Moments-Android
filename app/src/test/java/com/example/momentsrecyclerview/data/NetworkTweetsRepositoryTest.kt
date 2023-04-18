@@ -11,8 +11,8 @@ class NetworkTweetsRepositoryTest {
     fun networkTweetsRepository_getTweetsList_verifySuccess() {
         runTest {
             val tweetsRepository = NetworkTweetsRepository(FakeNetworkTweetsService())
-            val tweets = tweetsRepository.getNetworkTweetsList()
-            assertEquals(listOf(FakeData.networkTweet), tweets)
+            val tweets = tweetsRepository.getTweetsList()
+            assertEquals(listOf(FakeData.tweet), tweets)
         }
     }
 }

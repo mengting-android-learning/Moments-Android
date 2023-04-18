@@ -13,16 +13,16 @@ fun List<NetworkTweet>.asDomainModel() = filter {
     it.sender != null
 }.filter {
     !(it.images == null && it.content == null)
-}.map { networkTweet ->
-    Tweet(
-        content = networkTweet.content,
-        images = networkTweet.images?.map {
-            it.asDomainModel()
-        },
-        sender = networkTweet.sender!!.asDomainModel(),
-        comments = networkTweet.comments?.map { it.asDomainModel() }
-    )
+}.map {
+    it.asDomainModel()
 }
+
+fun NetworkTweet.asDomainModel() = Tweet(
+    content = content,
+    images = images?.map { it.asDomainModel() },
+    sender = sender!!.asDomainModel(),
+    comments = comments?.map { it.asDomainModel() }
+)
 
 fun NetworkTweetComment.asDomainModel() =
     TweetComment(

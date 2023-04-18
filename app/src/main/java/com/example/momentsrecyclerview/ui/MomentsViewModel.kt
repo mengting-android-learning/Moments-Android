@@ -16,10 +16,6 @@ import com.example.momentsrecyclerview.data.source.network.TweetsListNetwork
 import com.example.momentsrecyclerview.data.source.network.UserInfoNetwork
 import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.UserInfo
-import com.example.momentsrecyclerview.domain.mapper.local.asDomainTweet
-import com.example.momentsrecyclerview.domain.mapper.local.toLocalImage
-import com.example.momentsrecyclerview.domain.mapper.local.toLocalTweet
-import com.example.momentsrecyclerview.domain.mapper.local.toLocalTweetComment
 import com.example.momentsrecyclerview.domain.mapper.local.toLocalUser
 import com.example.momentsrecyclerview.domain.mapper.network.asDomainModel
 import kotlinx.coroutines.launch
@@ -61,11 +57,11 @@ class MomentsViewModel(
             _status.value = STATUS.LOADING
             try {
                 val userInfoVal = userInfoRepository.getNetworkUserInfo().asDomainModel()
-                val tweetsListVal = tweetsRepository.getNetworkTweetsList().asDomainModel()
+                val tweetsListVal = tweetsRepository.getTweetsList()
                 _userInfo.value = userInfoVal
                 _tweetsList.value = tweetsListVal
                 _status.value = STATUS.DONE
-                insertData(userInfoVal, tweetsListVal)
+//                insertData(userInfoVal, tweetsListVal)
             } catch (e: Exception) {
                 _status.value = STATUS.ERROR
             }
@@ -74,20 +70,6 @@ class MomentsViewModel(
 
     private suspend fun insertData(userInfo: UserInfo, tweets: List<Tweet>) {
         db.insertUser(userInfo.toLocalUser())
-        for (tweet in tweets) {
-            val senderId = db.insertUser(tweet.sender.toLocalUser())
-            val tweetId = db.insertTweet(tweet.toLocalTweet(senderId))
-            if (tweet.comments?.isNotEmpty() == true) {
-                for (comment in tweet.comments) {
-                    val commentSenderId = db.insertUser(comment.sender.toLocalUser())
-                    db.insertTweetComment(comment.toLocalTweetComment(commentSenderId, tweetId))
-                }
-            }
-            if (tweet.images?.isNotEmpty() == true) {
-                db.insertImage(tweet.images.map { it.toLocalImage(tweetId) })
-            }
-        }
-//        _tweetsList.value = db.loadTweets().map { it.asDomainTweet() }
     }
 }
 
