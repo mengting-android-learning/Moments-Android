@@ -16,8 +16,6 @@ import com.example.momentsrecyclerview.data.source.network.TweetsListNetwork
 import com.example.momentsrecyclerview.data.source.network.UserInfoNetwork
 import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.UserInfo
-import com.example.momentsrecyclerview.domain.mapper.local.toLocalUser
-import com.example.momentsrecyclerview.domain.mapper.network.asDomainModel
 import kotlinx.coroutines.launch
 
 enum class STATUS { LOADING, ERROR, DONE }
@@ -56,20 +54,15 @@ class MomentsViewModel(
         viewModelScope.launch {
             _status.value = STATUS.LOADING
             try {
-                val userInfoVal = userInfoRepository.getNetworkUserInfo().asDomainModel()
+                val userInfoVal = userInfoRepository.getUserInfo()
                 val tweetsListVal = tweetsRepository.getTweetsList()
                 _userInfo.value = userInfoVal
                 _tweetsList.value = tweetsListVal
                 _status.value = STATUS.DONE
-//                insertData(userInfoVal, tweetsListVal)
             } catch (e: Exception) {
                 _status.value = STATUS.ERROR
             }
         }
-    }
-
-    private suspend fun insertData(userInfo: UserInfo, tweets: List<Tweet>) {
-        db.insertUser(userInfo.toLocalUser())
     }
 }
 

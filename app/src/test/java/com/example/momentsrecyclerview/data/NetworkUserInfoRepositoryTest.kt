@@ -11,8 +11,8 @@ class NetworkUserInfoRepositoryTest {
     fun networkUserInfoRepository_getUserInfo_verifySuccess() {
         runTest {
             val userInfoRepository = NetworkUserInfoRepository(FakeNetworkUserInfoService())
-            val userInfo = userInfoRepository.getNetworkUserInfo()
-            assertEquals(FakeData.networkUserInfo, userInfo)
+            val userInfo = userInfoRepository.getUserInfo()
+            assertEquals(FakeData.userInfo, userInfo)
         }
     }
 }

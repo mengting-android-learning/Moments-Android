@@ -24,7 +24,7 @@ class LocalTweetsRepository(private val dataSource: MomentsDatabaseDao) : Tweets
     override suspend fun getTweetsList(): List<Tweet> =
         dataSource.loadTweets().map { it.asDomainTweet() }
 
-    suspend fun saveData(tweets: List<Tweet>) {
+    suspend fun saveTweets(tweets: List<Tweet>) {
         for (tweet in tweets) {
             val senderId = dataSource.insertUser(tweet.sender.toLocalUser())
             val tweetId = dataSource.insertTweet(tweet.toLocalTweet(senderId))
