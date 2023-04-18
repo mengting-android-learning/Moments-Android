@@ -4,8 +4,10 @@ import android.app.Application
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.momentsrecyclerview.fake.FakeData
-import com.example.momentsrecyclerview.fake.FakeTweetsRepository
-import com.example.momentsrecyclerview.fake.FakeUserInfoRepository
+import com.example.momentsrecyclerview.fake.FakeLocalTweetsRepo
+import com.example.momentsrecyclerview.fake.FakeLocalUserInfoRepo
+import com.example.momentsrecyclerview.fake.FakeRemoteTweetsRepo
+import com.example.momentsrecyclerview.fake.FakeRemoteUserInfoRepo
 import com.example.momentsrecyclerview.rules.TestDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -33,19 +35,23 @@ class MomentsViewModelTest {
     @Mock
     private val context = mock(Context::class.java)
 
+    private lateinit var viewModel: MomentsViewModel
+
     @Before
     fun setup() {
+        viewModel = MomentsViewModel(
+            application,
+            FakeRemoteUserInfoRepo(),
+            FakeRemoteTweetsRepo(),
+            FakeLocalUserInfoRepo(),
+            FakeLocalTweetsRepo()
+        )
         `when`(application.applicationContext).thenReturn(context)
     }
 
     @Test
     fun momentsViewModel_init_verifySuccess() {
         runTest {
-            val viewModel = MomentsViewModel(
-                application,
-                userInfoRepository = FakeUserInfoRepository(),
-                tweetsRepository = FakeTweetsRepository()
-            )
             assertEquals(STATUS.DONE, viewModel.status.value)
             assertEquals(viewModel.userInfo.value, FakeData.userInfo)
             assertEquals(viewModel.tweetsList.value, listOf(FakeData.tweet))
@@ -55,11 +61,6 @@ class MomentsViewModelTest {
     @Test
     fun momentsViewModel_refreshData_verifySuccess() {
         runTest {
-            val viewModel = MomentsViewModel(
-                application,
-                userInfoRepository = FakeUserInfoRepository(),
-                tweetsRepository = FakeTweetsRepository()
-            )
             viewModel.refreshData()
             assertEquals(STATUS.DONE, viewModel.status.value)
             assertEquals(viewModel.userInfo.value, FakeData.userInfo)
