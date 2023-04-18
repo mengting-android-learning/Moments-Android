@@ -51,40 +51,54 @@ import java.nio.charset.StandardCharsets
 
 @Composable
 fun MomentsDescription(momentsViewModel: MomentsViewModel, onImageClick: (String) -> Unit) {
-    var showLandingScreen by remember { mutableStateOf(true) }
-    if (showLandingScreen) {
-        LandingScreen(
-            onTimeout = { showLandingScreen = false },
-            momentsViewModel = momentsViewModel
-        )
-    } else {
-        val userInfo by momentsViewModel.userInfo.observeAsState()
-        val tweets by momentsViewModel.tweetsList.observeAsState()
-        if (userInfo != null && tweets != null) {
-            Moments(userInfo = userInfo!!, tweets = tweets!!, onImageClick = onImageClick)
+    var currentStatus by remember { mutableStateOf(STATUS.LOADING) }
+    when (currentStatus) {
+        STATUS.DONE -> {
+            val userInfo by momentsViewModel.userInfo.observeAsState()
+            val tweets by momentsViewModel.tweetsList.observeAsState()
+            if (userInfo != null && tweets != null) {
+                Moments(userInfo = userInfo!!, tweets = tweets!!, onImageClick = onImageClick)
+            }
         }
+        else ->
+            LandingOrErrorScreen(
+                onStatusChange = { status -> currentStatus = status },
+                momentsViewModel = momentsViewModel
+            )
     }
 }
 
 @Composable
-fun LandingScreen(
+fun LandingOrErrorScreen(
     modifier: Modifier = Modifier,
-    onTimeout: () -> Unit,
+    onStatusChange: (status: STATUS) -> Unit,
     momentsViewModel: MomentsViewModel
 ) {
     Box(modifier = modifier.fillMaxSize()) {
-        val currentOnTimeout by rememberUpdatedState(onTimeout)
+        val currentOnStatusChange by rememberUpdatedState(onStatusChange)
         val status by momentsViewModel.status.observeAsState()
         LaunchedEffect(status) {
-            if (status == STATUS.DONE) {
-                currentOnTimeout()
+            when (status) {
+                STATUS.LOADING -> currentOnStatusChange(STATUS.LOADING)
+                STATUS.DONE -> currentOnStatusChange(STATUS.DONE)
+                STATUS.ERROR -> currentOnStatusChange(STATUS.ERROR)
+                else -> {}
             }
         }
-        Image(
-            painterResource(id = R.drawable.loading_img),
-            contentDescription = "loading",
-            modifier = modifier.fillMaxSize()
-        )
+        if (status == STATUS.LOADING) {
+            Image(
+                painterResource(id = R.drawable.loading_img),
+                contentDescription = "loading",
+                modifier = modifier.fillMaxSize()
+            )
+        }
+        if (status == STATUS.ERROR) {
+            Image(
+                painterResource(id = R.drawable.ic_connection_error),
+                contentDescription = "loading",
+                modifier = modifier.fillMaxSize()
+            )
+        }
     }
 }
 
