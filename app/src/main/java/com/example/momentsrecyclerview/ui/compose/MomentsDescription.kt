@@ -37,8 +37,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil.compose.AsyncImage
 import com.example.momentsrecyclerview.R
 import com.example.momentsrecyclerview.domain.ImageUrl
 import com.example.momentsrecyclerview.domain.Tweet
@@ -130,7 +129,6 @@ fun TweetCommentItem(modifier: Modifier = Modifier, tweetComments: List<TweetCom
         }
     }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet, onImageClick: (String) -> Unit) =
     Row(
@@ -139,7 +137,7 @@ fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet, onImageClick: (Strin
             bottom = dimensionResource(id = R.dimen.tweet_padding_bottom)
         )
     ) {
-        GlideImage(
+        AsyncImage(
             model = tweet.sender.avatarUrl,
             modifier = modifier
                 .padding(dimensionResource(id = R.dimen.tweet_padding))
@@ -147,7 +145,9 @@ fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet, onImageClick: (Strin
                 .weight(1f)
                 .aspectRatio(1f / 1f),
             contentScale = ContentScale.Crop,
-            contentDescription = stringResource(id = R.string.user_avatar_description)
+            contentDescription = stringResource(id = R.string.user_avatar_description),
+            placeholder = painterResource(id = R.drawable.loading_img),
+            error = painterResource(id = R.drawable.ic_broken_image)
         )
         Column(
             horizontalAlignment = Alignment.Start,
@@ -177,7 +177,6 @@ fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet, onImageClick: (Strin
     }
 
 @Composable
-@OptIn(ExperimentalGlideComposeApi::class)
 private fun GridImages(
     images: List<ImageUrl>,
     modifier: Modifier,
@@ -196,8 +195,7 @@ private fun GridImages(
                         url,
                         StandardCharsets.UTF_8.toString()
                     )
-
-                    GlideImage(
+                    AsyncImage(
                         model = url,
                         contentDescription = stringResource(id = R.string.tweet_image_description),
                         modifier = modifier
@@ -208,6 +206,8 @@ private fun GridImages(
                             .size(100.dp)
                             .clickable { onImageClick(encodeUrl) },
                         contentScale = ContentScale.Crop,
+                        placeholder = painterResource(id = R.drawable.loading_img),
+                        error = painterResource(id = R.drawable.ic_broken_image)
                     )
                 }
             }
@@ -215,21 +215,21 @@ private fun GridImages(
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun UserInfoItem(modifier: Modifier = Modifier, userInfo: UserInfo) =
     Box(
         contentAlignment = Alignment.BottomEnd
     ) {
         Column {
-            GlideImage(
+            AsyncImage(
                 model = userInfo.profileImageUrl,
                 modifier = modifier
                     .fillMaxWidth()
                     .aspectRatio(16f / 9f),
                 contentDescription = stringResource(id = R.string.user_profile_description),
                 contentScale = ContentScale.Crop,
-
+                placeholder = painterResource(id = R.drawable.loading_img),
+                error = painterResource(id = R.drawable.ic_broken_image)
             )
             Spacer(
                 modifier = modifier
@@ -244,13 +244,15 @@ fun UserInfoItem(modifier: Modifier = Modifier, userInfo: UserInfo) =
                 modifier = modifier.padding(end = 10.dp),
                 color = Color.White
             )
-            GlideImage(
+            AsyncImage(
                 model = userInfo.avatarUrl,
                 modifier = modifier
                     .padding(end = 10.dp)
                     .size(75.dp),
                 contentScale = ContentScale.Crop,
-                contentDescription = stringResource(id = R.string.user_avatar_description)
+                contentDescription = stringResource(id = R.string.user_avatar_description),
+                placeholder = painterResource(id = R.drawable.loading_img),
+                error = painterResource(id = R.drawable.ic_broken_image)
             )
         }
     }

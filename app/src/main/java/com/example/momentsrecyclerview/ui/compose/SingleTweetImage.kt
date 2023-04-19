@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil.compose.AsyncImage
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun SingleTweetImage(url: String?, onScreenClick: () -> Unit) {
     Box(
@@ -19,7 +17,7 @@ fun SingleTweetImage(url: String?, onScreenClick: () -> Unit) {
             .clickable { onScreenClick() }
     ) {
         url?.let {
-            GlideImage(
+            AsyncImage(
                 model = url,
                 contentDescription = "singleImage",
                 modifier = Modifier
