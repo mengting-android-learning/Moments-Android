@@ -3,6 +3,7 @@ package com.example.momentsrecyclerview.ui.compose
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
@@ -49,21 +51,29 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 @Composable
-fun MomentsDescription(momentsViewModel: MomentsViewModel, onImageClick: (String) -> Unit) {
+fun MomentsDescription(
+    momentsViewModel: MomentsViewModel,
+    onImageClick: (String) -> Unit,
+    onCameraClick: () -> Unit
+) {
     var currentStatus by remember { mutableStateOf(STATUS.LOADING) }
     when (currentStatus) {
         STATUS.DONE -> {
             val userInfo by momentsViewModel.userInfo.observeAsState()
             val tweets by momentsViewModel.tweetsList.observeAsState()
             if (userInfo != null && tweets != null) {
-                Moments(userInfo = userInfo!!, tweets = tweets!!, onImageClick = onImageClick)
+                Moments(
+                    userInfo = userInfo!!,
+                    tweets = tweets!!,
+                    onImageClick = onImageClick,
+                    onCameraClick = onCameraClick
+                )
             }
         }
-        else ->
-            LandingOrErrorScreen(
-                onStatusChange = { status -> currentStatus = status },
-                momentsViewModel = momentsViewModel
-            )
+        else -> LandingOrErrorScreen(
+            onStatusChange = { status -> currentStatus = status },
+            momentsViewModel = momentsViewModel
+        )
     }
 }
 
@@ -102,79 +112,77 @@ fun LandingOrErrorScreen(
 }
 
 @Composable
-fun TweetCommentItem(modifier: Modifier = Modifier, tweetComments: List<TweetComment>) =
-    Column(
-        modifier
-            .fillMaxWidth()
-            .padding(
-                end = dimensionResource(id = R.dimen.small_margin_end),
-                top = dimensionResource(id = R.dimen.tweet_padding)
-            )
-            .background(colorResource(id = R.color.grey))
-    ) {
-        for (tweetComment in tweetComments) {
-            Row {
-                Text(
-                    text = "${tweetComment.sender.nick}: ",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
-                    )
-                )
-                Text(
-                    text = tweetComment.content,
-                    fontSize = 16.sp
-                )
-            }
-        }
-    }
-
-@Composable
-fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet, onImageClick: (String) -> Unit) =
-    Row(
-        verticalAlignment = Alignment.Top,
-        modifier = modifier.padding(
-            bottom = dimensionResource(id = R.dimen.tweet_padding_bottom)
+fun TweetCommentItem(modifier: Modifier = Modifier, tweetComments: List<TweetComment>) = Column(
+    modifier
+        .fillMaxWidth()
+        .padding(
+            end = dimensionResource(id = R.dimen.small_margin_end),
+            top = dimensionResource(id = R.dimen.tweet_padding)
         )
-    ) {
-        AsyncImage(
-            model = tweet.sender.avatarUrl,
-            modifier = modifier
-                .padding(dimensionResource(id = R.dimen.tweet_padding))
-                .fillMaxWidth()
-                .weight(1f)
-                .aspectRatio(1f / 1f),
-            contentScale = ContentScale.Crop,
-            contentDescription = stringResource(id = R.string.user_avatar_description),
-            placeholder = painterResource(id = R.drawable.loading_img),
-            error = painterResource(id = R.drawable.ic_broken_image)
-        )
-        Column(
-            horizontalAlignment = Alignment.Start,
-            modifier = modifier
-                .fillMaxWidth()
-                .weight(9f)
-                .padding(
-                    start = dimensionResource(id = R.dimen.tweet_padding),
-                    end = dimensionResource(id = R.dimen.small_margin_end)
-                )
-        ) {
+        .background(colorResource(id = R.color.grey))
+) {
+    for (tweetComment in tweetComments) {
+        Row {
             Text(
-                text = tweet.sender.nick,
+                text = "${tweetComment.sender.nick}: ",
                 style = TextStyle(
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
                 )
             )
-            tweet.content?.let { Text(text = it, modifier = modifier.padding(bottom = 5.dp)) }
-            tweet.images?.let {
-                GridImages(tweet.images, modifier, onImageClick = onImageClick)
-            }
-            if (tweet.comments?.isNotEmpty() == true) {
-                TweetCommentItem(tweetComments = tweet.comments)
-            }
+            Text(
+                text = tweetComment.content,
+                fontSize = 16.sp
+            )
         }
     }
+}
+
+@Composable
+fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet, onImageClick: (String) -> Unit) = Row(
+    verticalAlignment = Alignment.Top,
+    modifier = modifier.padding(
+        bottom = dimensionResource(id = R.dimen.tweet_padding_bottom)
+    )
+) {
+    AsyncImage(
+        model = tweet.sender.avatarUrl,
+        modifier = modifier
+            .padding(dimensionResource(id = R.dimen.tweet_padding))
+            .fillMaxWidth()
+            .weight(1f)
+            .aspectRatio(1f / 1f),
+        contentScale = ContentScale.Crop,
+        contentDescription = stringResource(id = R.string.user_avatar_description),
+        placeholder = painterResource(id = R.drawable.loading_img),
+        error = painterResource(id = R.drawable.ic_broken_image)
+    )
+    Column(
+        horizontalAlignment = Alignment.Start,
+        modifier = modifier
+            .fillMaxWidth()
+            .weight(9f)
+            .padding(
+                start = dimensionResource(id = R.dimen.tweet_padding),
+                end = dimensionResource(id = R.dimen.small_margin_end)
+            )
+    ) {
+        Text(
+            text = tweet.sender.nick,
+            style = TextStyle(
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
+        )
+        tweet.content?.let { Text(text = it, modifier = modifier.padding(bottom = 5.dp)) }
+        tweet.images?.let {
+            GridImages(tweet.images, modifier, onImageClick = onImageClick)
+        }
+        if (tweet.comments?.isNotEmpty() == true) {
+            TweetCommentItem(tweetComments = tweet.comments)
+        }
+    }
+}
 
 @Composable
 private fun GridImages(
@@ -216,21 +224,41 @@ private fun GridImages(
 }
 
 @Composable
-fun UserInfoItem(modifier: Modifier = Modifier, userInfo: UserInfo) =
+fun UserInfoItem(modifier: Modifier = Modifier, userInfo: UserInfo, onCameraClick: () -> Unit) =
     Box(
         contentAlignment = Alignment.BottomEnd
     ) {
         Column {
-            AsyncImage(
-                model = userInfo.profileImageUrl,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 9f),
-                contentDescription = stringResource(id = R.string.user_profile_description),
-                contentScale = ContentScale.Crop,
-                placeholder = painterResource(id = R.drawable.loading_img),
-                error = painterResource(id = R.drawable.ic_broken_image)
-            )
+            Box() {
+                AsyncImage(
+                    model = userInfo.profileImageUrl,
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .aspectRatio(16f / 9f),
+                    contentDescription = stringResource(id = R.string.user_profile_description),
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(id = R.drawable.loading_img),
+                    error = painterResource(id = R.drawable.ic_broken_image)
+                )
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(end = 30.dp, top = 25.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.camera),
+                        contentDescription = "add new tweet",
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .size(25.dp)
+                            .pointerInput(Unit) {
+                                detectTapGestures(
+                                    onLongPress = { onCameraClick() }
+                                )
+                            }
+                    )
+                }
+            }
             Spacer(
                 modifier = modifier
                     .fillMaxWidth()
@@ -262,11 +290,11 @@ fun Moments(
     modifier: Modifier = Modifier,
     userInfo: UserInfo,
     tweets: List<Tweet>,
-    onImageClick: (String) -> Unit
-) =
-    LazyColumn(modifier = modifier.fillMaxHeight()) {
-        item { UserInfoItem(userInfo = userInfo) }
-        items(items = tweets) { tweet ->
-            TweetsItem(tweet = tweet, onImageClick = onImageClick)
-        }
+    onImageClick: (String) -> Unit,
+    onCameraClick: () -> Unit
+) = LazyColumn(modifier = modifier.fillMaxHeight()) {
+    item { UserInfoItem(userInfo = userInfo, onCameraClick = onCameraClick) }
+    items(items = tweets) { tweet ->
+        TweetsItem(tweet = tweet, onImageClick = onImageClick)
     }
+}

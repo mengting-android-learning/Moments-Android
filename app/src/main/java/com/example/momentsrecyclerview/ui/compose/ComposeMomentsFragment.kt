@@ -71,7 +71,8 @@ fun MomentsNavHost(
                 momentsViewModel = viewModel,
                 onImageClick = { url ->
                     navController.navigateToSingleImage(url)
-                }
+                },
+                onCameraClick = { navController.navigateSingleTopTo(NewTextTweetScreen.route) }
             )
         }
         composable(
@@ -82,6 +83,9 @@ fun MomentsNavHost(
             val imageUrl =
                 navBackStackEntry.arguments?.getString(SingleTweetImageScreen.imageUrlArg)
             SingleTweetImage(imageUrl) { navController.navigateUp() }
+        }
+        composable(route = NewTextTweetScreen.route) {
+            NewTextTweetScreen()
         }
     }
 }

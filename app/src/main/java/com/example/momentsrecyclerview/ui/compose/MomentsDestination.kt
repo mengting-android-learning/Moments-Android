@@ -26,3 +26,7 @@ object SingleTweetImageScreen : MomentsDestination {
         }
     )
 }
+
+object NewTextTweetScreen : MomentsDestination {
+    override val route = "new_text_tweet"
+}
