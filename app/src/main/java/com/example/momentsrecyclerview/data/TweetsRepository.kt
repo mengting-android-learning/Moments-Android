@@ -30,7 +30,7 @@ class LocalTweetsRepository(private val dataSource: MomentsDatabaseDao) : Tweets
         dataSource.deleteComments()
         dataSource.deleteImages()
         dataSource.deleteUsers()
-        if (localUserInfo != null) dataSource.insertUser(localUserInfo.copy(userId = 0))
+        if (localUserInfo != null) dataSource.insertUser(localUserInfo)
         for (tweet in tweets) {
             val senderId = dataSource.insertUser(tweet.sender.toLocalUser())
             val tweetId = dataSource.insertTweet(tweet.toLocalTweet(senderId))
