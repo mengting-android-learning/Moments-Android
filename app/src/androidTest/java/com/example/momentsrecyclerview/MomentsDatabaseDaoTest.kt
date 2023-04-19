@@ -13,6 +13,7 @@ import com.example.momentsrecyclerview.data.source.local.MomentsDatabaseDao
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -56,8 +57,10 @@ class MomentsDatabaseDaoTest {
             val userId = momentsDao.insertUser(localUser)
             assertEquals(userId, 1)
             val users = momentsDao.getUsers()
+            val userInfo = momentsDao.getUserInfo()
             assertEquals(users[0], localUser.copy(userId = 1))
             assertEquals(momentsDao.getUserInfo(), null)
+            assertEquals(userInfo, null)
         }
     }
 
@@ -119,6 +122,63 @@ class MomentsDatabaseDaoTest {
             assertEquals(tweets[0].comments?.get(0)?.sender, localUser.copy(userId = 1))
             assertEquals(tweets[0].images?.size, 1)
             assertEquals(tweets[0].images?.get(0), image.copy(imageId = 1))
+        }
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun deleteTweets() {
+        runTest {
+            momentsDao.insertTweet(tweet)
+            momentsDao.deleteTweets()
+            val tweets = momentsDao.getTweets()
+            assertTrue(tweets.isEmpty())
+        }
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun deleteComments() {
+        runTest {
+            momentsDao.insertTweetComment(comment)
+            momentsDao.deleteComments()
+            val comments = momentsDao.getComments()
+            assertTrue(comments.isEmpty())
+        }
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun deleteImages() {
+        runTest {
+            momentsDao.insertImage(listOf(image))
+            momentsDao.deleteImages()
+            val images = momentsDao.getImages()
+            assertTrue(images.isEmpty())
+        }
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun deleteUsers() {
+        runTest {
+            momentsDao.insertUser(user)
+            momentsDao.deleteUsers()
+            val users = momentsDao.getUsers()
+            assertTrue(users.isEmpty())
+        }
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun updateUser() {
+        runTest {
+            momentsDao.insertUser(localUser)
+            val users = momentsDao.getUsers()
+            momentsDao.updateUser(users[0].copy(userName = "user"))
+            val newUsers = momentsDao.getUsers()
+            assertEquals(newUsers.size, 1)
+            assertEquals(newUsers[0], localUser.copy(userId = 1, userName = "user"))
         }
     }
 }
