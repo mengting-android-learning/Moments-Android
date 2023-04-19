@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 
 @Dao
 interface MomentsDatabaseDao {
@@ -33,9 +34,24 @@ interface MomentsDatabaseDao {
     suspend fun getImages(): List<LocalImage>
 
     @Query("SELECT * from user WHERE profile_image_url IS NOT NULL")
-    suspend fun getUserInfo(): LocalUser
+    suspend fun getUserInfo(): LocalUser?
 
     @Query("SELECT * from tweet")
     @Transaction
     suspend fun loadTweets(): List<LocalEntireTweet>
+
+    @Update
+    suspend fun updateUser(user: LocalUser)
+
+    @Query("DELETE FROM tweet")
+    suspend fun deleteTweets()
+
+    @Query("DELETE FROM tweet_comment")
+    suspend fun deleteComments()
+
+    @Query("DELETE FROM image")
+    suspend fun deleteImages()
+
+    @Query("DELETE FROM user")
+    suspend fun deleteUsers()
 }

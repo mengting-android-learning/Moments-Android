@@ -81,27 +81,27 @@ class MomentsViewModel(
     }
 
     private suspend fun saveDataToLocal() {
-        _userInfo.value?.let {
-            localUserInfoRepo.saveUserInfo(it)
-        }
         if (localTweetsRepo is LocalTweetsRepository) {
             _tweetsList.value?.let {
                 localTweetsRepo.saveTweets(it)
             }
+        }
+        _userInfo.value?.let {
+            localUserInfoRepo.saveUserInfo(it)
         }
     }
 
     private suspend fun fetchRemoteData() {
         val userInfoVal = remoteUserInfoRepo.getUserInfo()
         val tweetsListVal = remoteTweetsRepo.getTweetsList()
-        _userInfo.value = userInfoVal
+        userInfoVal?.let { _userInfo.value = it }
         _tweetsList.value = tweetsListVal
     }
 
     private suspend fun fetchLocalData() {
         val userInfoVal = _userInfo.value ?: localUserInfoRepo.getUserInfo()
         val tweetsListVal = _tweetsList.value ?: localTweetsRepo.getTweetsList()
-        _userInfo.value = userInfoVal
+        userInfoVal?.let { _userInfo.value = it }
         _tweetsList.value = tweetsListVal
     }
 }
