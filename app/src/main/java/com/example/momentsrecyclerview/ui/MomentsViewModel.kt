@@ -54,22 +54,28 @@ class MomentsViewModel(
 
     private fun getData() {
         viewModelScope.launch {
+            var fetchRemoteDataSuccess = false
             _status.value = STATUS.LOADING
             try {
                 fetchRemoteData()
                 _status.value = STATUS.DONE
-                saveDataToLocal()
+                fetchRemoteDataSuccess = true
             } catch (e: Exception) {
-                if (_tweetsList.value == null || _userInfo.value == null) {
-                    _status.value = STATUS.LOADING
-                    try {
-                        fetchLocalData()
-                        _status.value = STATUS.DONE
-                    } catch (e: Exception) {
-                        _status.value = STATUS.ERROR
-                    }
+                Log.d("FetchRemoteDataExp", e.toString())
+                try {
+                    fetchLocalData()
+                    _status.value = STATUS.DONE
+                } catch (e: Exception) {
+                    Log.d("FetchLocalDataExp", e.toString())
+                    _status.value = STATUS.ERROR
                 }
-                Log.d("NetOrRoomError", e.toString())
+            }
+            if (fetchRemoteDataSuccess) {
+                try {
+                    saveDataToLocal()
+                } catch (e: Exception) {
+                    Log.d("SaveDataToLocalExp", e.toString())
+                }
             }
         }
     }
