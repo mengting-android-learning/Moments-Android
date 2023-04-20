@@ -19,9 +19,11 @@ fun List<NetworkTweet>.asDomainModel() = filter {
 
 fun NetworkTweet.asDomainModel() = Tweet(
     content = content,
-    images = images?.map { it.asDomainModel() },
+    images =
+    if (images?.isNotEmpty() == true) images.map { it.asDomainModel() } else null,
     sender = sender!!.asDomainModel(),
-    comments = comments?.map { it.asDomainModel() }
+    comments =
+    if (comments?.isNotEmpty() == true) comments.map { it.asDomainModel() } else null
 )
 
 fun NetworkTweetComment.asDomainModel() =
