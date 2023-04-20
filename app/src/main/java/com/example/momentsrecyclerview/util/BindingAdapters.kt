@@ -29,11 +29,10 @@ fun bindRecyclerView(
     adapter.allItems(userInfo, tweets)
 }
 
-@BindingAdapter("status", "tweetsList")
+@BindingAdapter("status")
 fun bindStatus(
     statusImageView: ImageView,
-    status: STATUS?,
-    tweets: List<Tweet>?
+    status: STATUS?
 ) {
     when (status!!) {
         STATUS.LOADING ->

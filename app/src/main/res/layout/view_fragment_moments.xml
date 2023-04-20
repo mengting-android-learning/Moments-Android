@@ -42,8 +42,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:status="@{viewModel.status}"
-                app:tweetsList="@{viewModel.tweetsList}" />
+                app:status="@{viewModel.status}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
