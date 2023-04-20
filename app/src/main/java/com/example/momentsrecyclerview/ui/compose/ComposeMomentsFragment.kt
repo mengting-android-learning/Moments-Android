@@ -86,7 +86,11 @@ fun MomentsNavHost(
         }
         composable(route = NewTextTweetScreen.route) {
             NewTextTweetScreen(
-                onCancelClick = { navController.navigateSingleTopTo(MomentsScreen.route) }
+                onCancelClick = { navController.navigateSingleTopTo(MomentsScreen.route) },
+                onSendClick = { text ->
+                    viewModel.saveNewTweet(text)
+                },
+                onSendClickNavigate = { navController.navigateUp() }
             )
         }
     }

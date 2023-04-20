@@ -33,7 +33,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun NewTextTweetScreen(
     modifier: Modifier = Modifier,
-    onCancelClick: () -> Unit
+    onCancelClick: () -> Unit,
+    onSendClick: (text: String) -> Unit,
+    onSendClickNavigate: () -> Unit
 ) {
     var text by remember {
         mutableStateOf("")
@@ -70,13 +72,17 @@ fun NewTextTweetScreen(
                 text = "Send Text",
             )
             Button(
-                onClick = {},
+                onClick = {
+                    onSendClick(text)
+                    onSendClickNavigate()
+                },
                 colors = buttonColors(
                     backgroundColor = if (enabled) Color.Green else Color.Gray,
                     contentColor = if (enabled) Color.White else Color.DarkGray
                 ),
                 enabled = enabled,
-                modifier = Modifier.wrapContentSize()
+                modifier = Modifier
+                    .wrapContentSize()
             ) {
                 Text(text = "Send")
             }

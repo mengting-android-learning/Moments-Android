@@ -13,28 +13,41 @@ import com.example.momentsrecyclerview.domain.mapper.network.asDomainModel
 
 interface TweetsRepository {
     suspend fun getTweetsList(): List<Tweet>
+    suspend fun saveNewTweet(tweet: Tweet)
 }
 
 class NetworkTweetsRepository(private val networkTweetsService: NetworkTweetsService) :
     TweetsRepository {
     override suspend fun getTweetsList(): List<Tweet> =
         networkTweetsService.getTweetsList().asDomainModel()
+
+    override suspend fun saveNewTweet(tweet: Tweet) {
+        throw Exception()
+    }
 }
 
 class LocalTweetsRepository(private val dataSource: MomentsDatabaseDao) : TweetsRepository {
     override suspend fun getTweetsList(): List<Tweet> =
-        dataSource.loadTweets().map { it.asDomainTweet() }
+        dataSource.loadTweets().asReversed().map { it.asDomainTweet() }
+
+    override suspend fun saveNewTweet(tweet: Tweet) = insertEntireTweet(tweet)
 
     suspend fun saveTweets(tweets: List<Tweet>) {
         val localUserInfo = dataSource.getUserInfo()
         clearAllData()
         if (localUserInfo != null) dataSource.insertUser(localUserInfo)
-        for (tweet in tweets) {
-            val senderId = insertUser(tweet.sender)
-            val tweetId = insertTweet(tweet, senderId)
-            insertComments(tweet, tweetId)
-            insertImages(tweet, tweetId)
+        for (tweet in tweets.asReversed()) {
+            insertEntireTweet(tweet)
         }
+    }
+
+    private suspend fun insertEntireTweet(
+        tweet: Tweet
+    ) {
+        val senderId = insertUser(tweet.sender)
+        val tweetId = insertTweet(tweet, senderId)
+        insertComments(tweet, tweetId)
+        insertImages(tweet, tweetId)
     }
 
     private suspend fun insertComments(

@@ -17,6 +17,7 @@ import com.example.momentsrecyclerview.data.UserInfoRepository
 import com.example.momentsrecyclerview.data.source.local.MomentsDatabase
 import com.example.momentsrecyclerview.data.source.network.TweetsListNetwork
 import com.example.momentsrecyclerview.data.source.network.UserInfoNetwork
+import com.example.momentsrecyclerview.domain.Sender
 import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.UserInfo
 import kotlinx.coroutines.launch
@@ -65,6 +66,7 @@ class MomentsViewModel(
                 try {
                     fetchLocalData()
                     _status.value = STATUS.DONE
+                    // TODO:when fetched data is null, status should be error
                 } catch (e: Exception) {
                     Log.d("FetchLocalDataExp", e.toString())
                     _status.value = STATUS.ERROR
@@ -75,6 +77,35 @@ class MomentsViewModel(
                     saveDataToLocal()
                 } catch (e: Exception) {
                     Log.d("SaveDataToLocalExp", e.toString())
+                }
+            }
+        }
+    }
+
+    fun saveNewTweet(text: String) {
+        viewModelScope.launch {
+            _userInfo.value?.let {
+                val tweet = Tweet(
+                    content = text,
+                    images = null,
+                    sender = Sender(
+                        userName = it.userName,
+                        nick = it.nick,
+                        avatarUrl = it.avatarUrl
+                    ),
+                    comments = null
+                )
+                val currentList = _tweetsList.value ?: emptyList()
+                _tweetsList.value = listOf(tweet) + currentList
+                try {
+                    remoteTweetsRepo.saveNewTweet(tweet)
+                } catch (e: Exception) {
+                    Log.w("AddTweetToRemoteExp", e.toString())
+                    try {
+                        localTweetsRepo.saveNewTweet(tweet)
+                    } catch (e: Exception) {
+                        Log.w("AddTweetToLocalExp", e.toString())
+                    }
                 }
             }
         }
@@ -100,8 +131,9 @@ class MomentsViewModel(
 
     private suspend fun fetchLocalData() {
         val userInfoVal = _userInfo.value ?: localUserInfoRepo.getUserInfo()
-        val tweetsListVal = _tweetsList.value ?: localTweetsRepo.getTweetsList()
         userInfoVal?.let { _userInfo.value = it }
+        val tweetsListVal =
+            _tweetsList.value ?: localTweetsRepo.getTweetsList()
         _tweetsList.value = tweetsListVal
     }
 }
