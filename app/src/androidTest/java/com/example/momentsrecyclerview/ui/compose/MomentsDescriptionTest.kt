@@ -54,7 +54,7 @@ class MomentsDescriptionTest{
         )
 
         composeTestRule.setContent {
-            UserInfoItem(userInfo = userInfo, onCameraClick = {})
+            UserInfoItem(userInfo = userInfo, onCameraLongPress = {}, onCameraTap = {})
         }
 
         composeTestRule.onNodeWithText("nick").assertIsDisplayed()

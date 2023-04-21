@@ -61,7 +61,8 @@ import java.nio.charset.StandardCharsets
 fun MomentsDescription(
     momentsViewModel: MomentsViewModel,
     onImageClick: (String) -> Unit,
-    onCameraClick: () -> Unit
+    onCameraClick: () -> Unit,
+    onCameraTap: () -> Unit
 ) {
     var currentStatus by remember { mutableStateOf(STATUS.LOADING) }
     when (currentStatus) {
@@ -73,7 +74,8 @@ fun MomentsDescription(
                     userInfo = userInfo!!,
                     tweets = tweets!!,
                     onImageClick = onImageClick,
-                    onCameraClick = onCameraClick
+                    onCameraClick = onCameraClick,
+                    onCameraTap = onCameraTap
                 )
             }
         }
@@ -244,7 +246,12 @@ private fun GridImages(
 }
 
 @Composable
-fun UserInfoItem(modifier: Modifier = Modifier, userInfo: UserInfo, onCameraClick: () -> Unit) =
+fun UserInfoItem(
+    modifier: Modifier = Modifier,
+    userInfo: UserInfo,
+    onCameraLongPress: () -> Unit,
+    onCameraTap: () -> Unit
+) =
     Box(
         contentAlignment = Alignment.BottomEnd
     ) {
@@ -273,7 +280,9 @@ fun UserInfoItem(modifier: Modifier = Modifier, userInfo: UserInfo, onCameraClic
                             .size(25.dp)
                             .pointerInput(Unit) {
                                 detectTapGestures(
-                                    onLongPress = { onCameraClick() }
+                                    onLongPress = { onCameraLongPress() },
+                                    onTap = { onCameraTap() }
+
                                 )
                             }
                     )
@@ -311,9 +320,16 @@ fun Moments(
     userInfo: UserInfo,
     tweets: List<Tweet>,
     onImageClick: (String) -> Unit,
-    onCameraClick: () -> Unit
+    onCameraClick: () -> Unit,
+    onCameraTap: () -> Unit
 ) = LazyColumn(modifier = modifier.fillMaxHeight()) {
-    item { UserInfoItem(userInfo = userInfo, onCameraClick = onCameraClick) }
+    item {
+        UserInfoItem(
+            userInfo = userInfo,
+            onCameraLongPress = onCameraClick,
+            onCameraTap = onCameraTap
+        )
+    }
     items(items = tweets) { tweet ->
         TweetsItem(tweet = tweet, onImageClick = onImageClick)
     }

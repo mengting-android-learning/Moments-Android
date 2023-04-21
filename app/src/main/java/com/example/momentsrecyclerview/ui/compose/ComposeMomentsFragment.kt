@@ -72,7 +72,8 @@ fun MomentsNavHost(
                 onImageClick = { url ->
                     navController.navigateToSingleImage(url)
                 },
-                onCameraClick = { navController.navigateSingleTopTo(NewTextTweetScreen.route) }
+                onCameraClick = { navController.navigateSingleTopTo(NewTextTweetScreen.route) },
+                onCameraTap = { navController.navigateSingleTopTo(NewTweetScreen.route) }
             )
         }
         composable(
@@ -92,6 +93,9 @@ fun MomentsNavHost(
                 },
                 onSendClickNavigate = { navController.navigateUp() }
             )
+        }
+        composable(route = NewTweetScreen.route) {
+            NewTweetScreen()
         }
     }
 }
