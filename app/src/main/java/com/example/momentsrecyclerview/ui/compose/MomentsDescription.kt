@@ -1,5 +1,11 @@
 package com.example.momentsrecyclerview.ui.compose
 
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,6 +34,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -70,7 +77,7 @@ fun MomentsDescription(
                 )
             }
         }
-        else -> LandingOrErrorScreen(
+        else -> LoadingOrErrorScreen(
             onStatusChange = { status -> currentStatus = status },
             momentsViewModel = momentsViewModel
         )
@@ -78,7 +85,7 @@ fun MomentsDescription(
 }
 
 @Composable
-fun LandingOrErrorScreen(
+fun LoadingOrErrorScreen(
     modifier: Modifier = Modifier,
     onStatusChange: (status: STATUS) -> Unit,
     momentsViewModel: MomentsViewModel
@@ -94,11 +101,22 @@ fun LandingOrErrorScreen(
                 else -> {}
             }
         }
+        val infiniteTransition = rememberInfiniteTransition()
+        val rotation by infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(1000, easing = FastOutLinearInEasing),
+                repeatMode = RepeatMode.Restart
+            )
+        )
         if (status == STATUS.LOADING) {
             Image(
                 painterResource(id = R.drawable.loading_img),
                 contentDescription = "loading",
-                modifier = modifier.fillMaxSize()
+                modifier = modifier
+                    .fillMaxSize()
+                    .rotate(rotation)
             )
         }
         if (status == STATUS.ERROR) {
@@ -194,6 +212,7 @@ private fun GridImages(
     val columnCount =
         if (columnCountMap.containsKey(images.size)) columnCountMap[images.size]!! else 3
     val rowCount = ((images.size - 1) / 3) + 1
+
     Column {
         for (i in 0 until rowCount) {
             Row {
@@ -203,6 +222,7 @@ private fun GridImages(
                         url,
                         StandardCharsets.UTF_8.toString()
                     )
+
                     AsyncImage(
                         model = url,
                         contentDescription = stringResource(id = R.string.tweet_image_description),
@@ -229,7 +249,7 @@ fun UserInfoItem(modifier: Modifier = Modifier, userInfo: UserInfo, onCameraClic
         contentAlignment = Alignment.BottomEnd
     ) {
         Column {
-            Box() {
+            Box {
                 AsyncImage(
                     model = userInfo.profileImageUrl,
                     modifier = modifier
@@ -243,11 +263,11 @@ fun UserInfoItem(modifier: Modifier = Modifier, userInfo: UserInfo, onCameraClic
                 Box(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .padding(end = 30.dp, top = 25.dp)
+                        .padding(end = 30.dp, top = 50.dp)
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.camera),
-                        contentDescription = "add new tweet",
+                        contentDescription = stringResource(id = R.string.camera_icon_description),
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .size(25.dp)
