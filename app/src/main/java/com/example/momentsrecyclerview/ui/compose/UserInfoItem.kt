@@ -32,11 +32,11 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun UserInfoItem(
-    modifier: Modifier = Modifier,
     userInfo: UserInfo,
     navigateToNewTextTweetScreen: () -> Unit,
     navigateToNewTweetScreen: () -> Unit,
-    setLocalImage: (List<String>) -> Unit
+    setLocalImage: (List<String>) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val scope = rememberCoroutineScope()
     val launcher =

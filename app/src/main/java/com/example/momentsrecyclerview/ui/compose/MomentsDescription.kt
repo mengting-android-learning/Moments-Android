@@ -43,27 +43,27 @@ fun MomentsDescription(
             val tweets by momentsViewModel.tweetsList.observeAsState()
             if (userInfo != null && tweets != null) {
                 Moments(
-                    userInfo = userInfo!!,
-                    tweets = tweets!!,
-                    navigateToSingleTweetImage = navigateToSingleTweetImage,
-                    navigateToNewTextTweetScreen = navigateToNewTextTweetScreen,
-                    navigateToNewTweetScreen = navigateToNewTweetScreen,
-                    setLocalImage = momentsViewModel::setLocalImages
+                    userInfo!!,
+                    tweets!!,
+                    navigateToSingleTweetImage,
+                    navigateToNewTextTweetScreen,
+                    navigateToNewTweetScreen,
+                    momentsViewModel::setLocalImages
                 )
             }
         }
         else -> LoadingOrErrorScreen(
-            onStatusChange = { status -> currentStatus = status },
-            momentsViewModel = momentsViewModel
+            { status -> currentStatus = status },
+            momentsViewModel
         )
     }
 }
 
 @Composable
 fun LoadingOrErrorScreen(
-    modifier: Modifier = Modifier,
     onStatusChange: (status: STATUS) -> Unit,
-    momentsViewModel: MomentsViewModel
+    momentsViewModel: MomentsViewModel,
+    modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         val currentOnStatusChange by rememberUpdatedState(onStatusChange)
@@ -106,20 +106,20 @@ fun LoadingOrErrorScreen(
 
 @Composable
 fun Moments(
-    modifier: Modifier = Modifier,
     userInfo: UserInfo,
     tweets: List<Tweet>,
     navigateToSingleTweetImage: (String) -> Unit,
     navigateToNewTextTweetScreen: () -> Unit,
     navigateToNewTweetScreen: () -> Unit,
-    setLocalImage: (List<String>) -> Unit
+    setLocalImage: (List<String>) -> Unit,
+    modifier: Modifier = Modifier
 ) = LazyColumn(modifier = modifier.fillMaxHeight()) {
     item {
         UserInfoItem(
-            userInfo = userInfo,
-            navigateToNewTextTweetScreen = navigateToNewTextTweetScreen,
-            navigateToNewTweetScreen = navigateToNewTweetScreen,
-            setLocalImage = setLocalImage,
+            userInfo,
+            navigateToNewTextTweetScreen,
+            navigateToNewTweetScreen,
+            setLocalImage,
         )
     }
     items(items = tweets) { tweet ->

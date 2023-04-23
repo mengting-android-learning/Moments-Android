@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NewTextTweet(
-    modifier: Modifier = Modifier,
     onCancelClick: () -> Unit,
     onSendClick: (text: String) -> Unit,
     onSendClickNavigate: () -> Unit
@@ -53,7 +52,7 @@ fun NewTextTweet(
         verticalArrangement = Arrangement.Center
     ) {
         Row(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 10.dp, end = 10.dp),
             verticalAlignment = Alignment.CenterVertically,

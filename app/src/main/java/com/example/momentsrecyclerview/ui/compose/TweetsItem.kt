@@ -30,7 +30,11 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 @Composable
-fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet, onImageClick: (String) -> Unit) = Row(
+fun TweetsItem(
+    tweet: Tweet,
+    onImageClick: (String) -> Unit,
+    modifier: Modifier = Modifier
+) = Row(
     verticalAlignment = Alignment.Top,
     modifier = modifier.padding(
         bottom = dimensionResource(id = R.dimen.tweet_padding_bottom)
@@ -66,11 +70,11 @@ fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet, onImageClick: (Strin
             )
         )
         tweet.content?.let { Text(text = it, modifier = modifier.padding(bottom = 5.dp)) }
-        tweet.images?.let {
-            GridImages(tweet.images, modifier, onImageClick = onImageClick)
+        if (tweet.images?.isNotEmpty() == true) {
+            GridImages(tweet.images, onImageClick)
         }
         if (tweet.comments?.isNotEmpty() == true) {
-            TweetCommentItem(tweetComments = tweet.comments)
+            TweetCommentItem(tweet.comments)
         }
     }
 }
@@ -78,38 +82,39 @@ fun TweetsItem(modifier: Modifier = Modifier, tweet: Tweet, onImageClick: (Strin
 @Composable
 private fun GridImages(
     images: List<ImageUrl>,
-    modifier: Modifier,
-    onImageClick: (String) -> Unit
+    onImageClick: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val columnCountMap = mapOf(1 to 1, 2 to 2, 4 to 2)
     val columnCount =
         if (columnCountMap.containsKey(images.size)) columnCountMap[images.size]!! else 3
     val rowCount = ((images.size - 1) / 3) + 1
-
     Column {
         for (i in 0 until rowCount) {
             Row {
                 for (j in 0 until columnCount) {
-                    val url = images[i * columnCount + j].url
-                    val encodeUrl = URLEncoder.encode(
-                        url,
-                        StandardCharsets.UTF_8.toString()
-                    )
-
-                    AsyncImage(
-                        model = url,
-                        contentDescription = stringResource(id = R.string.tweet_image_description),
-                        modifier = modifier
-                            .padding(
-                                end = dimensionResource(id = R.dimen.tweet_padding),
-                                bottom = dimensionResource(id = R.dimen.tweet_padding)
-                            )
-                            .size(100.dp)
-                            .clickable { onImageClick(encodeUrl) },
-                        contentScale = ContentScale.Crop,
-                        placeholder = painterResource(id = R.drawable.loading_img),
-                        error = painterResource(id = R.drawable.ic_broken_image)
-                    )
+                    val index = i * columnCount + j
+                    if (index < images.size) {
+                        val url = images[index].url
+                        val encodeUrl = URLEncoder.encode(
+                            url,
+                            StandardCharsets.UTF_8.toString()
+                        )
+                        AsyncImage(
+                            model = url,
+                            contentDescription = stringResource(id = R.string.tweet_image_description),
+                            modifier = modifier
+                                .padding(
+                                    end = dimensionResource(id = R.dimen.tweet_padding),
+                                    bottom = dimensionResource(id = R.dimen.tweet_padding)
+                                )
+                                .size(100.dp)
+                                .clickable { onImageClick(encodeUrl) },
+                            contentScale = ContentScale.Crop,
+                            placeholder = painterResource(id = R.drawable.loading_img),
+                            error = painterResource(id = R.drawable.ic_broken_image)
+                        )
+                    }
                 }
             }
         }
@@ -117,7 +122,10 @@ private fun GridImages(
 }
 
 @Composable
-fun TweetCommentItem(modifier: Modifier = Modifier, tweetComments: List<TweetComment>) = Column(
+fun TweetCommentItem(
+    tweetComments: List<TweetComment>,
+    modifier: Modifier = Modifier
+) = Column(
     modifier
         .fillMaxWidth()
         .padding(

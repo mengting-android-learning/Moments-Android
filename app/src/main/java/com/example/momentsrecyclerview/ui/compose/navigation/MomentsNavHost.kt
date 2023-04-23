@@ -27,16 +27,10 @@ fun MomentsNavHost(
     ) {
         composable(route = MomentsScreen.route) {
             MomentsDescription(
-                momentsViewModel = viewModel,
-                navigateToSingleTweetImage = { url ->
-                    navController.navigateToSingleImage(url)
-                },
-                navigateToNewTextTweetScreen = {
-                    navController.navigateSingleTopTo(NewTextTweetScreen.route)
-                },
-                navigateToNewTweetScreen = {
-                    navController.navigateSingleTopTo(NewTweetScreen.route)
-                },
+                viewModel,
+                { url -> navController.navigateToSingleImage(url) },
+                { navController.navigateSingleTopTo(NewTextTweetScreen.route) },
+                { navController.navigateSingleTopTo(NewTweetScreen.route) },
             )
         }
         composable(
@@ -50,11 +44,9 @@ fun MomentsNavHost(
         }
         composable(route = NewTextTweetScreen.route) {
             NewTextTweet(
-                onCancelClick = { navController.navigateSingleTopTo(MomentsScreen.route) },
-                onSendClick = { text ->
-                    viewModel.createNewTextTweet(text)
-                },
-                onSendClickNavigate = { navController.navigateUp() }
+                { navController.navigateSingleTopTo(MomentsScreen.route) },
+                { text -> viewModel.createNewTextTweet(text) },
+                { navController.navigateUp() }
             )
         }
         composable(
