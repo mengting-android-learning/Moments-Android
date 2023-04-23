@@ -1,4 +1,4 @@
-package com.example.momentsrecyclerview.ui.compose
+package com.example.momentsrecyclerview.ui.compose.navigation
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument

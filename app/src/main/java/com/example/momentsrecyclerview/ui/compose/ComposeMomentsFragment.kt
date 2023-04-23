@@ -10,15 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.momentsrecyclerview.R
 import com.example.momentsrecyclerview.databinding.ComposeFragmentMomentsBinding
 import com.example.momentsrecyclerview.ui.MomentsViewModel
 import com.example.momentsrecyclerview.ui.MomentsViewModelFactory
+import com.example.momentsrecyclerview.ui.compose.navigation.MomentsNavHost
 
 class ComposeMomentsFragment : Fragment() {
     private val momentsViewModel by activityViewModels<MomentsViewModel> {
@@ -61,67 +58,3 @@ fun MomentsFragment(
     )
 }
 
-@Composable
-fun MomentsNavHost(
-    navController: NavHostController,
-    viewModel: MomentsViewModel,
-    modifier: Modifier = Modifier
-) {
-    NavHost(
-        navController = navController,
-        startDestination = MomentsScreen.route,
-        modifier = modifier
-    ) {
-        composable(route = MomentsScreen.route) {
-            MomentsDescription(
-                momentsViewModel = viewModel,
-                navigateToSingleTweetImage = { url ->
-                    navController.navigateToSingleImage(url)
-                },
-                navigateToNewTextTweetScreen = {
-                    navController.navigateSingleTopTo(NewTextTweetScreen.route)
-                },
-                navigateToNewTweetScreen = {
-                    navController.navigateSingleTopTo(NewTweetScreen.route)
-                },
-            )
-        }
-        composable(
-            route = SingleTweetImageScreen.routeWithArgs,
-            arguments = SingleTweetImageScreen.arguments,
-            deepLinks = SingleTweetImageScreen.deepLinks
-        ) { navBackStackEntry ->
-            val imageUrl =
-                navBackStackEntry.arguments?.getString(SingleTweetImageScreen.imageUrlArg)
-            SingleTweetImage(imageUrl) { navController.navigateUp() }
-        }
-        composable(route = NewTextTweetScreen.route) {
-            NewTextTweet(
-                onCancelClick = { navController.navigateSingleTopTo(MomentsScreen.route) },
-                onSendClick = { text ->
-                    viewModel.saveNewTweet(text)
-                },
-                onSendClickNavigate = { navController.navigateUp() }
-            )
-        }
-        composable(
-            route = NewTweetScreen.route,
-        ) {
-            NewTweet(viewModel.localImages.value) { navController.navigateUp() }
-        }
-    }
-}
-
-fun NavHostController.navigateSingleTopTo(route: String) = this.navigate(route) {
-    popUpTo(
-        this@navigateSingleTopTo.graph.findStartDestination().id
-    ) {
-        saveState = true
-    }
-    launchSingleTop = true
-    restoreState = true
-}
-
-private fun NavHostController.navigateToSingleImage(accountType: String) {
-    this.navigateSingleTopTo("${SingleTweetImageScreen.route}/$accountType")
-}
