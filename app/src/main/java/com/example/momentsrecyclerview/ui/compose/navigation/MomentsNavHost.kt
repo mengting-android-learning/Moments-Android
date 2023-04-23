@@ -1,6 +1,8 @@
 package com.example.momentsrecyclerview.ui.compose.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -50,7 +52,7 @@ fun MomentsNavHost(
             NewTextTweet(
                 onCancelClick = { navController.navigateSingleTopTo(MomentsScreen.route) },
                 onSendClick = { text ->
-                    viewModel.saveNewTweet(text)
+                    viewModel.createNewTextTweet(text)
                 },
                 onSendClickNavigate = { navController.navigateUp() }
             )
@@ -58,7 +60,14 @@ fun MomentsNavHost(
         composable(
             route = NewTweetScreen.route,
         ) {
-            NewTweet(viewModel.localImages.value) { navController.navigateUp() }
+            val urls by viewModel.localImages.observeAsState()
+            NewTweet(
+                urls,
+                { navController.navigateUp() },
+                viewModel::createNewTweet,
+                { navController.navigateUp() },
+                viewModel::setLocalImages
+            )
         }
     }
 }

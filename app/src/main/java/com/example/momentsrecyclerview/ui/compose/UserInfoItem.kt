@@ -1,6 +1,5 @@
 package com.example.momentsrecyclerview.ui.compose
 
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -37,7 +36,7 @@ fun UserInfoItem(
     userInfo: UserInfo,
     navigateToNewTextTweetScreen: () -> Unit,
     navigateToNewTweetScreen: () -> Unit,
-    setLocalImage: (List<Uri>) -> Unit
+    setLocalImage: (List<String>) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val launcher =
@@ -47,7 +46,7 @@ fun UserInfoItem(
             )
         ) { uris ->
             run {
-                setLocalImage(uris)
+                setLocalImage(uris.map { uri -> uri.toString() })
                 if (uris.isNotEmpty()) navigateToNewTweetScreen()
             }
         }

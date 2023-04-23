@@ -1,6 +1,5 @@
 package com.example.momentsrecyclerview.ui.compose
 
-import android.net.Uri
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -113,7 +112,7 @@ fun Moments(
     navigateToSingleTweetImage: (String) -> Unit,
     navigateToNewTextTweetScreen: () -> Unit,
     navigateToNewTweetScreen: () -> Unit,
-    setLocalImage: (List<Uri>) -> Unit
+    setLocalImage: (List<String>) -> Unit
 ) = LazyColumn(modifier = modifier.fillMaxHeight()) {
     item {
         UserInfoItem(
@@ -127,4 +126,3 @@ fun Moments(
         TweetsItem(tweet = tweet, onImageClick = navigateToSingleTweetImage)
     }
 }
-

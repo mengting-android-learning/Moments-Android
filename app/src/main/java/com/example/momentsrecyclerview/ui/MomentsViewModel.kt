@@ -1,7 +1,6 @@
 package com.example.momentsrecyclerview.ui
 
 import android.app.Application
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -18,6 +17,7 @@ import com.example.momentsrecyclerview.data.UserInfoRepository
 import com.example.momentsrecyclerview.data.source.local.MomentsDatabase
 import com.example.momentsrecyclerview.data.source.network.TweetsListNetwork
 import com.example.momentsrecyclerview.data.source.network.UserInfoNetwork
+import com.example.momentsrecyclerview.domain.ImageUrl
 import com.example.momentsrecyclerview.domain.Sender
 import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.UserInfo
@@ -50,13 +50,8 @@ class MomentsViewModel(
     val localImages: LiveData<List<String>?>
         get() = _localImages
 
-    fun setLocalImages(imageUris: List<Uri>) {
-        val uris = imageUris.map { uri -> uri.toString() }
-        _localImages.value = if (_localImages.value.isNullOrEmpty()) {
-            uris
-        } else {
-            _localImages.value!!.plus(uris)
-        }
+    fun setLocalImages(imageUris: List<String>) {
+        _localImages.value = imageUris
     }
 
     init {
@@ -84,7 +79,28 @@ class MomentsViewModel(
         }
     }
 
-    fun saveNewTweet(text: String) {
+    fun createNewTweet(text: String?, images: List<String>) {
+        viewModelScope.launch {
+            _localImages.value = images
+            _userInfo.value?.let {
+                val tweet = Tweet(
+                    content = text,
+                    images = _localImages.value?.map { image -> ImageUrl(image) },
+                    sender = Sender(
+                        userName = it.userName,
+                        nick = it.nick,
+                        avatarUrl = it.avatarUrl
+                    ),
+                    comments = null
+                )
+                if (saveNewTweet(tweet)) {
+                    _localImages.value = emptyList()
+                }
+            }
+        }
+    }
+
+    fun createNewTextTweet(text: String) {
         viewModelScope.launch {
             _userInfo.value?.let {
                 val tweet = Tweet(
@@ -97,20 +113,26 @@ class MomentsViewModel(
                     ),
                     comments = null
                 )
-                val currentList = _tweetsList.value ?: emptyList()
-                _tweetsList.value = listOf(tweet) + currentList
-                try {
-                    remoteTweetsRepo.saveNewTweet(tweet)
-                } catch (e: Exception) {
-                    Log.w("AddTweetToRemoteExp", e.toString())
-                    try {
-                        localTweetsRepo.saveNewTweet(tweet)
-                    } catch (e: Exception) {
-                        Log.w("AddTweetToLocalExp", e.toString())
-                    }
-                }
+                saveNewTweet(tweet)
             }
         }
+    }
+
+    private suspend fun saveNewTweet(tweet: Tweet): Boolean {
+        val currentList = _tweetsList.value ?: emptyList()
+        _tweetsList.value = listOf(tweet) + currentList
+        try {
+            remoteTweetsRepo.saveNewTweet(tweet)
+            return true
+        } catch (e: Exception) {
+            Log.w("AddTweetToRemoteExp", e.toString())
+            try {
+                localTweetsRepo.saveNewTweet(tweet)
+            } catch (e: Exception) {
+                Log.w("AddTweetToLocalExp", e.toString())
+            }
+        }
+        return false
     }
 
     private suspend fun fetchLocalData(): Pair<List<Tweet>, UserInfo?> {
