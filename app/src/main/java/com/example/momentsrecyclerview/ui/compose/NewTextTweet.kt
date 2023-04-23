@@ -32,16 +32,12 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NewTextTweet(
-    onCancelClick: () -> Unit,
-    onSendClick: (text: String) -> Unit,
-    onSendClickNavigate: () -> Unit
+    content: String,
+    setLocalContent: (String) -> Unit,
+    saveNewTweet: () -> Unit,
+    navigateBack: () -> Unit,
 ) {
-    var text by remember {
-        mutableStateOf("")
-    }
-    var enabled by remember {
-        mutableStateOf(false)
-    }
+    var enabled by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
     Column(
@@ -63,8 +59,9 @@ fun NewTextTweet(
                 modifier = Modifier
                     .wrapContentSize()
                     .clickable {
+                        setLocalContent("")
                         keyboardController?.hide()
-                        onCancelClick()
+                        navigateBack()
                     }
             )
             Text(
@@ -72,8 +69,8 @@ fun NewTextTweet(
             )
             Button(
                 onClick = {
-                    onSendClick(text)
-                    onSendClickNavigate()
+                    saveNewTweet()
+                    navigateBack()
                 },
                 colors = buttonColors(
                     backgroundColor = if (enabled) Color.Green else Color.Gray,
@@ -87,9 +84,9 @@ fun NewTextTweet(
             }
         }
         TextField(
-            value = text,
+            value = content,
             onValueChange = {
-                text = it
+                setLocalContent(it)
                 enabled = it.isNotBlank()
             },
             Modifier

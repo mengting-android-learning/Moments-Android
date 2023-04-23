@@ -1,6 +1,5 @@
 package com.example.momentsrecyclerview.ui.compose
 
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -40,22 +39,19 @@ import com.example.momentsrecyclerview.R
 
 @Composable
 fun NewTweet(
-    urls: List<String>?,
+    images: List<String>,
+    setLocalImages: (List<String>) -> Unit,
+    content: String,
+    setLocalContent: (String) -> Unit,
+    saveNewTweet: () -> Unit,
     navigateBack: () -> Unit,
-    onSendClick: (String, List<String>) -> Unit,
-    onSendClickNavigate: () -> Unit,
-    setUrls: (List<String>) -> Unit
 ) {
-    if (!urls.isNullOrEmpty()) {
-        var text by remember {
-            mutableStateOf("")
-        }
+    if (images.isNotEmpty()) {
         var openPhotoPicker: Boolean by remember { mutableStateOf(false) }
         val launcher =
-            rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(9)) {
-                val imageUris = urls + it.map { uri -> uri.toString() }
-                setUrls(imageUris)
-                Log.d("ImageInfo", imageUris.size.toString())
+            rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(9 - images.size)) {
+                val imageUris = images + it.map { uri -> uri.toString() }
+                setLocalImages(imageUris)
             }
         LaunchedEffect(openPhotoPicker) {
             if (openPhotoPicker) {
@@ -79,12 +75,16 @@ fun NewTweet(
                     text = "Cancel",
                     modifier = Modifier
                         .wrapContentSize()
-                        .clickable { navigateBack() }
+                        .clickable {
+                            setLocalContent("")
+                            setLocalImages(emptyList())
+                            navigateBack()
+                        }
                 )
                 Button(
                     onClick = {
-                        onSendClick(text, urls)
-                        onSendClickNavigate()
+                        saveNewTweet()
+                        navigateBack()
                     },
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = Color.Green,
@@ -97,9 +97,9 @@ fun NewTweet(
                 }
             }
             TextField(
-                value = text,
+                value = content,
                 onValueChange = {
-                    text = it
+                    setLocalContent(it)
                 },
                 modifier = Modifier
                     .background(color = Color.White)
@@ -125,9 +125,9 @@ fun NewTweet(
                                     .weight(1f / 3f)
                                     .aspectRatio(1f)
                             ) {
-                                if (index < urls.size) {
+                                if (index < images.size) {
                                     AsyncImage(
-                                        model = urls[index],
+                                        model = images[index],
                                         contentDescription = stringResource(id = R.string.tweet_image_description),
                                         modifier = Modifier
                                             .padding(
@@ -138,7 +138,7 @@ fun NewTweet(
                                         contentScale = ContentScale.Crop,
                                     )
                                 }
-                                if (index == urls.size) {
+                                if (index == images.size) {
                                     Image(
                                         painter = painterResource(id = R.drawable.plus),
                                         contentDescription = "tap to add image",

@@ -43,23 +43,25 @@ fun MomentsNavHost(
             SingleTweetImage(imageUrl) { navController.navigateUp() }
         }
         composable(route = NewTextTweetScreen.route) {
+            val content by viewModel.localContent.observeAsState("")
             NewTextTweet(
-                { navController.navigateSingleTopTo(MomentsScreen.route) },
-                { text -> viewModel.createNewTextTweet(text) },
-                { navController.navigateUp() }
-            )
+                content,
+                viewModel::setLocalContent,
+                viewModel::createAndSaveTweet
+            ) { navController.navigateUp() }
         }
         composable(
             route = NewTweetScreen.route,
         ) {
-            val urls by viewModel.localImages.observeAsState()
+            val images by viewModel.localImages.observeAsState(emptyList())
+            val content by viewModel.localContent.observeAsState("")
             NewTweet(
-                urls,
-                { navController.navigateUp() },
-                viewModel::createNewTweet,
-                { navController.navigateUp() },
-                viewModel::setLocalImages
-            )
+                images,
+                viewModel::setLocalImages,
+                content,
+                viewModel::setLocalContent,
+                viewModel::createAndSaveTweet,
+            ) { navController.navigateUp() }
         }
     }
 }

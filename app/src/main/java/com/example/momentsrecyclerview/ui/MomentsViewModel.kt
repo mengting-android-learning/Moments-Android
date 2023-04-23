@@ -46,12 +46,20 @@ class MomentsViewModel(
     val status: LiveData<STATUS>
         get() = _status
 
-    private val _localImages = MutableLiveData<List<String>?>(emptyList())
-    val localImages: LiveData<List<String>?>
+    private val _localImages = MutableLiveData<List<String>>(emptyList())
+    val localImages: LiveData<List<String>>
         get() = _localImages
 
     fun setLocalImages(imageUris: List<String>) {
         _localImages.value = imageUris
+    }
+
+    private val _localContent = MutableLiveData<String>("")
+    val localContent: LiveData<String>
+        get() = _localContent
+
+    fun setLocalContent(text: String) {
+        _localContent.value = text
     }
 
     init {
@@ -79,60 +87,50 @@ class MomentsViewModel(
         }
     }
 
-    fun createNewTweet(text: String?, images: List<String>) {
+    fun createAndSaveTweet() {
         viewModelScope.launch {
-            _localImages.value = images
-            _userInfo.value?.let {
-                val tweet = Tweet(
-                    content = text,
-                    images = _localImages.value?.map { image -> ImageUrl(image) },
-                    sender = Sender(
-                        userName = it.userName,
-                        nick = it.nick,
-                        avatarUrl = it.avatarUrl
-                    ),
-                    comments = null
-                )
-                if (saveNewTweet(tweet)) {
-                    _localImages.value = emptyList()
+            if (_localImages.value != null || _localContent.value != null) {
+                _userInfo.value?.let {
+                    val tweet = Tweet(
+                        content = if (_localContent.value?.isNotBlank() == true) {
+                            _localContent.value
+                        } else {
+                            null
+                        },
+                        images = if (_localImages.value?.isNotEmpty() == true) {
+                            _localImages.value?.map { image -> ImageUrl(image) }
+                        } else {
+                            null
+                        },
+                        sender = Sender(
+                            userName = it.userName,
+                            nick = it.nick,
+                            avatarUrl = it.avatarUrl
+                        ),
+                    )
+                    val currentList = _tweetsList.value ?: emptyList()
+                    _tweetsList.value = listOf(tweet) + currentList
+                    if (saveNewTweet(tweet)) {
+                        setLocalContent("")
+                        setLocalImages(emptyList())
+                    }
                 }
             }
         }
     }
 
-    fun createNewTextTweet(text: String) {
-        viewModelScope.launch {
-            _userInfo.value?.let {
-                val tweet = Tweet(
-                    content = text,
-                    images = null,
-                    sender = Sender(
-                        userName = it.userName,
-                        nick = it.nick,
-                        avatarUrl = it.avatarUrl
-                    ),
-                    comments = null
-                )
-                saveNewTweet(tweet)
-            }
-        }
-    }
-
-    private suspend fun saveNewTweet(tweet: Tweet): Boolean {
-        val currentList = _tweetsList.value ?: emptyList()
-        _tweetsList.value = listOf(tweet) + currentList
+    private suspend fun saveNewTweet(tweet: Tweet): Boolean = try {
+        remoteTweetsRepo.saveNewTweet(tweet)
+        true
+    } catch (e: Exception) {
+        Log.w("AddTweetToRemoteExp", e.toString())
         try {
-            remoteTweetsRepo.saveNewTweet(tweet)
-            return true
+            localTweetsRepo.saveNewTweet(tweet)
+            true
         } catch (e: Exception) {
-            Log.w("AddTweetToRemoteExp", e.toString())
-            try {
-                localTweetsRepo.saveNewTweet(tweet)
-            } catch (e: Exception) {
-                Log.w("AddTweetToLocalExp", e.toString())
-            }
+            Log.w("AddTweetToLocalExp", e.toString())
+            false
         }
-        return false
     }
 
     private suspend fun fetchLocalData(): Pair<List<Tweet>, UserInfo?> {

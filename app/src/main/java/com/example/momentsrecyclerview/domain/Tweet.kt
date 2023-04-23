@@ -1,10 +1,10 @@
 package com.example.momentsrecyclerview.domain
 
 data class Tweet(
-    val content: String?,
-    val images: List<ImageUrl>?,
+    val content: String? = null,
+    val images: List<ImageUrl>? = null,
     val sender: Sender,
-    val comments: List<TweetComment>?
+    val comments: List<TweetComment>? = null
 )
 
 data class TweetComment(
