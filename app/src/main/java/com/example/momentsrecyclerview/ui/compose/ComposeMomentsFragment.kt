@@ -38,7 +38,11 @@ class ComposeMomentsFragment : Fragment() {
             container,
             false
         ).apply {
-            composeMoments.setContent { MomentsFragment(momentsViewModel) }
+            composeMoments.setContent {
+                MomentsFragment(
+                    momentsViewModel
+                )
+            }
         }
         binding.lifecycleOwner = this
         return binding.root
@@ -46,20 +50,22 @@ class ComposeMomentsFragment : Fragment() {
 }
 
 @Composable
-fun MomentsFragment(momentsViewModel: MomentsViewModel) {
+fun MomentsFragment(
+    momentsViewModel: MomentsViewModel
+) {
     val navController = rememberNavController()
     MomentsNavHost(
-        modifier = Modifier.fillMaxSize(),
-        navController = navController,
-        viewModel = momentsViewModel
+        navController,
+        momentsViewModel,
+        Modifier.fillMaxSize()
     )
 }
 
 @Composable
 fun MomentsNavHost(
     navController: NavHostController,
-    modifier: Modifier = Modifier,
-    viewModel: MomentsViewModel
+    viewModel: MomentsViewModel,
+    modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
@@ -69,11 +75,15 @@ fun MomentsNavHost(
         composable(route = MomentsScreen.route) {
             MomentsDescription(
                 momentsViewModel = viewModel,
-                onImageClick = { url ->
+                navigateToSingleTweetImage = { url ->
                     navController.navigateToSingleImage(url)
                 },
-                onCameraClick = { navController.navigateSingleTopTo(NewTextTweetScreen.route) },
-                onCameraTap = { navController.navigateSingleTopTo(NewTweetScreen.route) }
+                navigateToNewTextTweetScreen = {
+                    navController.navigateSingleTopTo(NewTextTweetScreen.route)
+                },
+                navigateToNewTweetScreen = {
+                    navController.navigateSingleTopTo(NewTweetScreen.route)
+                },
             )
         }
         composable(
@@ -86,7 +96,7 @@ fun MomentsNavHost(
             SingleTweetImage(imageUrl) { navController.navigateUp() }
         }
         composable(route = NewTextTweetScreen.route) {
-            NewTextTweetScreen(
+            NewTextTweet(
                 onCancelClick = { navController.navigateSingleTopTo(MomentsScreen.route) },
                 onSendClick = { text ->
                     viewModel.saveNewTweet(text)
@@ -94,22 +104,23 @@ fun MomentsNavHost(
                 onSendClickNavigate = { navController.navigateUp() }
             )
         }
-        composable(route = NewTweetScreen.route) {
-            NewTweetScreen()
+        composable(
+            route = NewTweetScreen.route,
+        ) {
+            NewTweet(viewModel.localImages.value) { navController.navigateUp() }
         }
     }
 }
 
-fun NavHostController.navigateSingleTopTo(route: String) =
-    this.navigate(route) {
-        popUpTo(
-            this@navigateSingleTopTo.graph.findStartDestination().id
-        ) {
-            saveState = true
-        }
-        launchSingleTop = true
-        restoreState = true
+fun NavHostController.navigateSingleTopTo(route: String) = this.navigate(route) {
+    popUpTo(
+        this@navigateSingleTopTo.graph.findStartDestination().id
+    ) {
+        saveState = true
     }
+    launchSingleTop = true
+    restoreState = true
+}
 
 private fun NavHostController.navigateToSingleImage(accountType: String) {
     this.navigateSingleTopTo("${SingleTweetImageScreen.route}/$accountType")

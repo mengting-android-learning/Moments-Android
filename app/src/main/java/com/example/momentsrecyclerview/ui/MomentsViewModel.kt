@@ -1,6 +1,7 @@
 package com.example.momentsrecyclerview.ui
 
 import android.app.Application
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -44,6 +45,19 @@ class MomentsViewModel(
 
     val status: LiveData<STATUS>
         get() = _status
+
+    private val _localImages = MutableLiveData<List<String>?>(emptyList())
+    val localImages: LiveData<List<String>?>
+        get() = _localImages
+
+    fun setLocalImages(imageUris: List<Uri>) {
+        val uris = imageUris.map { uri -> uri.toString() }
+        _localImages.value = if (_localImages.value.isNullOrEmpty()) {
+            uris
+        } else {
+            _localImages.value!!.plus(uris)
+        }
+    }
 
     init {
         getData()

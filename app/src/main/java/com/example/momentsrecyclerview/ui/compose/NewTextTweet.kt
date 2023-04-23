@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun NewTextTweetScreen(
+fun NewTextTweet(
     modifier: Modifier = Modifier,
     onCancelClick: () -> Unit,
     onSendClick: (text: String) -> Unit,

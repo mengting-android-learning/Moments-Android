@@ -1,5 +1,9 @@
 package com.example.momentsrecyclerview.ui.compose
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -30,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -54,15 +59,16 @@ import com.example.momentsrecyclerview.domain.TweetComment
 import com.example.momentsrecyclerview.domain.UserInfo
 import com.example.momentsrecyclerview.ui.MomentsViewModel
 import com.example.momentsrecyclerview.ui.STATUS
+import kotlinx.coroutines.launch
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 @Composable
 fun MomentsDescription(
     momentsViewModel: MomentsViewModel,
-    onImageClick: (String) -> Unit,
-    onCameraClick: () -> Unit,
-    onCameraTap: () -> Unit
+    navigateToSingleTweetImage: (String) -> Unit,
+    navigateToNewTextTweetScreen: () -> Unit,
+    navigateToNewTweetScreen: () -> Unit,
 ) {
     var currentStatus by remember { mutableStateOf(STATUS.LOADING) }
     when (currentStatus) {
@@ -73,9 +79,10 @@ fun MomentsDescription(
                 Moments(
                     userInfo = userInfo!!,
                     tweets = tweets!!,
-                    onImageClick = onImageClick,
-                    onCameraClick = onCameraClick,
-                    onCameraTap = onCameraTap
+                    navigateToSingleTweetImage = navigateToSingleTweetImage,
+                    navigateToNewTextTweetScreen = navigateToNewTextTweetScreen,
+                    navigateToNewTweetScreen = navigateToNewTweetScreen,
+                    setLocalImage = momentsViewModel::setLocalImages
                 )
             }
         }
@@ -132,27 +139,114 @@ fun LoadingOrErrorScreen(
 }
 
 @Composable
-fun TweetCommentItem(modifier: Modifier = Modifier, tweetComments: List<TweetComment>) = Column(
-    modifier
-        .fillMaxWidth()
-        .padding(
-            end = dimensionResource(id = R.dimen.small_margin_end),
-            top = dimensionResource(id = R.dimen.tweet_padding)
+fun Moments(
+    modifier: Modifier = Modifier,
+    userInfo: UserInfo,
+    tweets: List<Tweet>,
+    navigateToSingleTweetImage: (String) -> Unit,
+    navigateToNewTextTweetScreen: () -> Unit,
+    navigateToNewTweetScreen: () -> Unit,
+    setLocalImage: (List<Uri>) -> Unit
+) = LazyColumn(modifier = modifier.fillMaxHeight()) {
+    item {
+        UserInfoItem(
+            userInfo = userInfo,
+            navigateToNewTextTweetScreen = navigateToNewTextTweetScreen,
+            navigateToNewTweetScreen = navigateToNewTweetScreen,
+            setLocalImage = setLocalImage,
         )
-        .background(colorResource(id = R.color.grey))
+    }
+    items(items = tweets) { tweet ->
+        TweetsItem(tweet = tweet, onImageClick = navigateToSingleTweetImage)
+    }
+}
+
+@Composable
+fun UserInfoItem(
+    modifier: Modifier = Modifier,
+    userInfo: UserInfo,
+    navigateToNewTextTweetScreen: () -> Unit,
+    navigateToNewTweetScreen: () -> Unit,
+    setLocalImage: (List<Uri>) -> Unit
 ) {
-    for (tweetComment in tweetComments) {
-        Row {
-            Text(
-                text = "${tweetComment.sender.nick}: ",
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
+    val scope = rememberCoroutineScope()
+    val launcher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.PickMultipleVisualMedia(
+                9
             )
+        ) { uris ->
+            run {
+                setLocalImage(uris)
+                if (uris.isNotEmpty()) navigateToNewTweetScreen()
+            }
+        }
+
+    Box(
+        contentAlignment = Alignment.BottomEnd
+    ) {
+        Column {
+            Box {
+                AsyncImage(
+                    model = userInfo.profileImageUrl,
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .aspectRatio(16f / 9f),
+                    contentDescription = stringResource(id = R.string.user_profile_description),
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(id = R.drawable.loading_img),
+                    error = painterResource(id = R.drawable.ic_broken_image)
+                )
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(end = 30.dp, top = 50.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.camera),
+                        contentDescription = stringResource(id = R.string.camera_icon_description),
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .size(25.dp)
+                            .pointerInput(Unit) {
+                                detectTapGestures(
+                                    onLongPress = { navigateToNewTextTweetScreen() },
+                                    onTap = {
+                                        scope.launch {
+                                            launcher.launch(
+                                                PickVisualMediaRequest(
+                                                    mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
+                                                )
+                                            )
+                                        }
+                                    }
+                                )
+                            }
+                    )
+                }
+            }
+            Spacer(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height(25.dp)
+            )
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = tweetComment.content,
-                fontSize = 16.sp
+                text = userInfo.nick,
+                modifier = modifier.padding(end = 10.dp),
+                color = Color.White
+            )
+            AsyncImage(
+                model = userInfo.avatarUrl,
+                modifier = modifier
+                    .padding(end = 10.dp)
+                    .size(75.dp),
+                contentScale = ContentScale.Crop,
+                contentDescription = stringResource(id = R.string.user_avatar_description),
+                placeholder = painterResource(id = R.drawable.loading_img),
+                error = painterResource(id = R.drawable.ic_broken_image)
             )
         }
     }
@@ -246,91 +340,28 @@ private fun GridImages(
 }
 
 @Composable
-fun UserInfoItem(
-    modifier: Modifier = Modifier,
-    userInfo: UserInfo,
-    onCameraLongPress: () -> Unit,
-    onCameraTap: () -> Unit
-) =
-    Box(
-        contentAlignment = Alignment.BottomEnd
-    ) {
-        Column {
-            Box {
-                AsyncImage(
-                    model = userInfo.profileImageUrl,
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .aspectRatio(16f / 9f),
-                    contentDescription = stringResource(id = R.string.user_profile_description),
-                    contentScale = ContentScale.Crop,
-                    placeholder = painterResource(id = R.drawable.loading_img),
-                    error = painterResource(id = R.drawable.ic_broken_image)
-                )
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(end = 30.dp, top = 50.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.camera),
-                        contentDescription = stringResource(id = R.string.camera_icon_description),
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .size(25.dp)
-                            .pointerInput(Unit) {
-                                detectTapGestures(
-                                    onLongPress = { onCameraLongPress() },
-                                    onTap = { onCameraTap() }
-
-                                )
-                            }
-                    )
-                }
-            }
-            Spacer(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .height(25.dp)
-            )
-        }
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = userInfo.nick,
-                modifier = modifier.padding(end = 10.dp),
-                color = Color.White
-            )
-            AsyncImage(
-                model = userInfo.avatarUrl,
-                modifier = modifier
-                    .padding(end = 10.dp)
-                    .size(75.dp),
-                contentScale = ContentScale.Crop,
-                contentDescription = stringResource(id = R.string.user_avatar_description),
-                placeholder = painterResource(id = R.drawable.loading_img),
-                error = painterResource(id = R.drawable.ic_broken_image)
-            )
-        }
-    }
-
-@Composable
-fun Moments(
-    modifier: Modifier = Modifier,
-    userInfo: UserInfo,
-    tweets: List<Tweet>,
-    onImageClick: (String) -> Unit,
-    onCameraClick: () -> Unit,
-    onCameraTap: () -> Unit
-) = LazyColumn(modifier = modifier.fillMaxHeight()) {
-    item {
-        UserInfoItem(
-            userInfo = userInfo,
-            onCameraLongPress = onCameraClick,
-            onCameraTap = onCameraTap
+fun TweetCommentItem(modifier: Modifier = Modifier, tweetComments: List<TweetComment>) = Column(
+    modifier
+        .fillMaxWidth()
+        .padding(
+            end = dimensionResource(id = R.dimen.small_margin_end),
+            top = dimensionResource(id = R.dimen.tweet_padding)
         )
-    }
-    items(items = tweets) { tweet ->
-        TweetsItem(tweet = tweet, onImageClick = onImageClick)
+        .background(colorResource(id = R.color.grey))
+) {
+    for (tweetComment in tweetComments) {
+        Row {
+            Text(
+                text = "${tweetComment.sender.nick}: ",
+                style = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+            )
+            Text(
+                text = tweetComment.content,
+                fontSize = 16.sp
+            )
+        }
     }
 }
