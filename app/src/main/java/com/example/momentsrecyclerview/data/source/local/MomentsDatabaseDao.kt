@@ -54,4 +54,8 @@ interface MomentsDatabaseDao {
 
     @Query("DELETE FROM user")
     suspend fun deleteUsers()
+
+    @Query("SELECT * from tweet WHERE isOnlyLocal = true")
+    @Transaction
+    suspend fun getLocalOnlyTweets(): List<LocalEntireTweet>?
 }

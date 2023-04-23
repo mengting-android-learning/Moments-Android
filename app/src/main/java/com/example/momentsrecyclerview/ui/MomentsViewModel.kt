@@ -24,7 +24,6 @@ import com.example.momentsrecyclerview.domain.UserInfo
 import kotlinx.coroutines.launch
 
 enum class STATUS { LOADING, ERROR, DONE }
-
 class MomentsViewModel(
     application: Application,
     private val remoteUserInfoRepo: UserInfoRepository,
@@ -73,16 +72,26 @@ class MomentsViewModel(
     private fun getData() {
         viewModelScope.launch {
             _status.value = STATUS.LOADING
-            val errorData: Pair<List<Tweet>, UserInfo?> = Pair(emptyList(), null)
-            val localData = fetchLocalData()
-            val remoteData = fetchRemoteData()
-            if (localData == errorData && remoteData == errorData) {
+            val tweetsVal: List<Tweet>?
+            val remoteTweets: List<Tweet>? = fetchRemoteTweets()
+            var localOnlyTweets: List<Tweet>? = emptyList()
+            tweetsVal = if (!remoteTweets.isNullOrEmpty()) {
+                localOnlyTweets = fetchOnlyLocalTweets()
+                (localOnlyTweets ?: emptyList()) + remoteTweets
+            } else {
+                fetchLocalTweets()
+            }
+            val userInfoVal: UserInfo? = fetchLocalUserInfo() ?: fetchRemoteUserInfo()
+            if (tweetsVal.isNullOrEmpty() && userInfoVal == null) {
                 _status.value = STATUS.ERROR
             } else {
-                _tweetsList.value = localData.first.union(remoteData.first).toList()
-                _userInfo.value = localData.second ?: remoteData.second
+                userInfoVal?.let { _userInfo.value = it }
+                tweetsVal?.let { _tweetsList.value = it }
                 _status.value = STATUS.DONE
-                saveDataToLocal()
+            }
+            saveUserInfoToLocal()
+            if (!remoteTweets.isNullOrEmpty()) {
+                saveTweetsToLocal(remoteTweets, localOnlyTweets)
             }
         }
     }
@@ -119,6 +128,73 @@ class MomentsViewModel(
         }
     }
 
+    private suspend fun fetchOnlyLocalTweets(): List<Tweet>? {
+        var tweets: List<Tweet>? = null
+        if (localTweetsRepo is LocalTweetsRepository) {
+            tweets = localTweetsRepo.getLocalTweets()
+        }
+        return tweets
+    }
+
+    private suspend fun fetchLocalTweets(): List<Tweet>? {
+        var tweets: List<Tweet>? = null
+        try {
+            tweets = localTweetsRepo.getTweetsList()
+        } catch (e: Exception) {
+            Log.d("FetchLocalExp", e.toString())
+        }
+        return tweets
+    }
+
+    private suspend fun fetchLocalUserInfo(): UserInfo? {
+        var userInfo: UserInfo? = null
+        try {
+            userInfo = localUserInfoRepo.getUserInfo()
+        } catch (e: java.lang.Exception) {
+            Log.d("FetchLocalExp", e.toString())
+        }
+        return userInfo
+    }
+
+    private suspend fun fetchRemoteTweets(): List<Tweet>? {
+        var tweets: List<Tweet>? = null
+        try {
+            tweets = remoteTweetsRepo.getTweetsList()
+        } catch (e: Exception) {
+            Log.d("FetchRemoteExp", e.toString())
+        }
+        return tweets
+    }
+
+    private suspend fun fetchRemoteUserInfo(): UserInfo? {
+        var userInfo: UserInfo? = null
+        try {
+            userInfo = remoteUserInfoRepo.getUserInfo()
+        } catch (e: java.lang.Exception) {
+            Log.d("FetchRemoteExp", e.toString())
+        }
+        return userInfo
+    }
+
+    private suspend fun saveTweetsToLocal(remoteTweets: List<Tweet>, localTweets: List<Tweet>?) {
+        try {
+            if (localTweetsRepo is LocalTweetsRepository) {
+                _tweetsList.value?.let {
+                    localTweetsRepo.saveTweets(remoteTweets, localTweets)
+                }
+            }
+        } catch (e: Exception) {
+            Log.w("SaveDataToLocalExp", e.toString())
+        }
+    }
+
+    private suspend fun saveUserInfoToLocal() =
+        try {
+            _userInfo.value?.let { it1 -> localUserInfoRepo.saveUserInfo(it1) }
+        } catch (e: Exception) {
+            Log.w("SaveDataToLocal", e.toString())
+        }
+
     private suspend fun saveNewTweet(tweet: Tweet): Boolean = try {
         remoteTweetsRepo.saveNewTweet(tweet)
         true
@@ -130,46 +206,6 @@ class MomentsViewModel(
         } catch (e: Exception) {
             Log.w("AddTweetToLocalExp", e.toString())
             false
-        }
-    }
-
-    private suspend fun fetchLocalData(): Pair<List<Tweet>, UserInfo?> {
-        var localData: Pair<List<Tweet>, UserInfo?> = Pair(emptyList(), null)
-        try {
-            val userInfoVal = _userInfo.value ?: localUserInfoRepo.getUserInfo()
-            val tweetsListVal =
-                _tweetsList.value ?: localTweetsRepo.getTweetsList()
-            localData = Pair(tweetsListVal, userInfoVal)
-        } catch (e: Exception) {
-            Log.w("FetchLocalExp", e.toString())
-        }
-        return localData
-    }
-
-    private suspend fun fetchRemoteData(): Pair<List<Tweet>, UserInfo?> {
-        var remoteData: Pair<List<Tweet>, UserInfo?> = Pair(emptyList(), null)
-        try {
-            val userInfoVal = remoteUserInfoRepo.getUserInfo()
-            val tweetsListVal = remoteTweetsRepo.getTweetsList()
-            remoteData = Pair(tweetsListVal, userInfoVal)
-        } catch (e: Exception) {
-            Log.w("FetchRemoteExp", e.toString())
-        }
-        return remoteData
-    }
-
-    private suspend fun saveDataToLocal() {
-        try {
-            if (localTweetsRepo is LocalTweetsRepository) {
-                _tweetsList.value?.let {
-                    localTweetsRepo.saveTweets(it)
-                }
-            }
-            _userInfo.value?.let {
-                localUserInfoRepo.saveUserInfo(it)
-            }
-        } catch (e: Exception) {
-            Log.w("SaveDataToLocalExp", e.toString())
         }
     }
 }

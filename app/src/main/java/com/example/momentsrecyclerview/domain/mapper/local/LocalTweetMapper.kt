@@ -32,9 +32,10 @@ fun LocalUser.asDomainSender() = Sender(
 
 fun LocalImage.asDomainImage() = ImageUrl(url = imageUrl)
 
-fun Tweet.toLocalTweet(senderId: Long) = LocalTweet(
+fun Tweet.toLocalTweet(senderId: Long, isOnlyLocal: Boolean = false) = LocalTweet(
     content = content,
-    senderId = senderId
+    senderId = senderId,
+    isOnlyLocal = isOnlyLocal
 )
 
 fun TweetComment.toLocalTweetComment(senderId: Long, tweetId: Long) = LocalTweetComment(

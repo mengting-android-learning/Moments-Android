@@ -30,22 +30,32 @@ class LocalTweetsRepository(private val dataSource: MomentsDatabaseDao) : Tweets
     override suspend fun getTweetsList(): List<Tweet> =
         dataSource.loadTweets().asReversed().map { it.asDomainTweet() }
 
-    override suspend fun saveNewTweet(tweet: Tweet) = insertEntireTweet(tweet)
+    override suspend fun saveNewTweet(tweet: Tweet) = insertEntireTweet(tweet, true)
 
-    suspend fun saveTweets(tweets: List<Tweet>) {
+    suspend fun saveTweets(remoteTweets: List<Tweet>, localTweets: List<Tweet>?) {
         val localUserInfo = dataSource.getUserInfo()
         clearAllData()
         if (localUserInfo != null) dataSource.insertUser(localUserInfo)
-        for (tweet in tweets.asReversed()) {
-            insertEntireTweet(tweet)
+        for (tweet in remoteTweets.asReversed()) {
+            insertEntireTweet(tweet, false)
+        }
+        localTweets?.let {
+            for (tweet in localTweets.asReversed()) {
+                insertEntireTweet(tweet, true)
+            }
         }
     }
 
+    suspend fun getLocalTweets(): List<Tweet>? =
+        dataSource.getLocalOnlyTweets()?.asReversed()
+            ?.map { localTweet -> localTweet.asDomainTweet() }
+
     private suspend fun insertEntireTweet(
-        tweet: Tweet
+        tweet: Tweet,
+        isOnlyLocal: Boolean
     ) {
         val senderId = insertUser(tweet.sender)
-        val tweetId = insertTweet(tweet, senderId)
+        val tweetId = insertTweet(tweet, senderId, isOnlyLocal)
         insertComments(tweet, tweetId)
         insertImages(tweet, tweetId)
     }
@@ -78,8 +88,9 @@ class LocalTweetsRepository(private val dataSource: MomentsDatabaseDao) : Tweets
 
     private suspend fun insertTweet(
         tweet: Tweet,
-        senderId: Long
-    ) = dataSource.insertTweet(tweet.toLocalTweet(senderId))
+        senderId: Long,
+        isOnlyLocal: Boolean
+    ) = dataSource.insertTweet(tweet.toLocalTweet(senderId, isOnlyLocal))
 
     private suspend fun insertUser(sender: Sender) =
         dataSource.insertUser(sender.toLocalUser())
