@@ -55,13 +55,22 @@ fun NewTweet(
 ) {
     if (images.isNotEmpty()) {
         var openPhotoPicker: Boolean by remember { mutableStateOf(false) }
-        val launcher =
+        val launcher = if (MAX_IMAGES_SIZE - images.size > 1)
             rememberLauncherForActivityResult(
                 ActivityResultContracts.PickMultipleVisualMedia(MAX_IMAGES_SIZE - images.size)
             ) { uris ->
                 uris.forEach { persistAccess(it) }
                 val imageUris = images + uris.map { it.toString() }
                 setLocalImages(imageUris)
+            }
+        else
+            rememberLauncherForActivityResult(
+                ActivityResultContracts.PickVisualMedia()
+            ) {
+                it?.let {
+                    persistAccess(it)
+                    setLocalImages(images + it.toString())
+                }
             }
         LaunchedEffect(openPhotoPicker) {
             if (openPhotoPicker) {
