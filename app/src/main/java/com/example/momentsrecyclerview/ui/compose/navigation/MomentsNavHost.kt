@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,9 +27,9 @@ fun MomentsNavHost(
         composable(route = MomentsScreen.route) {
             MomentsDescription(
                 viewModel,
-                { url -> navController.navigateToSingleImage(url) },
-                { navController.navigateSingleTopTo(NewTextTweetScreen.route) },
-                { navController.navigateSingleTopTo(NewTweetScreen.route) },
+                navController::navigateToSingleImage,
+                { navController.navigate(NewTextTweetScreen.route) },
+                { navController.navigate(NewTweetScreen.route) },
             )
         }
         composable(
@@ -62,22 +61,13 @@ fun MomentsNavHost(
                 viewModel::setLocalContent,
                 viewModel::createAndSaveTweet,
                 { navController.navigateUp() },
-                viewModel::persistAccess
+                viewModel::persistAccess,
+                navController::navigateToSingleImage
             )
         }
     }
 }
 
-fun NavHostController.navigateSingleTopTo(route: String) = this.navigate(route) {
-    popUpTo(
-        this@navigateSingleTopTo.graph.findStartDestination().id
-    ) {
-        saveState = true
-    }
-    launchSingleTop = true
-    restoreState = true
-}
-
 private fun NavHostController.navigateToSingleImage(accountType: String) {
-    this.navigateSingleTopTo("${SingleTweetImageScreen.route}/$accountType")
+    this.navigate("${SingleTweetImageScreen.route}/$accountType")
 }

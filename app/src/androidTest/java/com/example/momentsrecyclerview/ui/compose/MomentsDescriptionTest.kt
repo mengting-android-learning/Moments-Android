@@ -13,7 +13,7 @@ import com.example.momentsrecyclerview.domain.UserInfo
 import org.junit.Rule
 import org.junit.Test
 
-class MomentsDescriptionTest{
+class MomentsDescriptionTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -32,8 +32,8 @@ class MomentsDescriptionTest{
     }
 
     @Test
-    fun tweetItemTestWithImages(){
-        val tweet = Tweet("content", listOf(ImageUrl("https://com.example/image")),sender,null)
+    fun tweetItemTestWithImages() {
+        val tweet = Tweet("content", listOf(ImageUrl("https://com.example/image")), sender, null)
 
         composeTestRule.setContent {
             TweetsItem(tweet = tweet, onImageClick = {})
@@ -54,7 +54,7 @@ class MomentsDescriptionTest{
         )
 
         composeTestRule.setContent {
-            UserInfoItem(userInfo = userInfo, navigateToNewTextTweetScreen = {}, navigateToNewTweetScreen = {}, setLocalImage = {})
+            UserInfoItem(userInfo, {}, {}, {}, {})
         }
 
         composeTestRule.onNodeWithText("nick").assertIsDisplayed()

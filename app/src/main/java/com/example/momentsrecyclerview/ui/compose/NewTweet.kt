@@ -39,6 +39,8 @@ import com.example.momentsrecyclerview.R
 import com.example.momentsrecyclerview.util.CANCEL_TEXT
 import com.example.momentsrecyclerview.util.MAX_IMAGES_SIZE
 import com.example.momentsrecyclerview.util.POST_TEXT
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun NewTweet(
@@ -48,7 +50,8 @@ fun NewTweet(
     setLocalContent: (String) -> Unit,
     saveNewTweet: () -> Unit,
     navigateBack: () -> Unit,
-    persistAccess: (Uri) -> Unit
+    persistAccess: (Uri) -> Unit,
+    navigateToSingleImage: (String) -> Unit
 ) {
     if (images.isNotEmpty()) {
         var openPhotoPicker: Boolean by remember { mutableStateOf(false) }
@@ -148,6 +151,14 @@ fun NewTweet(
                                         model = images[index],
                                         contentDescription = stringResource(id = R.string.tweet_image_description),
                                         modifier = Modifier
+                                            .clickable {
+                                                val encodeUrl = URLEncoder.encode(
+                                                    images[index],
+                                                    StandardCharsets.UTF_8.toString()
+                                                )
+
+                                                navigateToSingleImage(encodeUrl)
+                                            }
                                             .padding(
                                                 end = dimensionResource(id = R.dimen.tweet_padding),
                                                 bottom = dimensionResource(id = R.dimen.tweet_padding)
