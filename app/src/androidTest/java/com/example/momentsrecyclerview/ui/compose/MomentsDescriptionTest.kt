@@ -10,6 +10,8 @@ import com.example.momentsrecyclerview.domain.ImageUrl
 import com.example.momentsrecyclerview.domain.Sender
 import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.UserInfo
+import com.example.momentsrecyclerview.ui.compose.screen.home.TweetsItem
+import com.example.momentsrecyclerview.ui.compose.screen.home.UserInfoItem
 import org.junit.Rule
 import org.junit.Test
 

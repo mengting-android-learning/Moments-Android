@@ -1,4 +1,4 @@
-package com.example.momentsrecyclerview.ui.compose
+package com.example.momentsrecyclerview.ui.compose.screen.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

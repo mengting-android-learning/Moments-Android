@@ -1,4 +1,4 @@
-package com.example.momentsrecyclerview.ui.compose
+package com.example.momentsrecyclerview.ui.compose.screen.add
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults.buttonColors
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -81,7 +81,7 @@ fun NewTextTweet(
                     saveNewTweet()
                     navigateBack()
                 },
-                colors = buttonColors(
+                colors = ButtonDefaults.buttonColors(
                     backgroundColor = if (enabled) Color.Green else Color.Gray,
                     contentColor = if (enabled) Color.White else Color.DarkGray
                 ),

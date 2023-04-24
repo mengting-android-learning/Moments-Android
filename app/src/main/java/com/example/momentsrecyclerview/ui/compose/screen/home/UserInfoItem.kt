@@ -1,4 +1,4 @@
-package com.example.momentsrecyclerview.ui.compose
+package com.example.momentsrecyclerview.ui.compose.screen.home
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult

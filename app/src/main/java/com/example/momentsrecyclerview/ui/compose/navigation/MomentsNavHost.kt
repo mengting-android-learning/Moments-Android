@@ -8,10 +8,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.momentsrecyclerview.ui.MomentsViewModel
-import com.example.momentsrecyclerview.ui.compose.MomentsDescription
-import com.example.momentsrecyclerview.ui.compose.NewTextTweet
-import com.example.momentsrecyclerview.ui.compose.NewTweet
-import com.example.momentsrecyclerview.ui.compose.SingleTweetImage
+import com.example.momentsrecyclerview.ui.compose.screen.add.NewTextTweet
+import com.example.momentsrecyclerview.ui.compose.screen.add.NewTweet
+import com.example.momentsrecyclerview.ui.compose.screen.home.MomentsDescription
+import com.example.momentsrecyclerview.ui.compose.screen.single.SingleTweetImage
 
 @Composable
 fun MomentsNavHost(

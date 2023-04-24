@@ -1,4 +1,4 @@
-package com.example.momentsrecyclerview.ui.compose
+package com.example.momentsrecyclerview.ui.compose.screen.add
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -55,7 +55,7 @@ fun NewTweet(
 ) {
     if (images.isNotEmpty()) {
         var openPhotoPicker: Boolean by remember { mutableStateOf(false) }
-        val launcher = if (MAX_IMAGES_SIZE - images.size > 1)
+        val launcher = if (MAX_IMAGES_SIZE - images.size > 1) {
             rememberLauncherForActivityResult(
                 ActivityResultContracts.PickMultipleVisualMedia(MAX_IMAGES_SIZE - images.size)
             ) { uris ->
@@ -63,7 +63,7 @@ fun NewTweet(
                 val imageUris = images + uris.map { it.toString() }
                 setLocalImages(imageUris)
             }
-        else
+        } else {
             rememberLauncherForActivityResult(
                 ActivityResultContracts.PickVisualMedia()
             ) {
@@ -72,6 +72,7 @@ fun NewTweet(
                     setLocalImages(images + it.toString())
                 }
             }
+        }
         LaunchedEffect(openPhotoPicker) {
             if (openPhotoPicker) {
                 launcher.launch(
