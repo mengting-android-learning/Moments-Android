@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import com.example.momentsrecyclerview.R
 import com.example.momentsrecyclerview.domain.UserInfo
+import com.example.momentsrecyclerview.util.MAX_IMAGES_SIZE
 import kotlinx.coroutines.launch
 
 @Composable
@@ -44,7 +45,7 @@ fun UserInfoItem(
     val launcher =
         rememberLauncherForActivityResult(
             ActivityResultContracts.PickMultipleVisualMedia(
-                9
+                MAX_IMAGES_SIZE
             )
         ) { uris ->
             run {
@@ -72,8 +73,8 @@ fun UserInfoItem(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(
-                            end = dimensionResource(id = R.dimen.tweet_padding),
-                            top = dimensionResource(id = R.dimen.tweet_padding)
+                            end = dimensionResource(id = R.dimen.icon_end_padding),
+                            top = dimensionResource(id = R.dimen.tweet_avatar_size)
                         )
                 ) {
                     Image(
@@ -116,7 +117,7 @@ fun UserInfoItem(
                 model = userInfo.avatarUrl,
                 modifier = modifier
                     .padding(dimensionResource(id = R.dimen.user_avatar_padding))
-                    .size(dimensionResource(id = R.dimen.user_avatar_height)),
+                    .size(dimensionResource(id = R.dimen.user_avatar_size)),
                 contentScale = ContentScale.Crop,
                 contentDescription = stringResource(id = R.string.user_avatar_description),
                 placeholder = painterResource(id = R.drawable.loading_img),

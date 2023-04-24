@@ -52,8 +52,8 @@
 
         <ImageView
             android:id="@+id/user_avatar"
-            android:layout_width="@dimen/user_avatar_width"
-            android:layout_height="@dimen/user_avatar_height"
+            android:layout_width="@dimen/user_avatar_size"
+            android:layout_height="@dimen/user_avatar_size"
             android:layout_marginEnd="@dimen/small_margin_end"
             android:contentDescription="@string/user_avatar_description"
             app:imageUrl="@{userInfo.avatarUrl}"

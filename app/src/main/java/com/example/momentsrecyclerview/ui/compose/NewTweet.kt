@@ -36,6 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import com.example.momentsrecyclerview.R
+import com.example.momentsrecyclerview.util.MAX_IMAGES_SIZE
 
 @Composable
 fun NewTweet(
@@ -51,7 +52,7 @@ fun NewTweet(
         var openPhotoPicker: Boolean by remember { mutableStateOf(false) }
         val launcher =
             rememberLauncherForActivityResult(
-                ActivityResultContracts.PickMultipleVisualMedia(9 - images.size)
+                ActivityResultContracts.PickMultipleVisualMedia(MAX_IMAGES_SIZE - images.size)
             ) { uris ->
                 uris.forEach { persistAccess(it) }
                 val imageUris = images + uris.map { it.toString() }
