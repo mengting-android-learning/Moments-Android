@@ -5,16 +5,12 @@
     <ID>EmptyFunctionBlock:FakeRemoteTweetsRepo.kt$FakeLocalTweetsRepo${ }</ID>
     <ID>EmptyFunctionBlock:FakeRemoteUserInfoRepo.kt$FakeLocalUserInfoRepo${}</ID>
     <ID>EmptyFunctionBlock:FakeRemoteUserInfoRepo.kt$FakeRemoteUserInfoRepo${}</ID>
-    <ID>LongMethod:MomentsDescription.kt$@Composable fun UserInfoItem( modifier: Modifier = Modifier, userInfo: UserInfo, navigateToNewTextTweetScreen: () -&gt; Unit, navigateToNewTweetScreen: () -&gt; Unit, setLocalImage: (List&lt;Uri&gt;) -&gt; Unit )</ID>
-    <ID>LongMethod:NewTextTweet.kt$@OptIn(ExperimentalComposeUiApi::class) @Composable fun NewTextTweet( modifier: Modifier = Modifier, onCancelClick: () -&gt; Unit, onSendClick: (text: String) -&gt; Unit, onSendClickNavigate: () -&gt; Unit )</ID>
-    <ID>LongMethod:NewTweet.kt$@Composable fun NewTweet( urls: List&lt;String&gt;?, navigateBack: () -&gt; Unit )</ID>
-    <ID>LongParameterList:MomentsDescription.kt$( modifier: Modifier = Modifier, userInfo: UserInfo, tweets: List&lt;Tweet&gt;, navigateToSingleTweetImage: (String) -&gt; Unit, navigateToNewTextTweetScreen: () -&gt; Unit, navigateToNewTweetScreen: () -&gt; Unit, setLocalImage: (List&lt;Uri&gt;) -&gt; Unit )</ID>
+    <ID>LongMethod:NewTextTweet.kt$@OptIn(ExperimentalComposeUiApi::class) @Composable fun NewTextTweet( content: String, setLocalContent: (String) -&gt; Unit, saveNewTweet: () -&gt; Unit, navigateBack: () -&gt; Unit, )</ID>
+    <ID>LongMethod:NewTweet.kt$@Composable fun NewTweet( images: List&lt;String&gt;, setLocalImages: (List&lt;String&gt;) -&gt; Unit, content: String, setLocalContent: (String) -&gt; Unit, saveNewTweet: () -&gt; Unit, navigateBack: () -&gt; Unit, )</ID>
+    <ID>LongMethod:UserInfoItem.kt$@Composable fun UserInfoItem( userInfo: UserInfo, navigateToNewTextTweetScreen: () -&gt; Unit, navigateToNewTweetScreen: () -&gt; Unit, setLocalImage: (List&lt;String&gt;) -&gt; Unit, modifier: Modifier = Modifier )</ID>
+    <ID>LongParameterList:MomentsDescription.kt$( userInfo: UserInfo, tweets: List&lt;Tweet&gt;, navigateToSingleTweetImage: (String) -&gt; Unit, navigateToNewTextTweetScreen: () -&gt; Unit, navigateToNewTweetScreen: () -&gt; Unit, setLocalImage: (List&lt;String&gt;) -&gt; Unit, modifier: Modifier = Modifier )</ID>
+    <ID>LongParameterList:NewTweet.kt$( images: List&lt;String&gt;, setLocalImages: (List&lt;String&gt;) -&gt; Unit, content: String, setLocalContent: (String) -&gt; Unit, saveNewTweet: () -&gt; Unit, navigateBack: () -&gt; Unit, )</ID>
     <ID>MagicNumber:MomentsDescription.kt$1000</ID>
-    <ID>MagicNumber:MomentsDescription.kt$16f</ID>
-    <ID>MagicNumber:MomentsDescription.kt$3</ID>
-    <ID>MagicNumber:MomentsDescription.kt$4</ID>
-    <ID>MagicNumber:MomentsDescription.kt$9</ID>
-    <ID>MagicNumber:MomentsDescription.kt$9f</ID>
     <ID>MagicNumber:NewTweet.kt$3</ID>
     <ID>MagicNumber:NewTweet.kt$3f</ID>
     <ID>MagicNumber:NewTweet.kt$9</ID>
@@ -22,10 +18,17 @@
     <ID>MagicNumber:TweetsAdapter.kt$TweetsAdapter.TweetViewHolder$300</ID>
     <ID>MagicNumber:TweetsAdapter.kt$TweetsAdapter.TweetViewHolder$4</ID>
     <ID>MagicNumber:TweetsAdapter.kt$TweetsAdapter.TweetViewHolder$5</ID>
+    <ID>MagicNumber:TweetsItem.kt$3</ID>
+    <ID>MagicNumber:TweetsItem.kt$4</ID>
+    <ID>MagicNumber:TweetsItem.kt$9f</ID>
+    <ID>MagicNumber:UserInfoItem.kt$16f</ID>
+    <ID>MagicNumber:UserInfoItem.kt$9</ID>
+    <ID>MagicNumber:UserInfoItem.kt$9f</ID>
     <ID>ThrowingExceptionsWithoutMessageOrCause:TweetsRepository.kt$NetworkTweetsRepository$Exception()</ID>
     <ID>TooGenericExceptionCaught:MomentsViewModel.kt$MomentsViewModel$e: Exception</ID>
     <ID>TooGenericExceptionThrown:FakeRemoteTweetsRepo.kt$FakeRemoteTweetsRepo$throw Exception()</ID>
     <ID>TooGenericExceptionThrown:TweetsRepository.kt$NetworkTweetsRepository$throw Exception()</ID>
     <ID>TooManyFunctions:MomentsDatabaseDao.kt$MomentsDatabaseDao</ID>
+    <ID>TooManyFunctions:MomentsViewModel.kt$MomentsViewModel : AndroidViewModel</ID>
   </CurrentIssues>
 </SmellBaseline>
