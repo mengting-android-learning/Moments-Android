@@ -1,6 +1,8 @@
 package com.example.momentsrecyclerview.ui
 
 import android.app.Application
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -207,6 +209,12 @@ class MomentsViewModel(
             Log.w("AddTweetToLocalExp", e.toString())
             false
         }
+    }
+
+    fun persistAccess(uri: Uri) {
+        val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        val context = getApplication<Application>().applicationContext
+        context.contentResolver.takePersistableUriPermission(uri, flag)
     }
 }
 

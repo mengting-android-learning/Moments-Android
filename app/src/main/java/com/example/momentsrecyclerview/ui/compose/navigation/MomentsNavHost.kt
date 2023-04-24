@@ -61,7 +61,9 @@ fun MomentsNavHost(
                 content,
                 viewModel::setLocalContent,
                 viewModel::createAndSaveTweet,
-            ) { navController.navigateUp() }
+                { navController.navigateUp() },
+                viewModel::persistAccess
+            )
         }
     }
 }
