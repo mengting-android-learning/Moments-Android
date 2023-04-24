@@ -6,10 +6,11 @@
     <ID>EmptyFunctionBlock:FakeRemoteUserInfoRepo.kt$FakeLocalUserInfoRepo${}</ID>
     <ID>EmptyFunctionBlock:FakeRemoteUserInfoRepo.kt$FakeRemoteUserInfoRepo${}</ID>
     <ID>LongMethod:NewTextTweet.kt$@OptIn(ExperimentalComposeUiApi::class) @Composable fun NewTextTweet( content: String, setLocalContent: (String) -&gt; Unit, saveNewTweet: () -&gt; Unit, navigateBack: () -&gt; Unit, )</ID>
-    <ID>LongMethod:NewTweet.kt$@Composable fun NewTweet( images: List&lt;String&gt;, setLocalImages: (List&lt;String&gt;) -&gt; Unit, content: String, setLocalContent: (String) -&gt; Unit, saveNewTweet: () -&gt; Unit, navigateBack: () -&gt; Unit, )</ID>
-    <ID>LongMethod:UserInfoItem.kt$@Composable fun UserInfoItem( userInfo: UserInfo, navigateToNewTextTweetScreen: () -&gt; Unit, navigateToNewTweetScreen: () -&gt; Unit, setLocalImage: (List&lt;String&gt;) -&gt; Unit, modifier: Modifier = Modifier )</ID>
-    <ID>LongParameterList:MomentsDescription.kt$( userInfo: UserInfo, tweets: List&lt;Tweet&gt;, navigateToSingleTweetImage: (String) -&gt; Unit, navigateToNewTextTweetScreen: () -&gt; Unit, navigateToNewTweetScreen: () -&gt; Unit, setLocalImage: (List&lt;String&gt;) -&gt; Unit, modifier: Modifier = Modifier )</ID>
-    <ID>LongParameterList:NewTweet.kt$( images: List&lt;String&gt;, setLocalImages: (List&lt;String&gt;) -&gt; Unit, content: String, setLocalContent: (String) -&gt; Unit, saveNewTweet: () -&gt; Unit, navigateBack: () -&gt; Unit, )</ID>
+    <ID>LongMethod:NewTweet.kt$@Composable fun NewTweet( images: List&lt;String&gt;, setLocalImages: (List&lt;String&gt;) -&gt; Unit, content: String, setLocalContent: (String) -&gt; Unit, saveNewTweet: () -&gt; Unit, navigateBack: () -&gt; Unit, persistAccess: (Uri) -&gt; Unit )</ID>
+    <ID>LongMethod:UserInfoItem.kt$@Composable fun UserInfoItem( userInfo: UserInfo, navigateToNewTextTweetScreen: () -&gt; Unit, navigateToNewTweetScreen: () -&gt; Unit, setLocalImage: (List&lt;String&gt;) -&gt; Unit, persistAccess: (Uri) -&gt; Unit, modifier: Modifier = Modifier )</ID>
+    <ID>LongParameterList:MomentsDescription.kt$( userInfo: UserInfo, tweets: List&lt;Tweet&gt;, navigateToSingleTweetImage: (String) -&gt; Unit, navigateToNewTextTweetScreen: () -&gt; Unit, navigateToNewTweetScreen: () -&gt; Unit, setLocalImage: (List&lt;String&gt;) -&gt; Unit, persistAccess: (Uri) -&gt; Unit, modifier: Modifier = Modifier )</ID>
+    <ID>LongParameterList:NewTweet.kt$( images: List&lt;String&gt;, setLocalImages: (List&lt;String&gt;) -&gt; Unit, content: String, setLocalContent: (String) -&gt; Unit, saveNewTweet: () -&gt; Unit, navigateBack: () -&gt; Unit, persistAccess: (Uri) -&gt; Unit )</ID>
+    <ID>LongParameterList:UserInfoItem.kt$( userInfo: UserInfo, navigateToNewTextTweetScreen: () -&gt; Unit, navigateToNewTweetScreen: () -&gt; Unit, setLocalImage: (List&lt;String&gt;) -&gt; Unit, persistAccess: (Uri) -&gt; Unit, modifier: Modifier = Modifier )</ID>
     <ID>MagicNumber:MomentsDescription.kt$1000</ID>
     <ID>MagicNumber:NewTweet.kt$3</ID>
     <ID>MagicNumber:NewTweet.kt$3f</ID>
@@ -22,7 +23,6 @@
     <ID>MagicNumber:TweetsItem.kt$4</ID>
     <ID>MagicNumber:TweetsItem.kt$9f</ID>
     <ID>MagicNumber:UserInfoItem.kt$16f</ID>
-    <ID>MagicNumber:UserInfoItem.kt$9</ID>
     <ID>MagicNumber:UserInfoItem.kt$9f</ID>
     <ID>ThrowingExceptionsWithoutMessageOrCause:TweetsRepository.kt$NetworkTweetsRepository$Exception()</ID>
     <ID>TooGenericExceptionCaught:MomentsViewModel.kt$MomentsViewModel$e: Exception</ID>

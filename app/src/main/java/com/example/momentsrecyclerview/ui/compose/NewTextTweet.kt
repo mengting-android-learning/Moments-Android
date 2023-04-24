@@ -29,6 +29,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import com.example.momentsrecyclerview.R
+import com.example.momentsrecyclerview.util.CANCEL_TEXT
+import com.example.momentsrecyclerview.util.POST_TEXT
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -62,7 +64,7 @@ fun NewTextTweet(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Cancel",
+                text = CANCEL_TEXT,
                 modifier = Modifier
                     .wrapContentSize()
                     .clickable {
@@ -72,7 +74,7 @@ fun NewTextTweet(
                     }
             )
             Text(
-                text = "Send Text",
+                text = "Text",
             )
             Button(
                 onClick = {
@@ -87,7 +89,7 @@ fun NewTextTweet(
                 modifier = Modifier
                     .wrapContentSize()
             ) {
-                Text(text = "Send")
+                Text(text = POST_TEXT)
             }
         }
         TextField(

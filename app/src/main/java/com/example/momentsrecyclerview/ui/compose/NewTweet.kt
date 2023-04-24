@@ -36,7 +36,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import com.example.momentsrecyclerview.R
+import com.example.momentsrecyclerview.util.CANCEL_TEXT
 import com.example.momentsrecyclerview.util.MAX_IMAGES_SIZE
+import com.example.momentsrecyclerview.util.POST_TEXT
 
 @Composable
 fun NewTweet(
@@ -80,7 +82,7 @@ fun NewTweet(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Cancel",
+                    text = CANCEL_TEXT,
                     modifier = Modifier
                         .wrapContentSize()
                         .clickable {
@@ -101,7 +103,7 @@ fun NewTweet(
                     modifier = Modifier
                         .wrapContentSize()
                 ) {
-                    Text(text = "Send")
+                    Text(text = POST_TEXT)
                 }
             }
             TextField(
