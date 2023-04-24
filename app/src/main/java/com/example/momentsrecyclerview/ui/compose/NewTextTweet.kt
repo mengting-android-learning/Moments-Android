@@ -27,7 +27,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.dimensionResource
+import com.example.momentsrecyclerview.R
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -43,14 +44,20 @@ fun NewTextTweet(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 10.dp, end = 10.dp),
+            .padding(
+                start = dimensionResource(id = R.dimen.small_margin_end),
+                end = dimensionResource(id = R.dimen.small_margin_end)
+            ),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 10.dp, end = 10.dp),
+                .padding(
+                    start = dimensionResource(id = R.dimen.small_margin_end),
+                    end = dimensionResource(id = R.dimen.small_margin_end)
+                ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -92,7 +99,10 @@ fun NewTextTweet(
             Modifier
                 .background(color = Color.White)
                 .fillMaxSize()
-                .padding(start = 15.dp, end = 15.dp)
+                .padding(
+                    start = dimensionResource(id = R.dimen.new_tweet_padding),
+                    end = dimensionResource(id = R.dimen.new_tweet_padding)
+                )
                 .focusRequester(focusRequester),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.White,

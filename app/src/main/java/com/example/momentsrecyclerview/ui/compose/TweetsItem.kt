@@ -19,7 +19,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.momentsrecyclerview.R
@@ -69,7 +68,12 @@ fun TweetsItem(
                 fontSize = 16.sp
             )
         )
-        tweet.content?.let { Text(text = it, modifier = modifier.padding(bottom = 5.dp)) }
+        tweet.content?.let {
+            Text(
+                text = it,
+                modifier = modifier.padding(bottom = dimensionResource(id = R.dimen.tweet_padding))
+            )
+        }
         if (tweet.images?.isNotEmpty() == true) {
             GridImages(tweet.images, onImageClick)
         }
@@ -108,7 +112,7 @@ private fun GridImages(
                                     end = dimensionResource(id = R.dimen.tweet_padding),
                                     bottom = dimensionResource(id = R.dimen.tweet_padding)
                                 )
-                                .size(100.dp)
+                                .size(dimensionResource(id = R.dimen.tweet_image_size))
                                 .clickable { onImageClick(encodeUrl) },
                             contentScale = ContentScale.Crop,
                             placeholder = painterResource(id = R.drawable.loading_img),

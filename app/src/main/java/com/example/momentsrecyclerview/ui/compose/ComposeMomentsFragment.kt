@@ -57,4 +57,3 @@ fun MomentsFragment(
         Modifier.fillMaxSize()
     )
 }
-

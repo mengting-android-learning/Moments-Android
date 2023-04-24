@@ -34,7 +34,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.momentsrecyclerview.R
 
@@ -72,7 +71,10 @@ fun NewTweet(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 10.dp, end = 10.dp),
+                    .padding(
+                        start = dimensionResource(id = R.dimen.user_avatar_padding),
+                        end = dimensionResource(id = R.dimen.user_avatar_padding)
+                    ),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -109,7 +111,10 @@ fun NewTweet(
                 modifier = Modifier
                     .background(color = Color.White)
                     .fillMaxWidth()
-                    .padding(start = 15.dp, end = 15.dp),
+                    .padding(
+                        start = dimensionResource(id = R.dimen.new_tweet_padding),
+                        end = dimensionResource(id = R.dimen.new_tweet_padding)
+                    ),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color.White,
                     textColor = Color.Black,
@@ -117,7 +122,12 @@ fun NewTweet(
                     unfocusedIndicatorColor = Color.Transparent
                 )
             )
-            Column(modifier = Modifier.padding(start = 15.dp, end = 15.dp)) {
+            Column(
+                modifier = Modifier.padding(
+                    start = dimensionResource(id = R.dimen.new_tweet_padding),
+                    end = dimensionResource(id = R.dimen.new_tweet_padding)
+                )
+            ) {
                 for (i in 0 until 3) {
                     Row(
                         horizontalArrangement = Arrangement.SpaceEvenly,

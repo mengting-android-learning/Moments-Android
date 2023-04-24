@@ -9,4 +9,8 @@
     <dimen name="tweet_padding">5dp</dimen>
     <dimen name="tweet_avatar_width">50dp</dimen>
     <dimen name="tweet_avatar_height">50dp</dimen>
+    <dimen name="icon_size">25dp</dimen>
+    <dimen name="user_avatar_padding">10dp</dimen>
+    <dimen name="tweet_image_size">100dp</dimen>
+    <dimen name="new_tweet_padding">15dp</dimen>
 </resources>

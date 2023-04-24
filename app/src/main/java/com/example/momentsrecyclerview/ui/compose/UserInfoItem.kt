@@ -23,9 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.momentsrecyclerview.R
 import com.example.momentsrecyclerview.domain.UserInfo
@@ -71,14 +71,17 @@ fun UserInfoItem(
                 Box(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .padding(end = 30.dp, top = 50.dp)
+                        .padding(
+                            end = dimensionResource(id = R.dimen.tweet_padding),
+                            top = dimensionResource(id = R.dimen.tweet_padding)
+                        )
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.camera),
                         contentDescription = stringResource(id = R.string.camera_icon_description),
                         modifier = Modifier
                             .align(Alignment.TopEnd)
-                            .size(25.dp)
+                            .size(dimensionResource(id = R.dimen.icon_size))
                             .pointerInput(Unit) {
                                 detectTapGestures(
                                     onLongPress = { navigateToNewTextTweetScreen() },
@@ -99,21 +102,21 @@ fun UserInfoItem(
             Spacer(
                 modifier = modifier
                     .fillMaxWidth()
-                    .height(25.dp)
+                    .height(dimensionResource(id = R.dimen.icon_size))
             )
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = userInfo.nick,
-                modifier = modifier.padding(end = 10.dp),
+                modifier = modifier.padding(dimensionResource(id = R.dimen.user_avatar_padding)),
                 color = Color.White
             )
             AsyncImage(
                 model = userInfo.avatarUrl,
                 modifier = modifier
-                    .padding(end = 10.dp)
-                    .size(75.dp),
+                    .padding(dimensionResource(id = R.dimen.user_avatar_padding))
+                    .size(dimensionResource(id = R.dimen.user_avatar_height)),
                 contentScale = ContentScale.Crop,
                 contentDescription = stringResource(id = R.string.user_avatar_description),
                 placeholder = painterResource(id = R.drawable.loading_img),
