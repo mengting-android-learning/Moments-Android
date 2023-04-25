@@ -2,7 +2,6 @@ package com.example.momentsrecyclerview.ui.compose.screen.home
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -17,7 +16,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,7 +31,6 @@ import coil.compose.AsyncImage
 import com.example.momentsrecyclerview.R
 import com.example.momentsrecyclerview.domain.UserInfo
 import com.example.momentsrecyclerview.util.MAX_IMAGES_SIZE
-import kotlinx.coroutines.launch
 
 @Composable
 fun UserInfoItem(
@@ -39,8 +39,10 @@ fun UserInfoItem(
     navigateToNewTweetScreen: () -> Unit,
     setLocalImage: (List<String>) -> Unit,
     persistAccess: (Uri) -> Unit,
+    showBottomSheet: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val currentShowBottomSheet by rememberUpdatedState(showBottomSheet)
     val scope = rememberCoroutineScope()
     val launcher =
         rememberLauncherForActivityResult(
@@ -87,13 +89,14 @@ fun UserInfoItem(
                                 detectTapGestures(
                                     onLongPress = { navigateToNewTextTweetScreen() },
                                     onTap = {
-                                        scope.launch {
-                                            launcher.launch(
-                                                PickVisualMediaRequest(
-                                                    mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
-                                                )
-                                            )
-                                        }
+                                        currentShowBottomSheet()
+//                                        scope.launch {
+//                                            launcher.launch(
+//                                                PickVisualMediaRequest(
+//                                                    mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
+//                                                )
+//                                            )
+//                                        }
                                     }
                                 )
                             }
