@@ -1,5 +1,6 @@
 package com.example.momentsrecyclerview.ui.compose.navigation
 
+import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -17,6 +18,7 @@ import com.example.momentsrecyclerview.ui.compose.screen.single.SingleTweetImage
 fun MomentsNavHost(
     navController: NavHostController,
     viewModel: MomentsViewModel,
+    activity: Activity,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -30,6 +32,7 @@ fun MomentsNavHost(
                 navController::navigateToSingleImage,
                 { navController.navigate(NewTextTweetScreen.route) },
                 { navController.navigate(NewTweetScreen.route) },
+                activity
             )
         }
         composable(

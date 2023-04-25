@@ -1,5 +1,6 @@
 package com.example.momentsrecyclerview.ui.compose.screen.home
 
+import android.app.Activity
 import android.net.Uri
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -40,6 +41,7 @@ fun MomentsDescription(
     navigateToSingleTweetImage: (String) -> Unit,
     navigateToNewTextTweetScreen: () -> Unit,
     navigateToNewTweetScreen: () -> Unit,
+    activity: Activity
 ) {
     var currentStatus by remember { mutableStateOf(STATUS.LOADING) }
     when (currentStatus) {
@@ -54,7 +56,8 @@ fun MomentsDescription(
                     navigateToNewTextTweetScreen,
                     navigateToNewTweetScreen,
                     momentsViewModel::setLocalImages,
-                    momentsViewModel::persistAccess
+                    momentsViewModel::persistAccess,
+                    activity
                 )
             }
         }
@@ -120,6 +123,7 @@ fun Moments(
     navigateToNewTweetScreen: () -> Unit,
     setLocalImage: (List<String>) -> Unit,
     persistAccess: (Uri) -> Unit,
+    activity:Activity,
     modifier: Modifier = Modifier
 ) {
     var showModelBottomSheet by remember { mutableStateOf(false) }
@@ -144,8 +148,10 @@ fun Moments(
             BottomSheetContent(
                 persistAccess,
                 setLocalImage,
-                navigateToNewTweetScreen
-            ) { showModelBottomSheet = false }
+                navigateToNewTweetScreen,
+                { showModelBottomSheet = false },
+                activity
+            )
         }
     ) {
         LazyColumn(modifier = modifier.fillMaxHeight()) {
