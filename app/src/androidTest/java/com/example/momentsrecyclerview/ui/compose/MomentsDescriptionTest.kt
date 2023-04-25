@@ -56,7 +56,7 @@ class MomentsDescriptionTest {
         )
 
         composeTestRule.setContent {
-            UserInfoItem(userInfo, {}, {}, {}, {})
+            UserInfoItem(userInfo, {}, {})
         }
 
         composeTestRule.onNodeWithText("nick").assertIsDisplayed()

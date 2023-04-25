@@ -1,6 +1,9 @@
 package com.example.momentsrecyclerview.ui.compose.screen.home
 
 import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -9,6 +12,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -39,12 +44,13 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import com.example.momentsrecyclerview.R
 import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.UserInfo
 import com.example.momentsrecyclerview.ui.MomentsViewModel
 import com.example.momentsrecyclerview.ui.STATUS
+import com.example.momentsrecyclerview.util.MAX_IMAGES_SIZE
+import kotlinx.coroutines.launch
 
 @Composable
 fun MomentsDescription(
@@ -134,32 +140,37 @@ fun Moments(
     persistAccess: (Uri) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val sheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden
-    )
     var showModelBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmValueChange = {
+            it != ModalBottomSheetValue.HalfExpanded
+        }
+    )
     LaunchedEffect(showModelBottomSheet) {
         if (showModelBottomSheet) {
             sheetState.show()
-        }
-        showModelBottomSheet = false
+        } else
+            sheetState.hide()
+    }
+    LaunchedEffect(sheetState.isVisible) {
+        showModelBottomSheet = sheetState.isVisible
     }
     ModalBottomSheetLayout(
         sheetState = sheetState,
         sheetContent = {
-            // Sheet content
-            BottomSheetContent()
+            BottomSheetContent(
+                persistAccess,
+                setLocalImage,
+                navigateToNewTweetScreen
+            ) { showModelBottomSheet = false }
         }
     ) {
-        // Screen content
         LazyColumn(modifier = modifier.fillMaxHeight()) {
             item {
                 UserInfoItem(
                     userInfo,
                     navigateToNewTextTweetScreen,
-                    navigateToNewTweetScreen,
-                    setLocalImage,
-                    persistAccess,
                     { showModelBottomSheet = true }
                 )
             }
@@ -171,31 +182,59 @@ fun Moments(
 }
 
 @Composable
-private fun BottomSheetContent() {
+private fun BottomSheetContent(
+    persistAccess: (Uri) -> Unit,
+    setLocalImage: (List<String>) -> Unit,
+    navigateToNewTweetScreen: () -> Unit,
+    hideBottomSheet: () -> Unit
+) {
     Column(
         Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Space()
-            Text(text = "Camera")
-            Space()
-        }
-        Divider(color = Color.Gray, thickness = 1.dp)
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Space()
-            Text(text = "Choose from Album")
-            Space()
-        }
-        Space(
-            modifier = Modifier.background(color = Color.LightGray)
+        CameraTab()
+        Divider(
+            color = Color.Gray,
+            thickness = dimensionResource(id = R.dimen.divider_weight)
         )
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Space()
-            Text(text = "Cancel")
-            Space()
+        PhotoPickerTab(
+            persistAccess,
+            setLocalImage,
+            navigateToNewTweetScreen,
+            hideBottomSheet
+        )
+        Space(modifier = Modifier.background(color = Color.LightGray))
+        CancelTab(hideBottomSheet)
+    }
+}
+
+@Composable
+private fun CameraTab() {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Space()
+        Text(text = "Camera")
+        Space()
+    }
+}
+
+@Composable
+private fun CancelTab(
+    hideBottomSheet: () -> Unit
+) {
+    val currentHideBottomSheet by rememberUpdatedState(hideBottomSheet)
+    val scope = rememberCoroutineScope()
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable {
+            scope.launch {
+                currentHideBottomSheet()
+            }
         }
+    ) {
+        Space()
+        Text(text = "Cancel")
+        Space()
     }
 }
 
@@ -206,4 +245,44 @@ private fun Space(modifier: Modifier = Modifier) {
             .fillMaxWidth()
             .height(dimensionResource(id = R.dimen.small_margin_end))
     )
+}
+
+@Composable
+fun PhotoPickerTab(
+    persistAccess: (Uri) -> Unit,
+    setLocalImage: (List<String>) -> Unit,
+    navigateToNewTweetScreen: () -> Unit,
+    hideBottomSheet: () -> Unit
+) {
+    val currentHideBottomSheet by rememberUpdatedState(hideBottomSheet)
+    val scope = rememberCoroutineScope()
+    val launcher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.PickMultipleVisualMedia(
+                MAX_IMAGES_SIZE
+            )
+        ) { uris ->
+            if (uris.isNotEmpty()) {
+                navigateToNewTweetScreen()
+                uris.forEach { persistAccess(it) }
+                setLocalImage(uris.map { uri -> uri.toString() })
+            }
+        }
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable {
+            scope.launch {
+                currentHideBottomSheet()
+                launcher.launch(
+                    PickVisualMediaRequest(
+                        mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
+                    )
+                )
+            }
+        }
+    ) {
+        Space()
+        Text(text = "Choose from Album")
+        Space()
+    }
 }

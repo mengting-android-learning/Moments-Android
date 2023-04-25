@@ -1,8 +1,5 @@
 package com.example.momentsrecyclerview.ui.compose.screen.home
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -17,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,32 +26,15 @@ import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import com.example.momentsrecyclerview.R
 import com.example.momentsrecyclerview.domain.UserInfo
-import com.example.momentsrecyclerview.util.MAX_IMAGES_SIZE
 
 @Composable
 fun UserInfoItem(
     userInfo: UserInfo,
     navigateToNewTextTweetScreen: () -> Unit,
-    navigateToNewTweetScreen: () -> Unit,
-    setLocalImage: (List<String>) -> Unit,
-    persistAccess: (Uri) -> Unit,
     showBottomSheet: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val currentShowBottomSheet by rememberUpdatedState(showBottomSheet)
-    val scope = rememberCoroutineScope()
-    val launcher =
-        rememberLauncherForActivityResult(
-            ActivityResultContracts.PickMultipleVisualMedia(
-                MAX_IMAGES_SIZE
-            )
-        ) { uris ->
-            run {
-                uris.forEach { persistAccess(it) }
-                setLocalImage(uris.map { uri -> uri.toString() })
-                if (uris.isNotEmpty()) navigateToNewTweetScreen()
-            }
-        }
     Box(
         contentAlignment = Alignment.BottomEnd
     ) {
@@ -90,13 +69,6 @@ fun UserInfoItem(
                                     onLongPress = { navigateToNewTextTweetScreen() },
                                     onTap = {
                                         currentShowBottomSheet()
-//                                        scope.launch {
-//                                            launcher.launch(
-//                                                PickVisualMediaRequest(
-//                                                    mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
-//                                                )
-//                                            )
-//                                        }
                                     }
                                 )
                             }
