@@ -5,7 +5,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,13 +19,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,7 +45,7 @@ fun BottomSheetContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround
     ) {
-        CameraTab(activity)
+        CameraTab(activity, hideBottomSheet)
         Divider(
             color = Color.Gray,
             thickness = dimensionResource(id = R.dimen.divider_weight)
@@ -67,48 +63,48 @@ fun BottomSheetContent(
 
 @Composable
 private fun CameraTab(
-    activity: Activity
+    activity: Activity,
+    hideBottomSheet: () -> Unit
 ) {
-    var shouldAskPermission by remember { mutableStateOf(false) }
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            Log.d("ExampleScreen", "PERMISSION GRANTED")
+            takePhoto()
         } else {
-            if (shouldShowRequestPermissionRationale(activity, Manifest.permission.CAMERA)) {
-                AlertDialog.Builder(activity)
-                    .setMessage("Camera Needed")
-                    .setPositiveButton("OK") { _, _ -> shouldAskPermission = true }
-                    .setNegativeButton("No") { _, _ -> }
-                    .create().show()
+            if (!shouldShowRequestPermissionRationale(activity, Manifest.permission.CAMERA)) {
+                Toast.makeText(activity, "You have denied", Toast.LENGTH_SHORT).show()
             }
         }
     }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.clickable {
-            shouldAskPermission = true
+            hideBottomSheet()
+            if (checkSelfPermission(
+                    activity,
+                    Manifest.permission.CAMERA
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                takePhoto()
+            } else if (shouldShowRequestPermissionRationale(activity, Manifest.permission.CAMERA)) {
+                AlertDialog.Builder(activity)
+                    .setMessage("Camera Needed")
+                    .setPositiveButton("OK") { _, _ -> launcher.launch(Manifest.permission.CAMERA) }
+                    .setNegativeButton("No") { _, _ -> }
+                    .create().show()
+            } else {
+                launcher.launch(Manifest.permission.CAMERA)
+            }
         }
     ) {
         Space()
         Text(text = "Camera")
         Space()
     }
-    LaunchedEffect(shouldAskPermission) {
-        if (shouldAskPermission) {
-            if (checkSelfPermission(
-                    activity,
-                    Manifest.permission.CAMERA
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                Log.d("ExampleScreen", "granted")
-            } else {
-                launcher.launch(Manifest.permission.CAMERA)
-            }
-            shouldAskPermission = false
-        }
-    }
+}
+
+fun takePhoto() {
 }
 
 @Composable

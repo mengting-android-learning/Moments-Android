@@ -123,7 +123,7 @@ fun Moments(
     navigateToNewTweetScreen: () -> Unit,
     setLocalImage: (List<String>) -> Unit,
     persistAccess: (Uri) -> Unit,
-    activity:Activity,
+    activity: Activity,
     modifier: Modifier = Modifier
 ) {
     var showModelBottomSheet by remember { mutableStateOf(false) }
@@ -136,8 +136,9 @@ fun Moments(
     LaunchedEffect(showModelBottomSheet) {
         if (showModelBottomSheet) {
             sheetState.show()
-        } else
+        } else {
             sheetState.hide()
+        }
     }
     LaunchedEffect(sheetState.isVisible) {
         showModelBottomSheet = sheetState.isVisible
@@ -168,4 +169,3 @@ fun Moments(
         }
     }
 }
-
