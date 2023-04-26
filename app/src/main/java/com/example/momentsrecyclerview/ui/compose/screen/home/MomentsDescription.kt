@@ -1,6 +1,5 @@
 package com.example.momentsrecyclerview.ui.compose.screen.home
 
-import android.net.Uri
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -55,7 +54,6 @@ fun MomentsDescription(
                     navigateToNewTextTweetScreen,
                     navigateToNewTweetScreen,
                     momentsViewModel::setLocalImages,
-                    momentsViewModel::persistAccess,
                 )
             }
         }
@@ -120,7 +118,6 @@ fun Moments(
     navigateToNewTextTweetScreen: () -> Unit,
     navigateToNewTweetScreen: () -> Unit,
     setLocalImage: (List<String>) -> Unit,
-    persistAccess: (Uri) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showModelBottomSheet by remember { mutableStateOf(false) }
@@ -144,7 +141,6 @@ fun Moments(
         sheetState = sheetState,
         sheetContent = {
             BottomSheetContent(
-                persistAccess,
                 setLocalImage,
                 navigateToNewTweetScreen,
             ) { showModelBottomSheet = false }

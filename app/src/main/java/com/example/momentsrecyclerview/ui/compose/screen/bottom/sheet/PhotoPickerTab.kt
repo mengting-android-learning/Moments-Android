@@ -1,6 +1,6 @@
 package com.example.momentsrecyclerview.ui.compose.screen.bottom.sheet
 
-import android.net.Uri
+import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -13,16 +13,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.example.momentsrecyclerview.util.MAX_IMAGES_SIZE
 import kotlinx.coroutines.launch
 
 @Composable
 fun PhotoPickerTab(
-    persistAccess: (Uri) -> Unit,
     setLocalImage: (List<String>) -> Unit,
     navigateToNewTweetScreen: () -> Unit,
     hideBottomSheet: () -> Unit
 ) {
+    val context = LocalContext.current
     val currentHideBottomSheet by rememberUpdatedState(hideBottomSheet)
     val scope = rememberCoroutineScope()
     val launcher =
@@ -33,7 +34,12 @@ fun PhotoPickerTab(
         ) { uris ->
             if (uris.isNotEmpty()) {
                 navigateToNewTweetScreen()
-                uris.forEach { persistAccess(it) }
+                uris.forEach {
+                    context.contentResolver.takePersistableUriPermission(
+                        it,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                }
                 setLocalImage(uris.map { uri -> uri.toString() })
             }
         }

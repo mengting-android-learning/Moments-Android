@@ -105,5 +105,3 @@ fun Context.createImageFileUri(): Uri {
     )
     return FileProvider.getUriForFile(this, "${BuildConfig.APPLICATION_ID}.provider", photoFile)
 }
-
-

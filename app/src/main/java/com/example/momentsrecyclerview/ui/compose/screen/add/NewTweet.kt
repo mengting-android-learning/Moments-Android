@@ -1,6 +1,6 @@
 package com.example.momentsrecyclerview.ui.compose.screen.add
 
-import android.net.Uri
+import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -50,25 +51,26 @@ fun NewTweet(
     setLocalContent: (String) -> Unit,
     saveNewTweet: () -> Unit,
     navigateBack: () -> Unit,
-    persistAccess: (Uri) -> Unit,
     navigateToSingleImage: (String) -> Unit
 ) {
+    val context = LocalContext.current
     if (images.isNotEmpty()) {
         var openPhotoPicker: Boolean by remember { mutableStateOf(false) }
         val launcher = if (MAX_IMAGES_SIZE - images.size > 1) {
             rememberLauncherForActivityResult(
                 ActivityResultContracts.PickMultipleVisualMedia(MAX_IMAGES_SIZE - images.size)
             ) { uris ->
-                uris.forEach { persistAccess(it) }
-                val imageUris = images + uris.map { it.toString() }
-                setLocalImages(imageUris)
+                uris.forEach {
+                    context.contentResolver.takePersistableUriPermission(it, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+                setLocalImages(images + uris.map { it.toString() })
             }
         } else {
             rememberLauncherForActivityResult(
                 ActivityResultContracts.PickVisualMedia()
             ) {
                 it?.let {
-                    persistAccess(it)
+                    context.contentResolver.takePersistableUriPermission(it, Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     setLocalImages(images + it.toString())
                 }
             }
@@ -166,7 +168,6 @@ fun NewTweet(
                                                     images[index],
                                                     StandardCharsets.UTF_8.toString()
                                                 )
-
                                                 navigateToSingleImage(encodeUrl)
                                             }
                                             .padding(

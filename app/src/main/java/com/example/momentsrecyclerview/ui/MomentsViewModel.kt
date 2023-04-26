@@ -1,8 +1,6 @@
 package com.example.momentsrecyclerview.ui
 
 import android.app.Application
-import android.content.Intent
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -34,7 +32,6 @@ class MomentsViewModel(
     private val localTweetsRepo: TweetsRepository
 ) : AndroidViewModel(application) {
     private val _userInfo = MutableLiveData<UserInfo>()
-
     val userInfo: LiveData<UserInfo>
         get() = _userInfo
 
@@ -43,7 +40,6 @@ class MomentsViewModel(
         get() = _tweetsList
 
     private val _status = MutableLiveData<STATUS>()
-
     val status: LiveData<STATUS>
         get() = _status
 
@@ -103,12 +99,8 @@ class MomentsViewModel(
             if (_localImages.value != null || _localContent.value != null) {
                 _userInfo.value?.let {
                     val tweet = Tweet(
-                        content = if (_localContent.value?.isNotBlank() == true) {
-                            _localContent.value
-                        } else {
-                            null
-                        },
-                        images = if (_localImages.value?.isNotEmpty() == true) {
+                        content = _localContent.value.takeIf { !_localContent.value.isNullOrBlank() },
+                        images = if (!_localImages.value.isNullOrEmpty()) {
                             _localImages.value?.map { image -> ImageUrl(image) }
                         } else {
                             null
@@ -119,8 +111,7 @@ class MomentsViewModel(
                             avatarUrl = it.avatarUrl
                         ),
                     )
-                    val currentList = _tweetsList.value ?: emptyList()
-                    _tweetsList.value = listOf(tweet) + currentList
+                    _tweetsList.value = listOf(tweet) + (_tweetsList.value ?: emptyList())
                     if (saveNewTweet(tweet)) {
                         setLocalContent("")
                         setLocalImages(emptyList())
@@ -130,53 +121,44 @@ class MomentsViewModel(
         }
     }
 
-    private suspend fun fetchOnlyLocalTweets(): List<Tweet>? {
-        var tweets: List<Tweet>? = null
+    private suspend fun fetchOnlyLocalTweets(): List<Tweet>? =
         if (localTweetsRepo is LocalTweetsRepository) {
-            tweets = localTweetsRepo.getLocalTweets()
+            localTweetsRepo.getLocalTweets()
+        } else {
+            null
         }
-        return tweets
-    }
 
-    private suspend fun fetchLocalTweets(): List<Tweet>? {
-        var tweets: List<Tweet>? = null
+    private suspend fun fetchLocalTweets(): List<Tweet>? =
         try {
-            tweets = localTweetsRepo.getTweetsList()
+            localTweetsRepo.getTweetsList()
         } catch (e: Exception) {
             Log.d("FetchLocalExp", e.toString())
+            null
         }
-        return tweets
-    }
 
-    private suspend fun fetchLocalUserInfo(): UserInfo? {
-        var userInfo: UserInfo? = null
+    private suspend fun fetchLocalUserInfo(): UserInfo? =
         try {
-            userInfo = localUserInfoRepo.getUserInfo()
+            localUserInfoRepo.getUserInfo()
         } catch (e: java.lang.Exception) {
             Log.d("FetchLocalExp", e.toString())
+            null
         }
-        return userInfo
-    }
 
-    private suspend fun fetchRemoteTweets(): List<Tweet>? {
-        var tweets: List<Tweet>? = null
+    private suspend fun fetchRemoteTweets(): List<Tweet>? =
         try {
-            tweets = remoteTweetsRepo.getTweetsList()
+            remoteTweetsRepo.getTweetsList()
         } catch (e: Exception) {
             Log.d("FetchRemoteExp", e.toString())
+            null
         }
-        return tweets
-    }
 
-    private suspend fun fetchRemoteUserInfo(): UserInfo? {
-        var userInfo: UserInfo? = null
+    private suspend fun fetchRemoteUserInfo(): UserInfo? =
         try {
-            userInfo = remoteUserInfoRepo.getUserInfo()
+            remoteUserInfoRepo.getUserInfo()
         } catch (e: java.lang.Exception) {
             Log.d("FetchRemoteExp", e.toString())
+            null
         }
-        return userInfo
-    }
 
     private suspend fun saveTweetsToLocal(remoteTweets: List<Tweet>, localTweets: List<Tweet>?) {
         try {
@@ -192,7 +174,7 @@ class MomentsViewModel(
 
     private suspend fun saveUserInfoToLocal() =
         try {
-            _userInfo.value?.let { it1 -> localUserInfoRepo.saveUserInfo(it1) }
+            _userInfo.value?.let { localUserInfoRepo.saveUserInfo(it) }
         } catch (e: Exception) {
             Log.w("SaveDataToLocal", e.toString())
         }
@@ -209,12 +191,6 @@ class MomentsViewModel(
             Log.w("AddTweetToLocalExp", e.toString())
             false
         }
-    }
-
-    fun persistAccess(uri: Uri) {
-        val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        val context = getApplication<Application>().applicationContext
-        context.contentResolver.takePersistableUriPermission(uri, flag)
     }
 }
 

@@ -1,6 +1,5 @@
 package com.example.momentsrecyclerview.ui.compose.screen.bottom.sheet
 
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,7 +16,6 @@ import com.example.momentsrecyclerview.R
 
 @Composable
 fun BottomSheetContent(
-    persistAccess: (Uri) -> Unit,
     setLocalImage: (List<String>) -> Unit,
     navigateToNewTweetScreen: () -> Unit,
     hideBottomSheet: () -> Unit,
@@ -37,7 +35,6 @@ fun BottomSheetContent(
             thickness = dimensionResource(id = R.dimen.divider_weight)
         )
         PhotoPickerTab(
-            persistAccess,
             setLocalImage,
             navigateToNewTweetScreen,
             hideBottomSheet

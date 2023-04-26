@@ -61,7 +61,6 @@ fun MomentsNavHost(
                 viewModel::setLocalContent,
                 viewModel::createAndSaveTweet,
                 { navController.navigateUp() },
-                viewModel::persistAccess,
                 navController::navigateToSingleImage
             )
         }
