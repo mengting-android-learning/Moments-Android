@@ -1,6 +1,5 @@
 package com.example.momentsrecyclerview.ui.compose
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -40,7 +39,6 @@ class ComposeMomentsFragment : Fragment() {
                 activity?.let {
                     MomentsFragment(
                         momentsViewModel,
-                        it
                     )
                 }
             }
@@ -53,13 +51,11 @@ class ComposeMomentsFragment : Fragment() {
 @Composable
 fun MomentsFragment(
     momentsViewModel: MomentsViewModel,
-    activity: Activity
 ) {
     val navController = rememberNavController()
     MomentsNavHost(
         navController,
         momentsViewModel,
-        activity,
         Modifier.fillMaxSize()
     )
 }

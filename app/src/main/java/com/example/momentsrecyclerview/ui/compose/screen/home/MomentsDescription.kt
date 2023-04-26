@@ -1,6 +1,5 @@
 package com.example.momentsrecyclerview.ui.compose.screen.home
 
-import android.app.Activity
 import android.net.Uri
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -34,6 +33,7 @@ import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.UserInfo
 import com.example.momentsrecyclerview.ui.MomentsViewModel
 import com.example.momentsrecyclerview.ui.STATUS
+import com.example.momentsrecyclerview.ui.compose.screen.bottom.sheet.BottomSheetContent
 
 @Composable
 fun MomentsDescription(
@@ -41,7 +41,6 @@ fun MomentsDescription(
     navigateToSingleTweetImage: (String) -> Unit,
     navigateToNewTextTweetScreen: () -> Unit,
     navigateToNewTweetScreen: () -> Unit,
-    activity: Activity
 ) {
     var currentStatus by remember { mutableStateOf(STATUS.LOADING) }
     when (currentStatus) {
@@ -57,7 +56,6 @@ fun MomentsDescription(
                     navigateToNewTweetScreen,
                     momentsViewModel::setLocalImages,
                     momentsViewModel::persistAccess,
-                    activity
                 )
             }
         }
@@ -123,7 +121,6 @@ fun Moments(
     navigateToNewTweetScreen: () -> Unit,
     setLocalImage: (List<String>) -> Unit,
     persistAccess: (Uri) -> Unit,
-    activity: Activity,
     modifier: Modifier = Modifier
 ) {
     var showModelBottomSheet by remember { mutableStateOf(false) }
@@ -150,9 +147,7 @@ fun Moments(
                 persistAccess,
                 setLocalImage,
                 navigateToNewTweetScreen,
-                { showModelBottomSheet = false },
-                activity
-            )
+            ) { showModelBottomSheet = false }
         }
     ) {
         LazyColumn(modifier = modifier.fillMaxHeight()) {
