@@ -34,7 +34,7 @@ fun NetworkTweetComment.asDomainModel() =
 
 fun NetworkSender.asDomainModel() =
     Sender(
-        userName = username,
+        userName = userName,
         nick = nick,
         avatarUrl = avatarUrl
     )

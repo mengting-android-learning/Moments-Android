@@ -19,7 +19,7 @@ data class NetworkTweetComment(
 
 @JsonClass(generateAdapter = true)
 data class NetworkSender(
-    val username: String,
+    val userName: String,
     val nick: String,
     @Json(name = "avatar") val avatarUrl: String
 )
