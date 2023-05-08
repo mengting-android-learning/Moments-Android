@@ -17,10 +17,14 @@ import com.example.momentsrecyclerview.data.UserInfoRepository
 import com.example.momentsrecyclerview.data.source.local.MomentsDatabase
 import com.example.momentsrecyclerview.data.source.network.TweetsListNetwork
 import com.example.momentsrecyclerview.data.source.network.UserInfoNetwork
+import com.example.momentsrecyclerview.data.source.network.request.NewCommentRequest
+import com.example.momentsrecyclerview.data.source.network.request.NewTweetRequest
+import com.example.momentsrecyclerview.data.source.network.request.NewUserRequest
 import com.example.momentsrecyclerview.domain.ImageUrl
 import com.example.momentsrecyclerview.domain.Sender
 import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.UserInfo
+import com.example.momentsrecyclerview.github.network.GitNetwork
 import kotlinx.coroutines.launch
 
 enum class STATUS { LOADING, ERROR, DONE }
@@ -60,6 +64,7 @@ class MomentsViewModel(
     }
 
     init {
+//        preWork()
         getData()
     }
 
@@ -127,6 +132,7 @@ class MomentsViewModel(
         if (localTweetsRepo is LocalTweetsRepository) {
             localTweetsRepo.getLocalTweets()
         } else {
+
             null
         }
 
@@ -194,6 +200,66 @@ class MomentsViewModel(
             false
         }
     }
+
+    private fun saveGitData() {
+        viewModelScope.launch {
+            val user = GitNetwork.service.getUserInfo()
+            val userInfo = UserInfoNetwork.userInfo.saveUser(
+                NewUserRequest(
+                    user.profileImageUrl,
+                    user.avatarUrl,
+                    user.nick,
+                    user.userName
+                )
+            )
+            val tweetsList = GitNetwork.service.getTweetsList()
+            for (tweet in tweetsList) {
+                if(tweet.sender!=null){
+                    if(!(tweet.images == null && tweet.content == null)){
+                        val saveUser = UserInfoNetwork.userInfo.saveUser(
+                            NewUserRequest(
+                                null,
+                                tweet.sender.avatarUrl,
+                                tweet.sender.nick,
+                                tweet.sender.userName
+                            )
+                        )
+                        val saveNewTweet = TweetsListNetwork.tweets.saveNewTweet(
+                            NewTweetRequest(
+                                saveUser.id,
+                                tweet.content,
+                                System.currentTimeMillis(),
+                                tweet.images
+                            )
+                        )
+                        if (!tweet.comments.isNullOrEmpty()) {
+                            for (comment in tweet.comments) {
+                                val saveSender = UserInfoNetwork.userInfo.saveUser(
+                                    NewUserRequest(
+                                        null,
+                                        comment.sender.avatarUrl,
+                                        comment.sender.nick,
+                                        comment.sender.userName
+                                    )
+                                )
+                                TweetsListNetwork.tweets.saveNewComment(
+                                    NewCommentRequest(
+                                        saveSender.id,
+                                        saveNewTweet.id,
+                                        System.currentTimeMillis(),
+                                        comment.content
+                                    )
+                                )
+                            }
+                        }
+
+                    }
+
+                }
+            }
+        }
+    }
+
 }
 
 class MomentsViewModelFactory(
