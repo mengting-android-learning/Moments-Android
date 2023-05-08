@@ -100,15 +100,17 @@ class MomentsViewModel(
                 _userInfo.value?.let {
                     val tweet = Tweet(
                         content = _localContent.value.takeIf { !_localContent.value.isNullOrBlank() },
+                        createdOn = System.currentTimeMillis(),
                         images = if (!_localImages.value.isNullOrEmpty()) {
                             _localImages.value?.map { image -> ImageUrl(image) }
                         } else {
                             null
                         },
                         sender = Sender(
+                            id = it.id,
                             userName = it.userName,
                             nick = it.nick,
-                            avatarUrl = it.avatarUrl
+                            avatarUrl = it.avatarUrl,
                         ),
                     )
                     _tweetsList.value = listOf(tweet) + (_tweetsList.value ?: emptyList())

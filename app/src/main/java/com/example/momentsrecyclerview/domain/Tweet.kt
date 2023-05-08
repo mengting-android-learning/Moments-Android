@@ -1,11 +1,9 @@
 package com.example.momentsrecyclerview.domain
 
-import java.sql.Timestamp
-
 data class Tweet(
-    val id: Long,
+    val id: Long = 0L,
     val content: String? = null,
-    val createdOn: Timestamp,
+    val createdOn: Long,
     val images: List<ImageUrl>? = null,
     val sender: Sender,
     val comments: List<TweetComment>? = null
@@ -14,7 +12,7 @@ data class Tweet(
 data class TweetComment(
     val id: Long,
     val content: String,
-    val createdOn: Timestamp,
+    val createdOn: Long,
     val sender: Sender
 )
 

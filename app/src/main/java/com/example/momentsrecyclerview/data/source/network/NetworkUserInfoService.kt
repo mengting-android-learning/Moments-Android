@@ -4,6 +4,6 @@ import retrofit2.http.GET
 
 interface NetworkUserInfoService {
 //    @GET("user.json")
-    @GET("users")
+    @GET("users?name=hengzeng")
     suspend fun getUserInfo(): NetworkUserInfo
 }

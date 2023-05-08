@@ -6,8 +6,8 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class NetworkUserInfo(
     val id: Long,
-    @Json(name = "profile-image") val profileImageUrl: String,
+    @Json(name = "profileImage") val profileImageUrl: String,
     @Json(name = "avatar") val avatarUrl: String,
     val nick: String,
-    @Json(name = "username") val userName: String
+    val userName: String
 )
