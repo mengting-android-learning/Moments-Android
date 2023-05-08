@@ -1,11 +1,14 @@
 package com.example.momentsrecyclerview.data.source.network.request
 
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class NewUserRequest(
-    private val profileImage: String? = null,
+    val profileImage: String?,
 
-    private val avatar: String,
+    val avatar: String,
 
-    private val nick: String,
+    val nick: String,
 
-    private val userName: String
+    val userName: String
 )

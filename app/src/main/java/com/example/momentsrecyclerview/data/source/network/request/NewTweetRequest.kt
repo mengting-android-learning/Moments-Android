@@ -1,11 +1,15 @@
 package com.example.momentsrecyclerview.data.source.network.request
 
 import com.example.momentsrecyclerview.data.source.network.NetworkImage
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class NewTweetRequest(
-    private val userId: Long,
+    val userId: Long,
 
-    private val content: String? = null,
+    val content: String? = null,
 
-    private val images: List<NetworkImage>? = null
+    val createdOn: Long,
+
+    val images: List<NetworkImage>? = null
 )
