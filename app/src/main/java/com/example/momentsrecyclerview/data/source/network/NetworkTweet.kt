@@ -2,10 +2,13 @@ package com.example.momentsrecyclerview.data.source.network
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.sql.Timestamp
 
 @JsonClass(generateAdapter = true)
 data class NetworkTweet(
+    val id: Long,
     val content: String?,
+    val createdOn: Timestamp,
     val images: List<NetworkImage>?,
     val sender: NetworkSender?,
     val comments: List<NetworkTweetComment>?
@@ -13,12 +16,15 @@ data class NetworkTweet(
 
 @JsonClass(generateAdapter = true)
 data class NetworkTweetComment(
+    val id: Long,
     val content: String,
+    val createdOn: Timestamp,
     val sender: NetworkSender
 )
 
 @JsonClass(generateAdapter = true)
 data class NetworkSender(
+    val id: Long,
     val userName: String,
     val nick: String,
     @Json(name = "avatar") val avatarUrl: String

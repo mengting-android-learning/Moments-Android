@@ -5,6 +5,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import java.sql.Timestamp
 
 data class LocalEntireTweet(
     @Embedded
@@ -26,18 +27,20 @@ data class CommentWithSender(
 
 @Entity(tableName = "tweet")
 data class LocalTweet(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: Long = 0L,
     val content: String?,
+    val createdOn: Timestamp,
     val senderId: Long,
     val isOnlyLocal: Boolean = false
 )
 
 @Entity(tableName = "tweet_comment")
 data class LocalTweetComment(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: Long = 0L,
     val content: String,
+    val createdOn: Timestamp,
     val senderId: Long,
     val tweetId: Long,
 )
