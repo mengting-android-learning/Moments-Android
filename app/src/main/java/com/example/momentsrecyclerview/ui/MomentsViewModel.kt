@@ -188,12 +188,12 @@ class MomentsViewModel(
         }
 
     private suspend fun saveNewTweet(tweet: Tweet): Boolean = try {
-        remoteTweetsRepo.saveNewTweet(tweet)
+        remoteTweetsRepo.saveNewTweet(tweet, _userInfo.value!!.id)
         true
     } catch (e: Exception) {
         Log.w("AddTweetToRemoteExp", e.toString())
         try {
-            localTweetsRepo.saveNewTweet(tweet)
+            localTweetsRepo.saveNewTweet(tweet, _userInfo.value!!.id)
             true
         } catch (e: Exception) {
             Log.w("AddTweetToLocalExp", e.toString())
@@ -214,8 +214,8 @@ class MomentsViewModel(
             )
             val tweetsList = GitNetwork.service.getTweetsList()
             for (tweet in tweetsList) {
-                if(tweet.sender!=null){
-                    if(!(tweet.images == null && tweet.content == null)){
+                if (tweet.sender != null) {
+                    if (!(tweet.images == null && tweet.content == null)) {
                         val saveUser = UserInfoNetwork.userInfo.saveUser(
                             NewUserRequest(
                                 null,
