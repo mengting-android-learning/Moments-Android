@@ -5,6 +5,7 @@ import com.example.momentsrecyclerview.domain.UserInfo
 
 fun NetworkUserInfo.asDomainModel() =
     UserInfo(
+        id = id,
         profileImageUrl = profileImageUrl,
         avatarUrl = avatarUrl,
         nick = nick,

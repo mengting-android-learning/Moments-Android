@@ -49,7 +49,7 @@ class NetworkTweetTest {
 
         val tweetComment = moshi.adapter(NetworkTweetComment::class.java).fromJson(json)
         assertEquals("Good", tweetComment?.content)
-        assertEquals("user", tweetComment?.sender?.username)
+        assertEquals("user", tweetComment?.sender?.userName)
         assertEquals("nick", tweetComment?.sender?.nick)
         assertEquals("http://avater", tweetComment?.sender?.avatarUrl)
     }

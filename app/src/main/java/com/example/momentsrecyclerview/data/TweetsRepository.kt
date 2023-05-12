@@ -1,7 +1,9 @@
 package com.example.momentsrecyclerview.data
 
 import com.example.momentsrecyclerview.data.source.local.MomentsDatabaseDao
+import com.example.momentsrecyclerview.data.source.network.NetworkImage
 import com.example.momentsrecyclerview.data.source.network.NetworkTweetsService
+import com.example.momentsrecyclerview.data.source.network.request.NewTweetRequest
 import com.example.momentsrecyclerview.domain.Sender
 import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.mapper.local.asDomainTweet
@@ -13,7 +15,7 @@ import com.example.momentsrecyclerview.domain.mapper.network.asDomainModel
 
 interface TweetsRepository {
     suspend fun getTweetsList(): List<Tweet>
-    suspend fun saveNewTweet(tweet: Tweet)
+    suspend fun saveNewTweet(tweet: Tweet, senderId: Long)
 }
 
 class NetworkTweetsRepository(private val networkTweetsService: NetworkTweetsService) :
@@ -21,8 +23,17 @@ class NetworkTweetsRepository(private val networkTweetsService: NetworkTweetsSer
     override suspend fun getTweetsList(): List<Tweet> =
         networkTweetsService.getTweetsList().asDomainModel()
 
-    override suspend fun saveNewTweet(tweet: Tweet) {
-        throw Exception()
+    override suspend fun saveNewTweet(tweet: Tweet, senderId: Long) {
+        networkTweetsService.saveNewTweet(
+            NewTweetRequest(
+                senderId,
+                tweet.content,
+                System.currentTimeMillis(),
+                tweet.images?.map {
+                    NetworkImage(it.url)
+                }
+            )
+        )
     }
 }
 
@@ -30,7 +41,7 @@ class LocalTweetsRepository(private val dataSource: MomentsDatabaseDao) : Tweets
     override suspend fun getTweetsList(): List<Tweet> =
         dataSource.loadTweets().asReversed().map { it.asDomainTweet() }
 
-    override suspend fun saveNewTweet(tweet: Tweet) = insertEntireTweet(tweet, true)
+    override suspend fun saveNewTweet(tweet: Tweet, senderId: Long) = insertEntireTweet(tweet, true)
 
     suspend fun saveTweets(remoteTweets: List<Tweet>, localTweets: List<Tweet>?) {
         val localUserInfo = dataSource.getUserInfo()

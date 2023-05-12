@@ -5,7 +5,9 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class NetworkTweet(
+    val id: Long,
     val content: String?,
+    val createdOn: Long,
     val images: List<NetworkImage>?,
     val sender: NetworkSender?,
     val comments: List<NetworkTweetComment>?
@@ -13,13 +15,16 @@ data class NetworkTweet(
 
 @JsonClass(generateAdapter = true)
 data class NetworkTweetComment(
+    val id: Long,
     val content: String,
+    val createdOn: Long,
     val sender: NetworkSender
 )
 
 @JsonClass(generateAdapter = true)
 data class NetworkSender(
-    val username: String,
+    val id: Long,
+    val userName: String,
     val nick: String,
     @Json(name = "avatar") val avatarUrl: String
 )

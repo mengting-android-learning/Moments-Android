@@ -26,18 +26,20 @@ data class CommentWithSender(
 
 @Entity(tableName = "tweet")
 data class LocalTweet(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: Long = 0L,
     val content: String?,
+    val createdOn: Long,
     val senderId: Long,
     val isOnlyLocal: Boolean = false
 )
 
 @Entity(tableName = "tweet_comment")
 data class LocalTweetComment(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: Long = 0L,
     val content: String,
+    val createdOn: Long,
     val senderId: Long,
     val tweetId: Long,
 )

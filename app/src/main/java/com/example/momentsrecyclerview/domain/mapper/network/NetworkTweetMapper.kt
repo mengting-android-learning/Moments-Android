@@ -18,7 +18,9 @@ fun List<NetworkTweet>.asDomainModel() = filter {
 }
 
 fun NetworkTweet.asDomainModel() = Tweet(
+    id = id,
     content = content,
+    createdOn = createdOn,
     images =
     if (images?.isNotEmpty() == true) images.map { it.asDomainModel() } else null,
     sender = sender!!.asDomainModel(),
@@ -28,13 +30,16 @@ fun NetworkTweet.asDomainModel() = Tweet(
 
 fun NetworkTweetComment.asDomainModel() =
     TweetComment(
+        id = id,
         content = content,
+        createdOn = createdOn,
         sender = sender.asDomainModel()
     )
 
 fun NetworkSender.asDomainModel() =
     Sender(
-        userName = username,
+        id = id,
+        userName = userName,
         nick = nick,
         avatarUrl = avatarUrl
     )
