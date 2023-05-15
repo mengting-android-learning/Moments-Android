@@ -27,6 +27,8 @@ import com.example.momentsrecyclerview.domain.Tweet
 import com.example.momentsrecyclerview.domain.TweetComment
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import java.text.SimpleDateFormat
+import java.util.Date
 
 @Composable
 fun TweetsItem(
@@ -77,11 +79,19 @@ fun TweetsItem(
         if (tweet.images?.isNotEmpty() == true) {
             GridImages(tweet.images, onImageClick)
         }
+        Text(text = convertLongToTime(tweet.createdOn))
         if (tweet.comments?.isNotEmpty() == true) {
             TweetCommentItem(tweet.comments)
         }
     }
 }
+
+fun convertLongToTime(time: Long): String {
+    val date = Date(time)
+    val format = SimpleDateFormat("yyyy.MM.dd HH:mm")
+    return format.format(date)
+}
+
 
 @Composable
 private fun GridImages(
