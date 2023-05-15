@@ -64,7 +64,7 @@ class MomentsViewModel(
     }
 
     init {
-//        preWork()
+//        saveGitData()
         getData()
     }
 
@@ -203,8 +203,9 @@ class MomentsViewModel(
 
     private fun saveGitData() {
         viewModelScope.launch {
+            _status.value = STATUS.LOADING
             val user = GitNetwork.service.getUserInfo()
-            val userInfo = UserInfoNetwork.userInfo.saveUser(
+            UserInfoNetwork.userInfo.saveUser(
                 NewUserRequest(
                     user.profileImageUrl,
                     user.avatarUrl,
@@ -213,51 +214,51 @@ class MomentsViewModel(
                 )
             )
             val tweetsList = GitNetwork.service.getTweetsList()
+                .filter { it.sender != null }.filter { !(it.images == null && it.content == null) }
+                .asReversed()
             for (tweet in tweetsList) {
-                if (tweet.sender != null) {
-                    if (!(tweet.images == null && tweet.content == null)) {
-                        val saveUser = UserInfoNetwork.userInfo.saveUser(
+                val saveUser = UserInfoNetwork.userInfo.saveUser(
+                    NewUserRequest(
+                        null,
+                        tweet.sender!!.avatarUrl,
+                        tweet.sender.nick,
+                        tweet.sender.userName
+                    )
+                )
+                val saveNewTweet = TweetsListNetwork.tweets.saveNewTweet(
+                    NewTweetRequest(
+                        saveUser.id,
+                        tweet.content,
+                        System.currentTimeMillis(),
+                        tweet.images
+                    )
+                )
+                if (!tweet.comments.isNullOrEmpty()) {
+                    for (comment in tweet.comments) {
+                        val saveSender = UserInfoNetwork.userInfo.saveUser(
                             NewUserRequest(
                                 null,
-                                tweet.sender.avatarUrl,
-                                tweet.sender.nick,
-                                tweet.sender.userName
+                                comment.sender.avatarUrl,
+                                comment.sender.nick,
+                                comment.sender.userName
                             )
                         )
-                        val saveNewTweet = TweetsListNetwork.tweets.saveNewTweet(
-                            NewTweetRequest(
-                                saveUser.id,
-                                tweet.content,
+                        TweetsListNetwork.tweets.saveNewComment(
+                            NewCommentRequest(
+                                saveSender.id,
+                                saveNewTweet.id,
                                 System.currentTimeMillis(),
-                                tweet.images
+                                comment.content
                             )
                         )
-                        if (!tweet.comments.isNullOrEmpty()) {
-                            for (comment in tweet.comments) {
-                                val saveSender = UserInfoNetwork.userInfo.saveUser(
-                                    NewUserRequest(
-                                        null,
-                                        comment.sender.avatarUrl,
-                                        comment.sender.nick,
-                                        comment.sender.userName
-                                    )
-                                )
-                                TweetsListNetwork.tweets.saveNewComment(
-                                    NewCommentRequest(
-                                        saveSender.id,
-                                        saveNewTweet.id,
-                                        System.currentTimeMillis(),
-                                        comment.content
-                                    )
-                                )
-                            }
-                        }
-
                     }
-
                 }
+
+
             }
+            getData()
         }
+
     }
 
 }
