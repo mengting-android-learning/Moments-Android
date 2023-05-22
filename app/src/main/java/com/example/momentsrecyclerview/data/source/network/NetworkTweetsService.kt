@@ -6,6 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface NetworkTweetsService {
     //    @GET("tweets.json")
@@ -17,6 +18,9 @@ interface NetworkTweetsService {
     suspend fun saveNewTweet(@Body newTweet: NewTweetRequest): NetworkTweet
 
     @Headers("Content-Type: application/json")
-    @POST("tweets/comments")
-    suspend fun saveNewComment(@Body newComment:NewCommentRequest):NetworkTweetComment
+    @POST("tweets/{id}/comments")
+    suspend fun saveNewComment(
+        @Path("id") tweetId: Long,
+        @Body newComment: NewCommentRequest
+    ): NetworkTweetComment
 }

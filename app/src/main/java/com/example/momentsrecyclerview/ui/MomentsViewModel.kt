@@ -132,7 +132,6 @@ class MomentsViewModel(
         if (localTweetsRepo is LocalTweetsRepository) {
             localTweetsRepo.getLocalTweets()
         } else {
-
             null
         }
 
@@ -244,23 +243,19 @@ class MomentsViewModel(
                             )
                         )
                         TweetsListNetwork.tweets.saveNewComment(
+                            saveNewTweet.id,
                             NewCommentRequest(
                                 saveSender.id,
-                                saveNewTweet.id,
                                 System.currentTimeMillis(),
                                 comment.content
                             )
                         )
                     }
                 }
-
-
             }
             getData()
         }
-
     }
-
 }
 
 class MomentsViewModelFactory(

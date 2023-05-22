@@ -13,6 +13,5 @@ interface NetworkUserInfoService {
 
     @Headers("Content-Type: application/json")
     @POST("users")
-    suspend fun saveUser(@Body newUser:NewUserRequest):NetworkUserInfo
-
+    suspend fun saveUser(@Body newUser: NewUserRequest): NetworkUserInfo
 }
