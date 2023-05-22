@@ -8,8 +8,6 @@ class FakeNetworkUserInfoService : NetworkUserInfoService {
     override suspend fun getUserInfo(): NetworkUserInfo =
         FakeData.networkUserInfo
 
-
     override suspend fun saveUser(newUser: NewUserRequest): NetworkUserInfo =
         FakeData.networkUserInfo
-
 }
