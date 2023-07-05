@@ -3,10 +3,13 @@ package com.example.momentsrecyclerview.ui.compose.screen.bottom.sheet
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.Context
+import android.content.ContentValues
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,11 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
-import com.example.momentsrecyclerview.BuildConfig
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
+import java.io.OutputStream
 
 @Composable
 fun CameraTab(
@@ -38,18 +37,20 @@ fun CameraTab(
     val activity = LocalContext.current as Activity
     var uri: Uri? by remember { mutableStateOf(null) }
     val cameraLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-            if (success) {
-                setLocalImage(listOf(uri.toString()))
-                navigateToNewTweetScreen()
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicturePreview()) {
+            it?.let { _ ->
+                uri = saveImage(it, activity)
+                uri?.apply {
+                    setLocalImage(listOf(toString()))
+                    navigateToNewTweetScreen()
+                }
             }
         }
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            uri = activity.createImageFileUri()
-            cameraLauncher.launch(uri)
+            cameraLauncher.launch(null)
         } else {
             if (!ActivityCompat.shouldShowRequestPermissionRationale(
                     activity,
@@ -69,8 +70,7 @@ fun CameraTab(
                     Manifest.permission.CAMERA
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
-                uri = activity.createImageFileUri()
-                cameraLauncher.launch(uri)
+                cameraLauncher.launch(null)
             } else if (ActivityCompat.shouldShowRequestPermissionRationale(
                     activity,
                     Manifest.permission.CAMERA
@@ -92,16 +92,28 @@ fun CameraTab(
     }
 }
 
-fun Context.createImageFileUri(): Uri {
-    val imageFileName = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-    val photoFile = File.createTempFile(
-        imageFileName,
-        ".png",
-        if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()) {
-            externalCacheDir
-        } else {
-            cacheDir
+fun saveImage(bitmap: Bitmap, activity: Activity): Uri? {
+    val filename = "IMG_${System.currentTimeMillis()}.jpg"
+    var imageUri: Uri? = null
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        var fos: OutputStream?
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            put(MediaStore.Video.Media.IS_PENDING, 1)
         }
-    )
-    return FileProvider.getUriForFile(this, "${BuildConfig.APPLICATION_ID}.provider", photoFile)
+        val application = activity.application
+        val contentResolver = application.contentResolver
+        contentResolver.apply {
+            imageUri = insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            fos = imageUri?.let { openOutputStream(it) }
+        }
+        fos?.use { bitmap.compress(Bitmap.CompressFormat.JPEG, 70, it) }
+        contentValues.clear()
+        contentValues.put(MediaStore.Video.Media.IS_PENDING, 0)
+        imageUri?.let { contentResolver.update(it, contentValues, null, null) }
+    }
+    return imageUri
 }
+
